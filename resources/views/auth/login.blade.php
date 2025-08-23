@@ -27,11 +27,6 @@
                     <div class="mb-10 fv-row">
                         <label class="form-label fs-6 fw-bolder text-dark">Username</label>
                         <input name="username"  class="form-control form-control-lg form-control-solid @error('username') is-invalid @enderror" value="{{old("username")}}" required autocomplete="username" autofocus  type="text"  />
-                        @error('username')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
                     </div>
                     <div class="mb-10 fv-row">
                         <div class="mb-2 d-flex flex-stack">
@@ -41,11 +36,6 @@
 
                         <input class="form-control form-control-lg form-control-solid @error('password') is-invalid @enderror" type="password" name="password" autocomplete="off" />
 
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                        @enderror
                     </div>
                     <!--end::Input group-->
                     <!--begin::Actions-->

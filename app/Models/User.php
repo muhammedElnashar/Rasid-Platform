@@ -25,6 +25,8 @@ class User extends Authenticatable
         'role_id',
         'phone',
         'points_balance',
+        'status',
+
     ];
 
     /**
@@ -49,11 +51,30 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // هل المستخدم Super Admin
+    public function isSuperAdmin(): bool
+    {
+        return $this->role && $this->role->name === 'super_admin';
+    }
+
+    // هل المستخدم School Admin
+    public function isSchoolAdmin(): bool
+    {
+        return $this->role && $this->role->name === 'school_admin';
+    }
+    public function isTeacher(): bool
+    {
+        return $this->role && $this->role->name === 'teacher';
+    }
+    public function isModerator(): bool
+    {
+        return $this->role && $this->role->name === 'moderator';
+    }
     public function school()
     {
         return $this->belongsTo(School::class);
     }
-
     public function role()
     {
         return $this->belongsTo(Role::class);
@@ -73,4 +94,9 @@ class User extends Authenticatable
             ->withPivot('relationship')
             ->withTimestamps();
     }
+    public function teacherSubjects()
+    {
+        return $this->hasMany(TeacherSubjectClass::class, 'teacher_id');
+    }
+
 }

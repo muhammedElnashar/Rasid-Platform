@@ -37,4 +37,33 @@
 
         });
     </script>
-@endif<?php
+@endif
+@if ($errors->any())
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-start',
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true,
+        });
+
+        let errors = @json($errors->all());
+
+        let errorList = "<ul style='margin:0; padding-left:15px; text-align:start'>";
+        errors.forEach(error => {
+            errorList += `<li style="font-weight:bold;">${error}</li>`;
+        });
+        errorList += "</ul>";
+
+        Toast.fire({
+            icon: 'error',
+            title: errorList
+        });
+    </script>
+@endif
+
+
+
+
+<?php

@@ -45,7 +45,7 @@
                         <div class="menu-item me-lg-1">
                             <a class="menu-link {{ request()->routeIs('home') ? 'active' : '' }} py-3"
                                 href="{{ route('home') }}">
-                                <span class="menu-title fs-6">Dashboard</span>
+                                <span class="menu-title fs-6">@lang('message.home')</span>
                             </a>
                         </div>
 
@@ -90,6 +90,7 @@
                 <!--begin::Toolbar wrapper-->
                 <div class="flex-shrink-0 d-flex align-items-stretch">
 
+{{--
                     <div class="d-flex align-items-center ms-1 ms-lg-3">
                         <!--begin::Menu wrapper-->
                         <div class="cursor-pointer symbol symbol-30px" data-kt-menu-trigger="click"
@@ -120,13 +121,14 @@
                             </div>
                         </div>
                     </div>
+--}}
 
                     <!--begin::User-->
                     <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                         <!--begin::Menu wrapper-->
                         <div class="cursor-pointer symbol symbol-30px symbol-md-40px" data-kt-menu-trigger="click"
                             data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                            @if(\Illuminate\Support\Facades\Auth::user()->image)
+                            @if(\Illuminate\Support\Facades\Auth::user()->image??"")
                                 <img alt="Logo"
                                      src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url(\Illuminate\Support\Facades\Auth::user()->image) }}" />
                             @else
@@ -142,7 +144,7 @@
                                 <div class="px-3 menu-content d-flex align-items-center">
                                     <!--begin::Avatar-->
                                     <div class="symbol symbol-50px me-5">
-                                        @if(\Illuminate\Support\Facades\Auth::user()->image)
+                                        @if(\Illuminate\Support\Facades\Auth::user()->image??"")
                                             <img alt="Logo"
                                                  src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url(\Illuminate\Support\Facades\Auth::user()->image) }}" />
                                         @else

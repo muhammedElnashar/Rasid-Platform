@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('location')->nullable();
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('documents')->nullable();
+            $table->string('ministerial_number')->nullable()->unique();
             $table->timestamps();
         });
     }

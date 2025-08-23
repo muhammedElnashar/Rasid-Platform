@@ -1,5 +1,5 @@
 <!DOCTYPE html >
-<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+<html lang="ar" dir="rtl">
 <!--begin::Head-->
 @include('layouts._head')
 <!--end::Head-->

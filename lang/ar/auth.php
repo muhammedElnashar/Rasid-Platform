@@ -1,7 +1,7 @@
 <?php
+// resources/lang/ar/auth.php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Language Lines
@@ -13,8 +13,13 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'بيانات الاعتماد هذه غير متطابقة مع سجلاتنا.',
+    'password' => 'كلمة المرور المدخلة غير صحيحة.',
+    'throttle' => 'عدد كبير جداً من محاولات الدخول. يرجى المحاولة مرة أخرى بعد :seconds ثانية.',
 
+    // رسائل إضافية
+    'login_success' => 'تم تسجيل الدخول بنجاح',
+    'logout_success' => 'تم تسجيل الخروج بنجاح',
+    'invalid_credentials' => 'البيانات المدخلة غير صحيحة',
+    'account_locked' => 'تم قفل الحساب مؤقتاً بسبب المحاولات المتعددة',
 ];
