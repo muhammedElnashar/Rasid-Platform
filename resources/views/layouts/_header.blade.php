@@ -153,9 +153,9 @@
                                     </div>
                                     <!--end::Avatar-->
                                     <!--begin::Username-->
-                                    <div class="d-flex flex-column">
+                                    <div class="d-flex flex-column ">
                                         <div class="fw-bolder d-flex align-items-center fs-5">
-                                            {{ \Illuminate\Support\Facades\Auth::user()->name ?? '' }}
+                                            {{ \Illuminate\Support\Facades\Auth::user()->full_name ?? '' }}
 
                                         </div>
                                         <a href="#"
@@ -184,6 +184,7 @@
                             <!--end::Menu item-->
 
                         </div>
+
                         <!--end::Menu-->
                         <!--end::Menu wrapper-->
                     </div>

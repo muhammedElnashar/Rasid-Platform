@@ -23,10 +23,18 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|max:255|unique:users,username',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string|max:15',
-            'role_id' => 'required|exists:roles,id',
+            'full_name' => 'required|string|max:255',
+            'email'     => 'required|email|unique:users,email',
+            'phone'     => 'nullable|string|max:15',
+            'role_id'   => 'required|integer|exists:roles,id',
+            'school_name' => 'required_if:role_id,2|string|max:255',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'school_name.required_if' => 'حقل المدرسه مطلوب لانشاء مدير جديد.',
         ];
     }
 }

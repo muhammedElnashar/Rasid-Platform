@@ -2,18 +2,17 @@
 
 namespace App\Policies;
 
-use App\Models\StudentClass;
+use App\Models\StudentGuardian;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class StudentClassPolicy
+class StudentGuardianPolicy
 {
-
-    protected function hasAccess(User $user, StudentClass $studentClass): bool
+    protected function hasAccess(User $user, StudentGuardian $studentGuardian): bool
     {
         return ($user->isSchoolAdmin() || $user->isModerator())
-            && $user->school_id === $studentClass->student->school_id
-            && $user->school_id === $studentClass->class->grade->stage->school_id;
+            && $user->school_id === $studentGuardian->student->school_id
+            && $user->school_id === $studentGuardian->guardian->school_id;
     }
     /**
      * Determine whether the user can view any models.
@@ -26,9 +25,9 @@ class StudentClassPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, StudentClass $studentClass): bool
+    public function view(User $user, StudentGuardian $studentGuardian): bool
     {
-        return $this->hasAccess($user, $studentClass);
+        return $this->hasAccess($user, $studentGuardian);
     }
 
     /**
@@ -42,23 +41,23 @@ class StudentClassPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, StudentClass $studentClass): bool
+    public function update(User $user, StudentGuardian $studentGuardian): bool
     {
-        return $this->hasAccess($user, $studentClass);
+        return $this->hasAccess($user, $studentGuardian);
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, StudentClass $studentClass): bool
+    public function delete(User $user, StudentGuardian $studentGuardian): bool
     {
-        return $this->hasAccess($user, $studentClass);
+        return $this->hasAccess($user, $studentGuardian);
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, StudentClass $studentClass): bool
+    public function restore(User $user, StudentGuardian $studentGuardian): bool
     {
         return false;
     }
@@ -66,7 +65,7 @@ class StudentClassPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, StudentClass $studentClass): bool
+    public function forceDelete(User $user, StudentGuardian $studentGuardian): bool
     {
         return false;
     }

@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class StoreSchoolAdminRequest extends FormRequest
+class UpdateStudentClassRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +22,8 @@ class StoreSchoolAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|max:255|unique:users,username',
-            'school_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string|max:15',
+            'student_id' => 'required|exists:users,id',
+            'class_id' => 'required|exists:classes,id',
         ];
     }
 }

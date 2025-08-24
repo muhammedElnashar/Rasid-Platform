@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('stage_id')->constrained('stages')->onDelete('cascade');
             $table->string('name')->unique(); //
             $table->timestamps();
+            $table->unique(['stage_id', 'name']);
+
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SchoolAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTeacherSubjectClassRequest;
+use App\Http\Requests\UpdateTeacherSubjectClassRequest;
 use App\Models\Classes;
 use App\Models\TeacherSubjectClass;
 use App\Models\User;
@@ -21,11 +22,16 @@ class TeacherSubjectClassController extends Controller
         if (!$school){
             return redirect()->route('home')->with('error', __('message.no_school_access'));
         }
-        $teacherSubjectClass= TeacherSubjectClass::where('school_id', $school->id)->with(['teacher', 'subject', 'class'])->paginate(10);
-
-
-
-        return view('school_admin.teacher-subject-class.index', compact('teacherSubjectClass'));
+        $subjects = auth()->user()->school->subjects;
+        $teachers = auth()->user()->school->users()->where('role_id', 4)->get();
+        $classes = Classes::with('grade.stage.school')
+            ->whereHas('grade.stage.school', function ($q) {
+                $q->where('id', auth()->user()->school_id);
+            })
+            ->get();
+        $teacherSubjectClass= TeacherSubjectClass::where('school_id', $school->id)
+            ->with(['teacher', 'subject', 'class'])->get();
+        return view('school_admin.teacher-subject-class.index', compact('teacherSubjectClass','subjects', 'teachers', 'classes'));
 
 
     }
@@ -77,9 +83,12 @@ class TeacherSubjectClassController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateTeacherSubjectClassRequest $request,TeacherSubjectClass $teacherSubjectClass)
     {
-        //
+        $this->authorize('update', $teacherSubjectClass);
+        $data = $request->validated();
+        $teacherSubjectClass->update($data);
+        return redirect()->route('teacher-subject-classes.index')->with('success', __('message.updated', ['item' => __('message.teacher-subject-class')]));
     }
 
     /**

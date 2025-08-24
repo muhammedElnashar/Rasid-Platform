@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class UpdateSchoolAdminRequest extends FormRequest
+class UpdateTeacherSubjectClassRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +22,9 @@ class UpdateSchoolAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'full_name' => 'required|string|max:255',
-            'email'    => 'required|email|max:255|unique:users,email,' . $this->route('admin')->id,
-            'password' => ['nullable', Password::min(8)->mixedCase()->numbers()->symbols(),],
-            'phone'    => 'nullable|string|max:15',
+            'teacher_id' => 'required|exists:users,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'class_id' => 'required|exists:classes,id',
         ];
     }
 }

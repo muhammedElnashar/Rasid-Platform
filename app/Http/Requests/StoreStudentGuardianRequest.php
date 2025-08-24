@@ -4,9 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
-class UpdateUserRequest extends FormRequest
+class StoreStudentGuardianRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +22,14 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = $this->route('user')->id;
-
         return [
-            'full_name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId),],
-            'password' => ['nullable', Password::min(8)->mixedCase()->numbers()->symbols(),],
-            'phone' => 'nullable|string|max:15',
-            'role_id' => 'required|exists:roles,id',
+            'student_id' => 'required|exists:users,id',
+            'guardian_id' => ['required', 'exists:users,id', Rule::unique('student_guardians')
+                ->where(fn($q) => $q->where('student_id', $this->student_id)),
+                ],
+            'relationship' => ['required', 'string', 'max:255', Rule::unique('student_guardians')
+                ->where(fn($q) => $q->where('student_id', $this->student_id)),
+            ],
         ];
     }
 }

@@ -30,18 +30,17 @@
                                   action="{{route("admin.store")}}">
                                 @csrf
 
+                                <input type="hidden" name="role_id" value="2">
+
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.username')</span>
-                                        <span>
-                                            @error('username')<small class="text-danger">{{ $message }}</small>@enderror
-                                        </span>
+                                        <span class="required"> @lang('message.full_name')</span>
                                     </label>
 
                                     <div class="input-group input-group-solid mb-5">
-                                        <input type="text" value="{{old("username")}}" class="form-control"
-                                               name="username"
-                                               placeholder="@lang('message.enter', ['item' => __('message.username')])"
+                                        <input type="text" value="{{old("full_name")}}" class="form-control"
+                                               name="full_name"
+                                               placeholder="@lang('message.enter', ['item' => __('message.full_name')])"
                                                autocomplete="off"/>
 
                                     </div>
@@ -50,9 +49,6 @@
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class="required"> @lang('message.school_name')</span>
-                                        <span>
-                                            @error('school_name')<small class="text-danger">{{ $message }}</small>@enderror
-                                        </span>
                                     </label>
 
                                     <div class="input-group input-group-solid mb-5">
@@ -67,9 +63,6 @@
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class="required"> @lang('message.email')</span>
-                                        <span>
-                                            @error('email')<small class="text-danger">{{ $message }}</small>@enderror
-                                        </span>
                                     </label>
 
                                     <div class="input-group input-group-solid mb-5">
@@ -80,61 +73,9 @@
 
                                     </div>
                                 </div>
-{{--
-                                <div class="mb-7 fv-row" data-kt-password-meter="true">
-                                    <!--begin::Wrapper-->
-                                    <div class="mb-2">
-                                        <!--begin::Label-->
-                                        <label
-                                            class="form-label  text-dark fs-6"><span class="required">@lang('message.password')</span>
-                                        <span>
-                                        @error('password')<small class="text-danger">{{ $message }}</small>@enderror
-                                        </span>
-                                        </label>
-                                        <!--end::Label-->
-                                        <!--begin::Input wrapper-->
-                                        <div class="position-relative mb-3">
-                                            <input
-                                                class="form-control form-control-lg form-control-solid"
-                                                type="password" placeholder="@lang('message.enter', ['item' => __('message.password')])" name="password"
-                                                autocomplete="off"/>
-                                            <span
-                                                class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
-                                                data-kt-password-meter-control="visibility">
-										                        	<i class="bi bi-eye-slash fs-2"></i>
-										                        	<i class="bi bi-eye fs-2 d-none"></i>
-									                            	</span>
-                                        </div>
-                                        <!--end::Input wrapper-->
-                                        <!--begin::Meter-->
-                                        <div class="d-flex align-items-center mb-3"
-                                             data-kt-password-meter-control="highlight">
-                                            <div
-                                                class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                            <div
-                                                class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                            <div
-                                                class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
-                                            <div
-                                                class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
-                                        </div>
-                                        <!--end::Meter-->
-                                    </div>
-                                    <!--end::Wrapper-->
-                                    <!--begin::Hint-->
-                                    <div class="text-muted">Use 8 or more characters with a mix of
-                                        letters, numbers &amp; symbols.
-                                    </div>
-                                    <!--end::Hint-->
-                                </div>
---}}
-
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class=""> @lang('message.phone')</span>
-                                        <span>
-                                            @error('phone')<small class="text-danger">{{ $message }}</small>@enderror
-                                        </span>
                                     </label>
 
                                     <div class="input-group input-group-solid mb-5">

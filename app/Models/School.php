@@ -12,7 +12,9 @@ class School extends Model
         'location',
         'email',
         'phone',
-        'ministerial_number'
+        'ministerial_number',
+        'logo',
+        'documents',
     ];
 
     public function manager()
@@ -35,8 +37,28 @@ class School extends Model
         return $this->hasMany(Subject::class);
     }
 
-
-
+    public function studentClasses()
+    {
+        return $this->hasManyThrough(
+            StudentClass::class,
+            User::class, // الطلاب
+            'school_id', // مفتاح المدرسة في جدول users
+            'student_id', // مفتاح الطالب في جدول student_classes
+            'id',        // مفتاح المدرسة في schools
+            'id'         // مفتاح الطالب في users
+        );
+    }
+    public function studentGuardians()
+    {
+     return   $this->hasManyThrough(
+          StudentGuardian::class,
+            User::class,
+            'school_id',
+            'student_id',
+            'id',
+            'id'
+        );
+    }
 
 
 }

@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'school_id',
         'username',
+        'full_name',
         'email',
         'password',
         'role_id',
@@ -52,25 +53,68 @@ class User extends Authenticatable
         ];
     }
 
-    // هل المستخدم Super Admin
+    /** ========== Checks ========== */
     public function isSuperAdmin(): bool
     {
-        return $this->role && $this->role->name === 'super_admin';
+        return $this->role_id === 1;
     }
 
-    // هل المستخدم School Admin
     public function isSchoolAdmin(): bool
     {
-        return $this->role && $this->role->name === 'school_admin';
+        return $this->role_id === 2;
+    }
+    public function isStudent(): bool
+    {
+        return $this->role_id === 3;
     }
     public function isTeacher(): bool
     {
-        return $this->role && $this->role->name === 'teacher';
+        return $this->role_id === 4;
+    }
+    public function isGuardian(): bool
+    {
+        return $this->role_id === 5;
     }
     public function isModerator(): bool
     {
-        return $this->role && $this->role->name === 'moderator';
+        return $this->role_id === 6;
     }
+
+    /** ========== Scopes ========== */
+    public function scopeSuperAdmins($query)
+    {
+        return $query->where('role_id', 1);
+    }
+    public function scopeSchoolAdmins($query)
+    {
+        return $query->where('role_id', 2);
+    }
+
+    public function scopeOnlyStudents($query)
+    {
+        return $query->where('role_id', 3);
+    }
+
+    public function scopeOnlyTeachers($query)
+    {
+        return $query->where('role_id', 4);
+    }
+    public function scopeOnlyGuardians($query)
+    {
+        return $query->where('role_id', 5);
+    }
+    public function scopeOnlyModerators($query)
+    {
+        return $query->where('role_id', 6);
+    }
+    public function scopeUsersExpectAdmins($query)
+    {
+        return $query->whereNotIn('role_id', [1, 2]);
+    }
+
+    /** ========== Relationships ========== */
+
+
     public function school()
     {
         return $this->belongsTo(School::class);
@@ -79,7 +123,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
-    // علاقة ولي الأمر ← طالب
     public function guardians()
     {
         return $this->belongsToMany(User::class, 'student_guardians', 'student_id', 'guardian_id')
@@ -87,7 +130,6 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    // علاقة الطالب ← ولي الأمر
     public function students()
     {
         return $this->belongsToMany(User::class, 'student_guardians', 'guardian_id', 'student_id')
@@ -98,5 +140,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(TeacherSubjectClass::class, 'teacher_id');
     }
-
+    public function classes()
+    {
+        return $this->belongsToMany(Classes::class, 'student_classes', 'student_id', 'class_id');
+    }
 }

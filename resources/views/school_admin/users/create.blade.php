@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section('title')
-    @lang('message.add', ['item' => __('message.employee')])
+    @lang('message.add', ['item' => __('message.users')])
 @endsection
 @push("css")
 @endpush
@@ -14,7 +14,7 @@
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <h1 class="page-heading d-flex text-dark fw-bolder fs-2 flex-column justify-content-center my-0">
-                            @lang('message.create', ['item' => __('message.employee')])
+                            @lang('message.create', ['item' => __('message.user')])
                         </h1>
 
                     </div>
@@ -32,16 +32,16 @@
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.username')</span>
+                                        <span class="required"> @lang('message.full_name')</span>
                                         <span>
                                             @error('username')<small class="text-danger">{{ $message }}</small>@enderror
                                         </span>
                                     </label>
 
                                     <div class="input-group input-group-solid mb-5">
-                                        <input type="text" value="{{old("username")}}" class="form-control"
-                                               name="username"
-                                               placeholder="@lang('message.enter', ['item' => __('message.username')])"
+                                        <input type="text" value="{{old("full_name")}}" class="form-control"
+                                               name="full_name"
+                                               placeholder="@lang('message.enter', ['item' => __('message.full_name')])"
                                                autocomplete="off"/>
 
                                     </div>

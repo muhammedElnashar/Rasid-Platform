@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('subjects', \App\Http\Controllers\SchoolAdmin\SubjectController::class);
     Route::resource('teacher-subject-classes', \App\Http\Controllers\SchoolAdmin\TeacherSubjectClassController::class);
     Route::resource('student-classes', \App\Http\Controllers\SchoolAdmin\StudentClassController::class);
+    Route::resource('student-guardian', \App\Http\Controllers\SchoolAdmin\StudentGuardiansController::class);
     Route::resource('stages', \App\Http\Controllers\SchoolAdmin\StagesController::class);
     Route::resource('stages.grades', \App\Http\Controllers\SchoolAdmin\GradesController::class);
     Route::resource('stages.grades.classes', \App\Http\Controllers\SchoolAdmin\ClassesController::class);

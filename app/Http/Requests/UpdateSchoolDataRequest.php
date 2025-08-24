@@ -31,6 +31,9 @@ class UpdateSchoolDataRequest extends FormRequest
             'location' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => ['nullable', 'email', 'max:255', Rule::unique('schools', 'email')->ignore($schoolId),],
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'documents' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
             ];
+
     }
 }

@@ -16,7 +16,7 @@
                     <div class="card-toolbar">
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             <a href="{{ route('users.create') }}" class="btn btn-primary" style="border-radius: 20px">
-                                @lang('message.add',['item' => __('message.employee')])
+                                @lang('message.add',['item' => __('message.user')])
                             </a>
 
                         </div>
@@ -27,7 +27,8 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class="text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-150px">@lang('message.username')</th>
+                            <th class="min-w-150px">@lang('message.full_name')</th>
+                            <th class="min-w-75px">@lang('message.username')</th>
                             <th class="min-w-150px">@lang('message.email')</th>
                             <th class="min-w-75px">@lang('message.role')</th>
                             <th class="min-w-100px">@lang('message.phone')</th>
@@ -37,6 +38,7 @@
                         <tbody class="fw-bold text-gray-600">
                         @foreach($users as $user)
                             <tr>
+                                <td>{{ $user->full_name }}</td>
                                 <td>{{ $user->username }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ __('message.' . $user->role->name) }}</td>
@@ -47,7 +49,7 @@
                                         <a href="javascript:void(0)"
                                            class="btn btn-icon btn-bg-light edit-btn btn-active-color-primary btn-sm ms-2"
                                            data-id="{{ $user->id }}"
-                                           data-username="{{ $user->username }}"
+                                           data-full_name="{{ $user->full_name }}"
                                            data-email="{{ $user->email }}"
                                            data-role="{{ $user->role->id }}"
                                            data-phone="{{ $user->phone }}">
@@ -98,9 +100,7 @@
                         </tbody>
                     </table>
 
-                    <div class="mt-5">
-                        {{ $users->links() }}
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -125,8 +125,8 @@
                     @method('PUT')
                     <div class="modal-body py-10 px-lg-17">
                         <div class="mb-5 fv-row">
-                            <label class="required fs-5 fw-bold mb-2">@lang('message.username')</label>
-                            <input type="text" class="form-control form-control-solid" name="username"/>
+                            <label class="required fs-5 fw-bold mb-2">@lang('message.full_name')</label>
+                            <input type="text" class="form-control form-control-solid" name="full_name"/>
                         </div>
                         <div class="mb-5 fv-row" data-kt-password-meter="true">
                             <div class="mb-1">
@@ -217,14 +217,14 @@
 
         $('.edit-btn').on('click', function() {
             var id = $(this).data('id');
-            var username = $(this).data('username');
+            var fullName = $(this).data('full_name');
             var email = $(this).data('email');
             var phone = $(this).data('phone');
             var role = $(this).data('role');
 
             var form = $('#editUserForm');
             form.attr('action', '/users/' + id);
-            form.find('input[name="username"]').val(username);
+            form.find('input[name="full_name"]').val(fullName);
             form.find('input[name="email"]').val(email);
             form.find('input[name="phone"]').val(phone);
 

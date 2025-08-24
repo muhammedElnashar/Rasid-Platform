@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('guardian_id')->constrained('users')->onDelete('cascade');
-            $table->string('relationship')->nullable(); // e.g., أب، أم
+            $table->string('relationship');
             $table->timestamps();
             $table->unique(['student_id', 'guardian_id']);
 

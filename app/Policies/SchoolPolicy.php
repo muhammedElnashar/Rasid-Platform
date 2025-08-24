@@ -17,6 +17,6 @@ class SchoolPolicy
     public function update(User $user, School $model): bool
     {
         return ($user->isSchoolAdmin() || $user->isModerator())
-            && $user->school_id === $model->school_id;
+            && $user->school_id === $model->id;
     }
 }

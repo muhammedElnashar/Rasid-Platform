@@ -6,12 +6,17 @@ return [
     'schools' => 'المدارس',
     'admin' => 'مدير',
     'admins' => 'المديرين',
-    'employee' => 'الموظف',
-    'users' => 'الموظفين',
+    'user' => 'المستخدم',
+    'users' => 'المستخدمين',
     'teacher' => 'المعلم',
     'moderator' => 'المشرف',
     'parent' => 'ولي الأمر',
     'student' => 'الطالب',
+    'students' => 'الطلاب',
+    'guardian' => 'ولي الأمر',
+    'guardians' => 'أولياء الأمور',
+    'father' => 'الأب',
+    'mother' => 'الأم',
     'stage' => 'مرحلة',
     'stages' => 'المراحل',
     'grade' => 'صف',
@@ -21,6 +26,11 @@ return [
     'subject' => 'مادة',
     'subjects' => 'المواد',
     'teacher-subject-class' => 'فصول و مواد المعلمين',
+    'student_class'=> 'فصول الطلاب',
+    'student_guardian'=> 'أولياء أمور الطلاب',
+    'relationship'=> 'العلاقة',
+
+
     // أزرار عامة
 
     'logout' => 'تسجيل الخروج',
@@ -31,6 +41,11 @@ return [
     'discard' => 'تجاهل',
     'submit' => 'إرسال',
     'action' => 'الإجراء',
+    'filter' => 'تصفية',
+    'search' => 'بحث',
+    'reset' => 'إعادة تعيين',
+    'close' => 'إغلاق',
+    'back' => 'رجوع',
 
     // رسائل عامة
     'created' => 'تم إنشاء :item بنجاح',
@@ -56,6 +71,7 @@ return [
     // حقول عامة
     'name' => 'الاسم',
     'username' => 'اسم المستخدم',
+    'full_name' => 'الاسم الكامل',
     'location' => 'الموقع',
     'phone' => 'الهاتف',
     'email' => 'البريد الإلكتروني',
@@ -66,5 +82,8 @@ return [
     'school_admin' => 'مدير المدرسة',
     'school_name' => 'اسم المدرسة',
     'ministerial_number'=> 'الرقم الوزاري',
+    'logo' => 'شعار المدرسة',
+    'documents' => 'المستندات',
+    'view_file' => 'عرض الملف'
 
 ];
