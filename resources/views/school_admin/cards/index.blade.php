@@ -1,9 +1,10 @@
 @extends("layouts.app")
 
 @section('title')
-    @lang('message.list', ['item' => __('message.stages')])
+    @lang('message.list', ['item' => __('message.cards')])
 @endsection
 @push("css")
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
 @endpush
 
 @section('content')
@@ -17,8 +18,8 @@
                     </div>
                     <div class="card-toolbar">
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
-                            <a href="{{ route('stages.create') }}" class="btn btn-primary" style="border-radius: 20px">
-                                @lang('message.add',['item' => __('message.stage')])</a>
+                            <a href="{{ route('cards.create') }}" class="btn btn-primary">
+                                @lang('message.add',['item' => __('message.cards')])</a>
                         </div>
                     </div>
                 </div>
@@ -35,18 +36,18 @@
                         <tbody class="fw-bold  text-gray-600">
 
 
-                        @foreach($stages as $stage)
+                        @foreach($cards as $card)
 
                             <tr>
-                                <td>{{ $stage->name }}</td>
+                                <td>{{ $card->name }}</td>
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
-                                        <a href="{{route('stages.grades.index',$stage)}}" class="btn btn-bg-light btn-active-color-primary btn-sm ms-2">Grades</a>
+                                        <a href="{{route('cards.categories.index',$card)}}" class="btn btn-bg-light btn-active-color-primary btn-sm ms-2">@lang('message.category')</a>
                                         <a href="javascript:void(0)"
                                            class="btn btn-icon btn-bg-light edit-btn btn-active-color-primary btn-sm ms-2"
-                                           data-id="{{ $stage->id }}"
-                                           data-name="{{ $stage->name }}">
+                                           data-id="{{ $card->id }}"
+                                           data-name="{{ $card->name }}">
                                             <span class="svg-icon svg-icon-3">
 																				<svg xmlns="http://www.w3.org/2000/svg"
                                                                                      width="24" height="24"
@@ -62,7 +63,7 @@
                                         </a>
 
                                         <!-- زر حذف -->
-                                        <form method="POST" action="{{ route('stages.destroy',$stage) }}">
+                                        <form method="POST" action="{{ route('cards.destroy',$card) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-icon btn-bg-light btn-active-color-primary deleted-btn btn-sm ms-2">
@@ -95,11 +96,7 @@
 
                         </tbody>
                     </table>
-                    <div class="">
 
-                        {{$stages->links()}}
-
-                    </div>
 
                 </div>
             </div>
@@ -107,11 +104,11 @@
     </div>
 
     <!-- Modal with Table -->
-    <div class="modal fade" id="kt_modal_stage_edit" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="kt_modal_card_edit" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered mw-650px">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>@lang('message.edit', ['item' => __('message.stage')])</h2>
+                    <h2>@lang('message.edit', ['item' => __('message.card')])</h2>
                     <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
                     <span class="svg-icon svg-icon-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
@@ -121,7 +118,7 @@
                     </span>
                     </div>
                 </div>
-                <form id="editStageForm" method="POST">
+                <form id="editCardForm" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body py-10 px-lg-17">
@@ -152,10 +149,10 @@
             var name = $(this).data('name');
 
 
-            var form = $('#editStageForm');
-            form.attr('action', '/stages/' + id);
+            var form = $('#editCardForm');
+            form.attr('action', '/cards/' + id);
             form.find('input[name="name"]').val(name);
-            var modal = new bootstrap.Modal($('#kt_modal_stage_edit')[0]);
+            var modal = new bootstrap.Modal($('#kt_modal_card_edit')[0]);
             modal.show();
         });
     </script>
@@ -184,5 +181,8 @@
 
         })
     </script>
-
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+    <script src="{{asset("assets/js/dynamic.js")}}"></script>
+    <script src="{{asset("assets/js/custom/apps/customers/add.js")}}"></script>
+    <script src="{{asset("assets/js/custom/widgets.js")}}"></script>
 @endpush

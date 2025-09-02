@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\StatusCardEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -59,6 +60,40 @@ class School extends Model
             'id'
         );
     }
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    // في School.php
+    public function pendingIssues()
+    {
+        return CardIssues::query()
+            ->where('status', StatusCardEnum::Pending)
+            ->whereHas('cardItem.category.card', function ($q) {
+                $q->where('school_id', $this->id);
+            });
+    }
+  public function approvedIssues()
+    {
+        return CardIssues::query()
+            ->where('status', StatusCardEnum::Approved)
+            ->whereHas('cardItem.category.card', function ($q) {
+                $q->where('school_id', $this->id);
+            });
+    }
+    public function rejectedIssues()
+    {
+        return CardIssues::query()
+            ->where('status', StatusCardEnum::Rejected)
+            ->whereHas('cardItem.category.card', function ($q) {
+                $q->where('school_id', $this->id);
+            });
+    }
+
+
+
+
 
 
 }

@@ -27,9 +27,6 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
         $school = auth()->user()->school;
-        if (!$school) {
-            return redirect()->route('home')->with('error', __('message.no_school_access'));
-        }
         $users = $school->users()->usersExpectAdmins()->get();
         $roles= Role::whereNotIn('name', ['super_admin', 'school_admin'])->get();
         return view('school_admin.users.index', compact('users','roles'));

@@ -16,9 +16,6 @@ class StagesController extends Controller
     {
         $this->authorize('viewAny', Stage::class);
         $school = auth()->user()->school;
-        if (!$school){
-            return redirect()->route('home')->with('error', __('message.no_school_access'));
-        }
         $stages = $school->stages()->paginate(5);
 
         return view('school_admin.stages.index', compact('stages'));

@@ -1,9 +1,10 @@
 @extends("layouts.app")
 
 @section('title')
-    @lang('message.list', ['item' => __('message.stages')])
+    @lang('message.list', ['item' => __('message.categories')])
 @endsection
 @push("css")
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
 @endpush
 
 @section('content')
@@ -17,8 +18,8 @@
                     </div>
                     <div class="card-toolbar">
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
-                            <a href="{{ route('stages.create') }}" class="btn btn-primary" style="border-radius: 20px">
-                                @lang('message.add',['item' => __('message.stage')])</a>
+                            <a href="{{ route('cards.categories.items.create',[$card,$category]) }}" class="btn btn-primary">
+                                @lang('message.add',['item' => __('message.category')])</a>
                         </div>
                     </div>
                 </div>
@@ -27,6 +28,7 @@
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-250px">@lang('message.name')</th>
+                            <th class="min-w-250px">@lang('message.points')</th>
 
 
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
@@ -35,20 +37,23 @@
                         <tbody class="fw-bold  text-gray-600">
 
 
-                        @foreach($stages as $stage)
+                        @foreach($items as $item)
 
                             <tr>
-                                <td>{{ $stage->name }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->points }}</td>
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
-                                        <a href="{{route('stages.grades.index',$stage)}}" class="btn btn-bg-light btn-active-color-primary btn-sm ms-2">Grades</a>
                                         <a href="javascript:void(0)"
                                            class="btn btn-icon btn-bg-light edit-btn btn-active-color-primary btn-sm ms-2"
-                                           data-id="{{ $stage->id }}"
-                                           data-name="{{ $stage->name }}">
+                                           data-id="{{ $item->id }}"
+                                           data-name="{{ $item->name }}"
+                                           data-points="{{ $item->points }}"
+                                           data-card_id="{{ $card->id }}"
+                                           data-category_id="{{ $category->id }}">
                                             <span class="svg-icon svg-icon-3">
-																				<svg xmlns="http://www.w3.org/2000/svg"
+                                                <svg xmlns="http://www.w3.org/2000/svg"
                                                                                      width="24" height="24"
                                                                                      viewBox="0 0 24 24" >
 																					<path opacity="0.3"
@@ -58,11 +63,11 @@
                                                                                         d="M5.574 21.3L3.692 21.928C3.46591 22.0032 3.22334 22.0141 2.99144 21.9594C2.75954 21.9046 2.54744 21.7864 2.3789 21.6179C2.21036 21.4495 2.09202 21.2375 2.03711 21.0056C1.9822 20.7737 1.99289 20.5312 2.06799 20.3051L2.696 18.422L5.574 21.3ZM4.13499 14.105L9.891 19.861L19.245 10.507L13.489 4.75098L4.13499 14.105Z"
                                                                                         fill="black"/>
 																				</svg>
-																			</span>
+                                            </span>
                                         </a>
 
                                         <!-- زر حذف -->
-                                        <form method="POST" action="{{ route('stages.destroy',$stage) }}">
+                                        <form method="POST" action="{{ route('cards.categories.destroy',[$card,$category]) }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-icon btn-bg-light btn-active-color-primary deleted-btn btn-sm ms-2">
@@ -95,11 +100,7 @@
 
                         </tbody>
                     </table>
-                    <div class="">
 
-                        {{$stages->links()}}
-
-                    </div>
 
                 </div>
             </div>
@@ -107,11 +108,11 @@
     </div>
 
     <!-- Modal with Table -->
-    <div class="modal fade" id="kt_modal_stage_edit" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="kt_modal_item_edit" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered mw-650px">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2>@lang('message.edit', ['item' => __('message.stage')])</h2>
+                    <h2>@lang('message.edit', ['item' => __('message.item')])</h2>
                     <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
                     <span class="svg-icon svg-icon-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
@@ -121,7 +122,7 @@
                     </span>
                     </div>
                 </div>
-                <form id="editStageForm" method="POST">
+                <form id="editItemForm" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body py-10 px-lg-17">
@@ -129,8 +130,12 @@
                             <label class="required fs-5 fw-bold mb-2">@lang('message.name')</label>
                             <input type="text" class="form-control form-control-solid" name="name"/>
                         </div>
-
-
+                    </div>
+                    <div class="modal-body py-10 px-lg-17">
+                        <div class="mb-5 fv-row">
+                            <label class="required fs-5 fw-bold mb-2">@lang('message.points')</label>
+                            <input type="number" class="form-control form-control-solid" name="points"/>
+                        </div>
                     </div>
 
                     <div class="modal-footer flex-center">
@@ -149,13 +154,17 @@
 
         $('.edit-btn').on('click', function() {
             var id = $(this).data('id');
+            var cardId = $(this).data('card_id');
+            var categoryId = $(this).data('category_id');
             var name = $(this).data('name');
+            var points = $(this).data('points');
 
 
-            var form = $('#editStageForm');
-            form.attr('action', '/stages/' + id);
+            var form = $('#editItemForm');
+            form.attr('action', '/cards/' + cardId + '/categories/' + categoryId +'/items/' + id);
             form.find('input[name="name"]').val(name);
-            var modal = new bootstrap.Modal($('#kt_modal_stage_edit')[0]);
+            form.find('input[name="points"]').val(points);
+            var modal = new bootstrap.Modal($('#kt_modal_item_edit')[0]);
             modal.show();
         });
     </script>
@@ -184,5 +193,8 @@
 
         })
     </script>
-
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+    <script src="{{asset("assets/js/dynamic.js")}}"></script>
+    <script src="{{asset("assets/js/custom/apps/customers/add.js")}}"></script>
+    <script src="{{asset("assets/js/custom/widgets.js")}}"></script>
 @endpush

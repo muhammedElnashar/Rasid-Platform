@@ -1,0 +1,177 @@
+<?php
+
+namespace App\Services;
+
+use App\Enum\DeductionTypeEnum;
+use App\Enum\PointTransactionTypeEnum;
+use App\Enum\StatusCardEnum;
+use App\Models\CardIssues;
+use App\Models\CardItem;
+use App\Models\PointTransaction;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
+class CardIssueService
+{
+
+
+    public function updateIssueCard(array $data,User $issuer , CardIssues $cardIssue)
+    {
+        $cardItem = CardItem::findOrFail($data['card_item_id']);
+        $cardIssue->update([
+            'user_id' => $data['user_id'],
+            'issued_by' => $issuer->id,
+            'card_item_id' => $cardItem->id,
+            'points' => $cardItem->points,
+            'deduction_type' => $data['deduction_type'] ?? null,
+            'deduction_duration_days' => $data['deduction_duration_days'] ?? null,
+        ]);
+        return $cardIssue;
+    }
+
+    public function issueCard(array $data, User $issuer)
+    {
+        $cardItem = CardItem::findOrFail($data['card_item_id']);
+        $status = StatusCardEnum::Pending;
+
+        $deductionDeadline = null;
+
+        $cardIssue = CardIssues::create([
+            'issue_number' => $this->generateUniqueIssueNumber(),
+            'user_id' => $data['user_id'],
+            'card_item_id' => $cardItem->id,
+            'issued_by' => $issuer->id,
+            'points' => $cardItem->points,
+            'deduction_type' => $data['deduction_type'] ?? null,
+            'issue_date' => now(),
+            'deduction_duration_days' => $data['deduction_duration_days'] ?? null,
+            'deduction_deadline' => $deductionDeadline,
+            'status' => $status,
+        ]);
+
+        return $cardIssue;
+    }
+
+    public function approve(CardIssues $cardIssue)
+    {
+        $updateData = ['status' => StatusCardEnum::Approved];
+
+
+        if ($cardIssue->deduction_type === DeductionTypeEnum::Deferred && !$cardIssue->deduction_deadline) {
+            $updateData['deduction_deadline'] = $this->calculateDeadline($cardIssue->deduction_duration_days);
+        }
+        $cardIssue->update($updateData);
+        if ($cardIssue->deduction_type === DeductionTypeEnum::Immediate || is_null($cardIssue->deduction_type)) {
+            $this->applyPoints($cardIssue);
+        }
+    }
+
+    public function reject(CardIssues $cardIssue)
+    {
+        $cardIssue->update(['status' => StatusCardEnum::Rejected]);
+    }
+
+    public function settle(CardIssues $cardIssue, ?int $amount = null)
+    {
+        if ($cardIssue->deduction_type === DeductionTypeEnum::Deferred &&
+            $cardIssue->status === StatusCardEnum::Approved) {
+
+            $this->applyPoints($cardIssue, $amount);
+        }
+    }
+
+    public function processDeferredDiscounts()
+    {
+        CardIssues::where('deduction_type', DeductionTypeEnum::Deferred)
+            ->where('status', StatusCardEnum::Approved)
+            ->where('deduction_deadline', '<=', now())
+            ->whereNull('applied_at')
+            ->chunk(100, function ($expiredCards) {
+                foreach ($expiredCards as $card) {
+                    try {
+                        $this->applyPoints($card);
+                    } catch (\Throwable $e) {
+                        \Log::error("Failed to apply deferred discount for card {$card->id}: {$e->getMessage()}");
+                    }
+                }
+            });
+    }
+
+
+
+    private function applyPoints(CardIssues $cardIssue, ?int $amount = null)
+    {
+        if ($cardIssue->points < 0 && $cardIssue->deduction_type === DeductionTypeEnum::Deferred) {
+            $remaining = $cardIssue->remaining_points ?? abs($cardIssue->points);
+
+            if ($remaining <= 0) {
+                return;
+            }
+
+            $amountToApply = $amount ?? $remaining;
+
+            $amountToApply = min($amountToApply, $remaining);
+            $user = $cardIssue->user;
+            if ($user->fixed_points < $amountToApply) {
+                return to_route('profile')->with('error','ليس لديك رصيد كافي');
+            }
+
+            $signedAmount = -$amountToApply;
+
+            $user->fixed_points += $signedAmount;
+            $user->flexible_points += $signedAmount;
+            $user->save();
+
+            PointTransaction::create([
+                'user_id' => $user->id,
+                'card_issue_id' => $cardIssue->id,
+                'type' => PointTransactionTypeEnum::Discount,
+                'points' => $signedAmount,
+                'balance_after' => $user->fixed_points,
+            ]);
+
+            $cardIssue->remaining_points = $remaining - $amountToApply;
+            if ($cardIssue->remaining_points <= 0) {
+                $cardIssue->applied_at = now();
+            }
+            $cardIssue->save();
+            return;
+        }
+
+        $signedAmount = $cardIssue->points;
+        $user = $cardIssue->user;
+        $user->fixed_points += $signedAmount;
+        $user->flexible_points += $signedAmount;
+        $user->save();
+
+        PointTransaction::create([
+            'user_id' => $user->id,
+            'card_issue_id' => $cardIssue->id,
+            'type' => $signedAmount > 0 ? PointTransactionTypeEnum::Support : PointTransactionTypeEnum::Discount,
+            'points' => $signedAmount,
+            'balance_after' => $user->fixed_points,
+        ]);
+
+        $cardIssue->applied_at = now();
+        $cardIssue->save();
+    }
+
+    private function generateUniqueIssueNumber()
+    {
+        do {
+            $number = 'CA' . str_pad(random_int(0, 9999999999), 10, '0', STR_PAD_LEFT);
+        } while (CardIssues::where('issue_number', $number)->exists());
+
+        return $number;
+    }
+
+    private function calculateDeadline(?int $days): ?\Carbon\Carbon
+    {
+        if (empty($days)) {
+            return null;
+        }
+        return now()->addDays($days);
+    }
+
+}
+

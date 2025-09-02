@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Card;
+use App\Models\CardCategory;
+use App\Models\CardIssues;
+use App\Models\CardItem;
 use App\Models\Classes;
 use App\Models\Grade;
 use App\Models\School;
@@ -11,6 +15,10 @@ use App\Models\StudentGuardian;
 use App\Models\Subject;
 use App\Models\TeacherSubjectClass;
 use App\Models\User;
+use App\Policies\CardCategoryPolicy;
+use App\Policies\CardIssuePolicy;
+use App\Policies\CardItemPolicy;
+use App\Policies\CardPolicy;
 use App\Policies\ClassesPolicy;
 use App\Policies\SchoolPolicy;
 use App\Policies\StudentClassPolicy;
@@ -47,5 +55,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(StudentClass::class, StudentClassPolicy::class);
         Gate::policy(StudentGuardian::class, StudentGuardianPolicy::class);
         Gate::policy(TeacherSubjectClass::class, TeacherSubjectClassPolicy::class);
+        Gate::policy(Card::class, CardPolicy::class);
+        Gate::policy(CardCategory::class, CardCategoryPolicy::class);
+        Gate::policy(CardItem::class, CardItemPolicy::class);
+        Gate::policy(CardIssues::class, CardIssuePolicy::class);
+
     }
 }

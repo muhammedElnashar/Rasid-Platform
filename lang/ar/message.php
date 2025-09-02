@@ -29,6 +29,33 @@ return [
     'student_class'=> 'فصول الطلاب',
     'student_guardian'=> 'أولياء أمور الطلاب',
     'relationship'=> 'العلاقة',
+    'card' => 'بطاقة',
+    'cards' => 'البطاقات',
+    'category'=> 'التصنيف',
+    'categories'=> 'التصنيفات',
+    'item'=> 'البند',
+    'items'=> 'البنود',
+    'card_issue' => 'إصدار بطاقة',
+    'points'=>'النقاط',
+    'deduction_type'=>'نوع الخصم',
+    'deduction_deadline'=>'الموعد النهائي للسداد',
+    'deduction_duration_days'=> 'الفترة المسموحه للسداد',
+    'issue_number'=>'رقم البطاقه',
+    'issue_date'=>'تاريخ الإصدار',
+    'issued_by'=>'تم الإصدار بواسطة',
+    'immediate'=>'فوري',
+    'deferred'=>'مؤجل',
+    'pending_issues'=> 'الإصدارات المؤجله',
+    'approved_issues'=> 'الإصدارات المعتمده',
+    'rejected_issues'=> 'الإصدارات المرفوضة',
+    'issue'=>'الاصدار',
+    'issues'=> 'الإصدارات',
+    'fixed_points'=> 'النقاط الثابته',
+    'flexible_points'=> 'النقاط المرنة',
+    'pay'=>'سدد',
+
+
+
 
 
     // أزرار عامة
@@ -36,7 +63,6 @@ return [
     'logout' => 'تسجيل الخروج',
     'dashboard' => 'لوحة التحكم',
     'home' => 'الصفحة الرئيسية',
-
     'save' => 'حفظ',
     'discard' => 'تجاهل',
     'submit' => 'إرسال',
@@ -46,11 +72,17 @@ return [
     'reset' => 'إعادة تعيين',
     'close' => 'إغلاق',
     'back' => 'رجوع',
+    'approve'=>'اعتماد',
+    'reject'=>'رفض',
+
+
 
     // رسائل عامة
     'created' => 'تم إنشاء :item بنجاح',
     'updated' => 'تم تحديث :item بنجاح',
     'deleted' => 'تم حذف :item بنجاح',
+    'approved' => 'تم اعتماد :item بنجاح',
+    'paid' => 'تم سداد :item بنجاح',
     'are_you_sure' => 'هل أنت متأكد أنك تريد حذف هذا السجل؟',
     'yes_delete' => 'نعم، احذفه',
     'no_cancel' => 'لا، إلغاء',

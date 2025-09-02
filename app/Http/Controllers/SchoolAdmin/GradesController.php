@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SchoolAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAndUpdateNameRequest;
 use App\Models\Grade;
 use App\Models\Stage;
 use Illuminate\Http\Request;
@@ -15,8 +16,8 @@ class GradesController extends Controller
     public function index(Stage $stage)
     {
         $this->authorize('viewAny', Grade::class);
-        $school = auth()->user()->school;
-        if (!$school) {
+        $user = auth()->user();
+        if ($user->school_id !== $stage->school_id) {
             return redirect()->route('home')->with('error', __('message.no_school_access'));
         }
         $grades = $stage->grades()->paginate(5);
@@ -36,12 +37,10 @@ class GradesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Stage $stage)
+    public function store(StoreAndUpdateNameRequest $request, Stage $stage)
     {
         $this->authorize('create', Grade::class);
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $data = $request->validated();
         $stage->grades()->create($data);
         return redirect()->route('stages.grades.index', $stage)->with('success', __('message.created', ['item' => __('message.grade')]));
     }
@@ -65,12 +64,10 @@ class GradesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,Stage $stage, Grade $grade)
+    public function update(StoreAndUpdateNameRequest $request,Stage $stage, Grade $grade)
     {
         $this->authorize('update', $grade);
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $data = $request->validated();
         $grade->update($data);
         return redirect()->route('stages.grades.index', $stage)->with('success', __('message.updated', ['item' => __('message.grade')]));
     }

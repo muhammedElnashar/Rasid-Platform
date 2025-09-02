@@ -16,8 +16,8 @@ class ClassesController extends Controller
     public function index(Stage $stage,Grade $grade)
     {
         $this->authorize('viewAny', Classes::class);
-        $school = auth()->user()->school;
-        if (!$school) {
+        $user = auth()->user();
+        if (($user->school_id !== $stage->school_id || $user->school_id !== $grade->stage->school_id)) {
             return redirect()->route('home')->with('error', __('message.no_school_access'));
         }
         $classes = $grade->classes()->paginate(5);

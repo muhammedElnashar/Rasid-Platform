@@ -19,9 +19,6 @@ class TeacherSubjectClassController extends Controller
     {
         $this->authorize('viewAny', TeacherSubjectClass::class);
         $school = auth()->user()->school;
-        if (!$school){
-            return redirect()->route('home')->with('error', __('message.no_school_access'));
-        }
         $subjects = auth()->user()->school->subjects;
         $teachers = auth()->user()->school->users()->where('role_id', 4)->get();
         $classes = Classes::with('grade.stage.school')

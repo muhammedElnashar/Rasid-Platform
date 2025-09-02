@@ -25,7 +25,8 @@ class User extends Authenticatable
         'password',
         'role_id',
         'phone',
-        'points_balance',
+        'fixed_points',
+        'flexible_points',
         'status',
 
     ];
@@ -143,5 +144,10 @@ class User extends Authenticatable
     public function classes()
     {
         return $this->belongsToMany(Classes::class, 'student_classes', 'student_id', 'class_id');
+    }
+
+    public function cardIssues()
+    {
+         return $this->hasMany(CardIssues::class, 'user_id');
     }
 }

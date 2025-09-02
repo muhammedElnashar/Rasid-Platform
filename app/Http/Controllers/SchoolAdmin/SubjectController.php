@@ -16,9 +16,6 @@ class SubjectController extends Controller
     {
         $this->authorize('viewAny', Subject::class);
         $school = auth()->user()->school;
-        if (!$school){
-            return redirect()->route('home')->with('error', __('message.no_school_access'));
-        }
         $subjects = $school->subjects()->paginate(5);
         return view('school_admin.subjects.index', compact('subjects'));
     }

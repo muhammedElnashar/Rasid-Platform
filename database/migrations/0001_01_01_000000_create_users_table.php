@@ -18,11 +18,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('name')->nullable();
             $table->string('image')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('status')->default(true);
-            $table->integer('points_balance')->default(0);
+            $table->integer('fixed_points')->default(0);
+            $table->integer('flexible_points')->default(0);
+            $table->string('settlement_code')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();
         });
