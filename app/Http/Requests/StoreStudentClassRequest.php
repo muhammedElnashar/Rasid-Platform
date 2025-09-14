@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreStudentClassRequest extends FormRequest
 {
@@ -22,8 +23,8 @@ class StoreStudentClassRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required|exists:users,id',
-            'class_id' => 'required|exists:classes,id',
+            'student_id' => 'required|unique:student_classes,student_id|exists:users,id',
+            'class_id'   => ['required', 'exists:classes,id'],
         ];
     }
 }

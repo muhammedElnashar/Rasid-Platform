@@ -59,6 +59,24 @@
                                         </div>
                                         <div class="fw-bolder mt-5">@lang('message.phone')</div>
                                         <div class="text-gray-600">{{$user->phone}}</div>
+                                        @if(\Illuminate\Support\Facades\Auth::user()->isStudent())
+                                        @foreach($parents as $parent)
+
+                                            @if($parent->pivot->relationship === 'father')
+                                                    <div class="fw-bolder mb-4 mt-5">اسم الاب</div>
+                                                    <span class="fs-5  text-gray-600">{{$parent->full_name}}</span>
+                                                @else
+                                                    <div class="fw-bolder mb-4 mt-5">اسم الام</div>
+                                                    <span class="fs-5  text-gray-600">{{$parent->full_name}}</span>
+                                            @endif
+                                        @endforeach
+                                            <div class="fw-bolder mb-4 mt-5">@lang('message.subjects')</div>
+                                            @foreach($subjectClasses as $subject)
+                                                <span class="fs-5  badge badge-light-info">{{$subject->name}}</span>
+                                            @endforeach
+
+
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -67,76 +85,17 @@
                     <div class="flex-lg-row-fluid ms-lg-15">
                         <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-8">
                             <li class="nav-item">
-                                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_user_view_overview_tab">Overview</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#kt_user_view_overview_security">Security</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#kt_user_view_overview_events_and_logs_tab">Events &amp; Logs</a>
-                            </li>
+                                    <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_user_view_overview_security">البيانات الاساسية</a>
+                                </li>
+                            @if(\Illuminate\Support\Facades\Auth::user()->isTeacher())
+                                <li class="nav-item">
+                                    <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#kt_user_view_overview_tab">الفصول و المواد </a>
+                                </li>
+                            @endif
+
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="kt_user_view_overview_tab" role="tabpanel">
-                                <div class="card card-flush mb-6 mb-xl-9">
-                                    <div class="card-header mt-6">
-                                        <div class="card-title flex-column">
-                                            <h2 class="mb-1">@lang('message.issues')</h2>
-                                            <div class="fs-6 fw-bold text-muted">@lang('message.card_issue')</div>
-                                        </div>
-
-                                    </div>
-                                    <div class="card-body p-9 pt-4">
-                                        <div class="tab-content">
-
-                                            <div id="kt_schedule_day_1" class="tab-pane fade show active">
-                                                @foreach($unsettledIssues as $issue)
-                                                    <div class="d-flex flex-stack position-relative mt-6">
-                                                        <div class="position-absolute h-100 w-4px bg-secondary rounded top-0 start-0"></div>
-
-                                                        <div class="fw-bold ms-5">
-                                                            <div class="fs-7 mb-1">{{date_format($issue->issue_date,'Y-m-d')}}
-                                                            </div>
-                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">{{$issue->issue_number}}</a>
-                                                            <div class="fs-7 text-muted">@lang('message.issued_by')
-                                                                <a href="#">{{$issue->issuer->full_name}}</a></div>
-                                                        </div>
-                                                        <div class="fw-bold ms-5">
-
-                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">{{$issue->cardItem->name}}</a>
-                                                            <div class="fs-7 text-muted">@lang('message.points')
-                                                                <span></span>{{$issue->points}}</div>
-                                                        </div>
-                                                        <div class="fw-bold ms-5">
-
-                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">@lang('message.'.$issue->deduction_type->value)</a>
-                                                            <div class="fs-7 text-muted">@lang('message.deduction_deadline')
-                                                                <span>{{date_format($issue->deduction_deadline,'Y-m-d')}}</span></div>
-                                                        </div>
-                                                        <form action="{{ route('issue.settle', $issue) }}" method="post" class="d-flex align-items-center">
-                                                            @csrf
-                                                            @method('put')
-
-                                                            <input type="number" name="amount" class="form-control form-control-sm w-100px me-2"
-                                                                   placeholder="@lang('message.points')" min="1" max="{{ $issue->remaining_points }}">
-
-                                                            <button class="btn btn-light btn-active-light-primary fs-6 btn-sm">
-                                                                @lang('message.pay')
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-
-                                                @endforeach
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="tab-pane fade" id="kt_user_view_overview_security" role="tabpanel">
+                            <div class="tab-pane fade show active " id="kt_user_view_overview_security" role="tabpanel">
                                 <div class="card pt-4 mb-6 mb-xl-9">
                                     <div class="card-header border-0">
                                         <div class="card-title">
@@ -176,54 +135,56 @@
 
 
                             </div>
+                            @if(\Illuminate\Support\Facades\Auth::user()->isTeacher())
+                            <div class="tab-pane fade " id="kt_user_view_overview_tab" role="tabpanel">
 
-                            <div class="tab-pane fade" id="kt_user_view_overview_events_and_logs_tab" role="tabpanel">
+                                <div class="card card-flush mb-6 mb-xl-9">
 
-                                <div class="card pt-4 mb-6 mb-xl-9">
-                                    <div class="card-header border-0">
-                                        <div class="card-title">
-                                            <h2>@lang('message.issues')</h2>
-                                        </div>
+                                    <div class="card-body p-9 pt-4">
+                                        <div class="tab-content">
 
-                                    </div>
-                                    <div class="card-body py-0">
-                                        <div class="table-responsive">
-                                            <table class="table align-middle table-row-dashed fw-bold text-gray-600 fs-6 gy-5" id="kt_table_users_logs">
-                                             <thead>
-                                             <tr>
-                                                 <th>@lang('message.issue_number')</th>
-                                                 <th>@lang('message.issued_by')</th>
-                                                 <th>@lang('message.item')</th>
-                                                 <th>@lang('message.points')</th>
-                                                 <th class="pe-0 text-end min-w-200px" >@lang('message.issue_date')</th>
-                                             </tr>
-                                             </thead>
-                                                <tbody>
-                                                @foreach($issues as $issue)
-                                                    <tr>
-                                                        <td class="min-w-70px">
-                                                            @if($issue->status == \App\Enum\StatusCardEnum::Rejected)
-                                                            <div class="badge badge-light-danger">{{$issue->issue_number}}</div>
-                                                            @else
-                                                                <div class="badge badge-light-success">{{$issue->issue_number}}</div>
-                                                            @endif
-                                                        </td>
+                                            <div id="kt_schedule_day_1" class="tab-pane fade show active">
+                                                @foreach($subjectClasses as $subjectClass)
+                                                    <div class="d-flex flex-stack position-relative mt-6">
+                                                        <div class="position-absolute h-100 w-4px bg-info rounded top-0 start-0"></div>
 
-                                                        <td>{{$issue->issuer->full_name}}</td>
-                                                        <td>{{$issue->cardItem->name}}</td>
-                                                        <td>{{$issue->points}}</td>
+                                                        <div class="fw-bold ms-5">
+                                                            <div class="fs-7 mb-1">الماده</div>
+                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">{{$subjectClass->subject_name}}</a>
+                                                            <hr>
+                                                        </div>
+                                                        <div class="fw-bold ms-5">
+                                                            <div class="fs-7 mb-1">الفصل</div>
+                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">{{$subjectClass->class_name}}</a>
+                                                            <hr>
+                                                        </div>
+                                                        <div class="fw-bold ms-5">
+                                                            <div class="fs-7 mb-1">الصف</div>
+                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">{{$subjectClass->grade_name}}</a>
+                                                            <hr>
+                                                        </div>
+                                                        <div class="fw-bold ms-5">
+                                                            <div class="fs-7 mb-1">المرحلة</div>
+                                                            <a href="#" class="fs-5 fw-bolder text-dark text-hover-primary mb-2">{{$subjectClass->stage_name}}</a>
+                                                            <hr>
+                                                        </div>
 
-                                                        <td class="pe-0 text-end min-w-200px">{{date_format($issue->applied_at,'Y-m-d')}}</td>
-                                                    </tr>
+
+                                                    </div>
+
                                                 @endforeach
 
-                                                </tbody>
-                                            </table>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
+                            @endif
+
+
+
                         </div>
                     </div>
                 </div>
@@ -285,7 +246,7 @@
                                                     <!--begin::Image input-->
                                                     <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(assets/media/avatars/blank.png)">
                                                         <!--begin::Preview existing avatar-->
-                                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url(assets/media/avatars/150-1.jpg"></div>
+                                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url(assets/media/avatars/150-1.jpg)"></div>
                                                         <!--end::Preview existing avatar-->
                                                         <!--begin::Edit-->
                                                         <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">

@@ -31,6 +31,69 @@
                                    class="form-control form-control-solid w-250px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
+                        <div class="kt-table-filter-container">
+                            <a type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
+                               data-kt-menu-placement="bottom-end">
+                            	<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24" fill="none">
+												<path
+                                                    d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z"
+                                                    fill="black"/>
+											</svg>
+										</span>
+                                @lang('message.filter')
+                            </a>
+
+                            <!-- القائمة -->
+                            <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
+                                <div class="px-7 py-5">
+                                    <!-- فلتر Status -->
+                                    <div class="mb-10">
+                                        <label class="form-label fs-5 fw-bold mb-3">@lang('message.status')</label>
+                                        <div class="d-flex flex-column flex-wrap fw-bold">
+                                            <label
+                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.all')" checked/>
+                                                <span class="form-check-label text-gray-600">@lang('message.all')</span>
+                                            </label>
+                                            <label
+                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.pending')"/>
+                                                <span
+                                                    class="form-check-label text-gray-600">@lang('message.pending')</span>
+                                            </label>
+                                            <label
+                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.approved')"/>
+                                                <span
+                                                    class="form-check-label text-gray-600">@lang('message.approved')</span>
+                                            </label>
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.rejected')"/>
+                                                <span
+                                                    class="form-check-label text-gray-600">@lang('message.rejected')</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- أزرار -->
+                                    <div class="d-flex justify-content-end">
+                                        <button type="reset" class="btn btn-light btn-active-light-primary me-2"
+                                                data-kt-menu-dismiss="true" data-kt-table-filter="reset">Reset
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-kt-menu-dismiss="true"
+                                                data-kt-table-filter="filter">Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             <a href="{{ route('issues.create') }}" class="btn btn-primary">
                                 @lang('message.add',['item' => __('message.card_issue')])</a>
@@ -42,14 +105,14 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-25px">@lang('message.issue_number')</th>
+                            <th class="min-w-20px">@lang('message.issue_number')</th>
                             <th class="min-w-25px">@lang('message.user')</th>
-                            <th class="min-w-25px">@lang('message.issued_by')</th>
+                            <th class="min-w-50px">@lang('message.issued_by')</th>
                             <th class="min-w-25px">@lang('message.item')</th>
                             <th class="min-w-25px">@lang('message.points')</th>
                             <th class="min-w-25px">@lang('message.deduction_type')</th>
-                            <th class="min-w-50px">@lang('message.issue_date')</th>
                             <th class="min-w-50px">@lang('message.deduction_deadline')</th>
+                            <th class="min-w-50px">@lang('message.status')</th>
                             <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
@@ -59,18 +122,26 @@
                         @foreach($pendingIssues as $issue)
 
                             <tr>
-                                <td> <span class="badge badge-light-warning"> {{ $issue->issue_number }}</span> </td>
+                                <td>  {{ $issue->issue_number }}</td>
                                 <td>{{ $issue->user->full_name }}</td>
                                 <td>{{ $issue->issuer->full_name }}</td>
                                 <td>{{ $issue->cardItem->name }}</td>
                                 <td>{{ $issue->cardItem->points }}</td>
-                                <td>{{ $issue->deduction_type->value ??"" }}</td>
-                                <td>{{ $issue->issue_date }}</td>
-                                <td>{{ $issue->deduction_deadline??"" }}</td>
+                                <td>{{ $issue->deduction_type->value ?? ""}}</td>
+                                <td>{{ optional($issue->deduction_deadline)->format('Y-m-d') }}</td>
+                                @if($issue->status === \App\Enum\StatusCardEnum::Pending)
+                                    <td> <span class="badge badge-light-warning">@lang('message.'.$issue->status->value)</span></td>
+                                @elseif($issue->status === \App\Enum\StatusCardEnum::Approved)
+                                    <td> <span class="badge badge-light-success">@lang('message.'.$issue->status->value)</span></td>
+                                @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
+                                    <td> <span class="badge badge-light-danger">@lang('message.'.$issue->status->value)</span></td>
+                                @endif
+
                                 <td>
-                                    <div class="d-flex justify-content-center flex-shrink-0">
-                                        <a href="{{route("issues.edit",$issue)}}"
-                                           class="btn btn-icon btn-bg-light edit-issue-btn btn-active-color-primary btn-sm ms-2">
+                                    @if($issue->status === \App\Enum\StatusCardEnum::Pending)
+                                        <div class="d-flex justify-content-center flex-shrink-0">
+                                            <a href="{{route("issues.edit",$issue)}}"
+                                               class="btn btn-icon btn-bg-light edit-issue-btn btn-active-color-primary btn-sm ms-2">
                                             <span class="svg-icon svg-icon-3">
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                      width="24" height="24"
@@ -83,14 +154,14 @@
                                                         fill="black"/>
                                                 </svg>
                                             </span>
-                                        </a>
-                                        <!-- زر حذف -->
-                                        <form method="POST"
-                                              action="{{ route('issues.destroy',$issue) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="btn btn-icon btn-bg-light btn-active-color-primary deleted-btn btn-sm ms-2">
+                                            </a>
+                                            <!-- زر حذف -->
+                                            <form method="POST"
+                                                  action="{{ route('issues.destroy',$issue) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="btn btn-icon btn-bg-light btn-active-color-primary deleted-btn btn-sm ms-2">
                                                 <span class="svg-icon svg-icon-3">
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          width="24" height="24"
@@ -107,8 +178,11 @@
 																				</svg>
                                                 </span>
 
-                                            </button>
-                                        </form>
+                                                </button>
+                                            </form>
+                                    @endif
+
+                                        @can('approve',$issue)
                                         <form method="POST"
                                               action="{{ route('issues.approved',$issue) }}">
                                             @csrf
@@ -118,16 +192,18 @@
                                                 @lang('message.approve')
                                             </button>
                                         </form>
+                                        @endcan
+                                        @can('reject',$issue)
                                         <form method="POST"
                                               action="{{ route('issues.rejected',$issue) }}">
                                             @csrf
-                                            @method('delete')
+                                            @method('put')
                                             <button type="submit"
                                                     class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
                                                 @lang('message.reject')
                                             </button>
                                         </form>
-
+                                        @endcan
 
                                     </div>
 

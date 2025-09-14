@@ -70,11 +70,11 @@ class CardIssuePolicy
     }
     public function approve(User $user, CardIssues $cardIssues): bool
     {
-        return $this->hasAccess($user, $cardIssues);
+        return $this->hasAccess($user, $cardIssues) && $cardIssues->isPending();
     }
 
     public function reject(User $user, CardIssues $cardIssues): bool
     {
-        return $this->hasAccess($user, $cardIssues);
+        return $this->hasAccess($user, $cardIssues)&&$cardIssues->isPending();
     }
 }

@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('point_transfers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->constrained('users');
-            $table->foreignId('receiver_id')->constrained('users');
+            $table->foreignId('sender_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('receiver_id')->nullable()->constrained('users')->nullOnDelete();
             $table->integer('amount');
             $table->text('reason');
-            $table->text('purpose')->nullable();
-            $table->date('transfer_date');
+            $table->string('purpose');
             $table->string('status');
             $table->timestamps();
         });

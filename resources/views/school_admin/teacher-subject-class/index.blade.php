@@ -14,6 +14,9 @@
             <div class="card ">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
+                    </div>
+
+                    <div class="card-toolbar">
                         <div class="d-flex align-items-center position-relative my-1">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -30,9 +33,7 @@
                                    class="form-control form-control-solid w-250px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
-                    </div>
 
-                    <div class="card-toolbar">
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             <a href="{{ route('teacher-subject-classes.create') }}" class="btn btn-primary">
                                 @lang('message.add',['item' => __('message.teacher-subject-class')])</a>

@@ -16,7 +16,7 @@ class StudentClassController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', \App\Models\StudentClass::class);
+        $this->authorize('viewAny', StudentClass::class);
         $students = auth()->user()->school->users()->where('role_id', 3)->get();
         $classes = Classes::with('grade.stage.school')
             ->whereHas('grade.stage.school', function ($q) {
@@ -32,7 +32,7 @@ class StudentClassController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', \App\Models\StudentClass::class);
+        $this->authorize('create', StudentClass::class);
         $students = auth()->user()->school->users()->where('role_id', 3)->get();
         $classes = Classes::with('grade.stage.school')
             ->whereHas('grade.stage.school', function ($q) {

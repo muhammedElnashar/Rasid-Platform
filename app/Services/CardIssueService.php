@@ -56,15 +56,24 @@ class CardIssueService
     {
         $updateData = ['status' => StatusCardEnum::Approved];
 
-
         if ($cardIssue->deduction_type === DeductionTypeEnum::Deferred && !$cardIssue->deduction_deadline) {
             $updateData['deduction_deadline'] = $this->calculateDeadline($cardIssue->deduction_duration_days);
         }
+
         $cardIssue->update($updateData);
+
+        $signedAmount = $cardIssue->points;
+        if ($signedAmount < 0) {
+            $user = $cardIssue->user;
+            $user->current_negative_points += abs($signedAmount);
+            $user->save();
+        }
+
         if ($cardIssue->deduction_type === DeductionTypeEnum::Immediate || is_null($cardIssue->deduction_type)) {
             $this->applyPoints($cardIssue);
         }
     }
+
 
     public function reject(CardIssues $cardIssue)
     {
@@ -109,9 +118,9 @@ class CardIssueService
             }
 
             $amountToApply = $amount ?? $remaining;
-
             $amountToApply = min($amountToApply, $remaining);
             $user = $cardIssue->user;
+
             if ($user->fixed_points < $amountToApply) {
                 return to_route('profile')->with('error','ليس لديك رصيد كافي');
             }
@@ -142,6 +151,7 @@ class CardIssueService
         $user = $cardIssue->user;
         $user->fixed_points += $signedAmount;
         $user->flexible_points += $signedAmount;
+
         $user->save();
 
         PointTransaction::create([

@@ -12,7 +12,9 @@
             <div class="card">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-                        <div class="d-flex align-items-center position-relative my-1">
+                    </div>
+                    <div class="card-toolbar">
+                        <div class="d-flex align-items-center position-relative mx-3 my-1">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none">
@@ -28,8 +30,7 @@
                                    class="form-control form-control-solid w-250px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
-                    </div>
-                    <div class="card-toolbar">
+
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             {{--      <button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
                                           data-kt-menu-placement="bottom-end">

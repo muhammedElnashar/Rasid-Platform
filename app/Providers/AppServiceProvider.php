@@ -7,11 +7,15 @@ use App\Models\CardCategory;
 use App\Models\CardIssues;
 use App\Models\CardItem;
 use App\Models\Classes;
+use App\Models\DeductionCard;
 use App\Models\Grade;
+use App\Models\PointTransfer;
+use App\Models\RechargeCard;
 use App\Models\School;
 use App\Models\Stage;
 use App\Models\StudentClass;
 use App\Models\StudentGuardian;
+use App\Models\StudentSubject;
 use App\Models\Subject;
 use App\Models\TeacherSubjectClass;
 use App\Models\User;
@@ -20,9 +24,13 @@ use App\Policies\CardIssuePolicy;
 use App\Policies\CardItemPolicy;
 use App\Policies\CardPolicy;
 use App\Policies\ClassesPolicy;
+use App\Policies\DeductionCardPolicy;
+use App\Policies\PointTransferPolicy;
+use App\Policies\RechargeCardPolicy;
 use App\Policies\SchoolPolicy;
 use App\Policies\StudentClassPolicy;
 use App\Policies\StudentGuardianPolicy;
+use App\Policies\StudentSubjectPolicy;
 use App\Policies\SubjectPolicy;
 use App\Policies\TeacherSubjectClassPolicy;
 use App\Policies\UserPolicy;
@@ -53,12 +61,16 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Classes::class, ClassesPolicy::class);
         Gate::policy(Subject::class, SubjectPolicy::class);
         Gate::policy(StudentClass::class, StudentClassPolicy::class);
+        Gate::policy(StudentSubject::class, StudentSubjectPolicy::class);
         Gate::policy(StudentGuardian::class, StudentGuardianPolicy::class);
         Gate::policy(TeacherSubjectClass::class, TeacherSubjectClassPolicy::class);
         Gate::policy(Card::class, CardPolicy::class);
         Gate::policy(CardCategory::class, CardCategoryPolicy::class);
         Gate::policy(CardItem::class, CardItemPolicy::class);
         Gate::policy(CardIssues::class, CardIssuePolicy::class);
+        Gate::policy(PointTransfer::class, PointTransferPolicy::class);
+        Gate::policy(DeductionCard::class, DeductionCardPolicy::class);
+        Gate::policy(RechargeCard::class, RechargeCardPolicy::class);
 
     }
 }

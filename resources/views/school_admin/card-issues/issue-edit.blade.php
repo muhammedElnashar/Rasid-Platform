@@ -26,20 +26,36 @@
                                 @csrf
                                 @method('PUT')
 
+
+
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.user')</span>
+                                        <span class="required"> @lang('message.role')</span>
                                     </label>
-                                    <select name="user_id" aria-label="Select Type" data-control="select2"
-                                            data-placeholder="@lang('message.select', ['item' => __('message.user')])"
+
+                                    <select name="role_id" aria-label="Select Type" id="role_id" data-control="select2"
+                                            data-placeholder="@lang('message.select', ['item' => __('message.role')])"
                                             class="form-select form-select-solid">
-                                        <option value="">@lang('message.select', ['item' => __('message.users')])</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}"
-                                                {{ (old('user_id', $issue->user_id) == $user->id) ? 'selected' : '' }}>
-                                                {{ $user->full_name }} - {{ $user->role->name }}
+                                        <option value="">@lang('message.select', ['item' => __('message.role')])</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}"
+                                                {{ old('role_id', $issue->user->role_id) == $role->id ? 'selected' : '' }}>
+                                                {{ __('message.'.$role->name) }}
                                             </option>
                                         @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">@lang('message.user')</span>
+                                    </label>
+
+                                    <select name="user_id" id="user_id"
+                                            data-control="select2"
+                                            data-placeholder="@lang('message.select', ['item' => __('message.user')])"
+                                            class="form-select form-select-solid">
+                                        <option value="">@lang('message.select', ['item' => __('message.user')])</option>
                                     </select>
                                 </div>
 
@@ -241,6 +257,35 @@
                     $deadlineWrapper.addClass('d-none');
                 }
             });
+        });
+
+    </script>
+    <script>
+        let allUsers = @json($users);
+
+        $(document).ready(function () {
+            let userSelect = $('#user_id');
+            let roleSelect = $('#role_id');
+            let currentUserId = "{{ old('user_id', $issue->user_id) }}";
+
+            roleSelect.on('change', function () {
+                let roleId = $(this).val();
+                userSelect.empty().append('<option value="">اختر المستخدم</option>');
+
+                if (roleId) {
+                    let filteredUsers = allUsers.filter(u => u.role_id == roleId);
+
+                    filteredUsers.forEach(user => {
+                        let selected = (user.id == currentUserId) ? 'selected' : '';
+                        userSelect.append('<option value="' + user.id + '" '+selected+'>' + user.full_name + '</option>');
+                    });
+
+                    userSelect.trigger('change');
+                }
+            });
+
+            // تحميل بيانات المستخدم الحالي
+            roleSelect.trigger('change');
         });
     </script>
 @endpush

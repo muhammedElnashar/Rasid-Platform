@@ -145,6 +145,9 @@ return [
         'location' => 'الموقع',
         'school_name'=> 'اسم المدرسة',
         'role_id' => 'الدور',
+        'receiver_id'=>'المستلم',
+        'reason'=>'السبب',
+        'amount'=>'عدد النقاط',
 
     ],
 

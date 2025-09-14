@@ -32,18 +32,28 @@
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.user')</span>
+                                        <span class="required"> @lang('message.role')</span>
                                     </label>
 
-                                    <select name="user_id" aria-label="Select Type"  data-control="select2"
+                                    <select name="role_id" aria-label="Select Type" id="type" data-control="select2"
+                                            data-placeholder="@lang('message.select', ['item' => __('message.role')])"
+                                            class="form-select form-select-solid">
+                                        <option value="">@lang('message.select', ['item' => __('message.role')])</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}">{{ __('message.'.$role->name) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">@lang('message.user')</span>
+                                    </label>
+
+                                    <select name="user_id" id="user_id"
+                                            data-control="select2"
                                             data-placeholder="@lang('message.select', ['item' => __('message.user')])"
                                             class="form-select form-select-solid">
-                                        <option value="">@lang('message.select', ['item' => __('message.users')])</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                                {{ $user->full_name }} - {{ $user->role->name }}
-                                            </option>
-                                        @endforeach
+                                        <option value="">@lang('message.select', ['item' => __('message.user')])</option>
                                     </select>
                                 </div>
 
@@ -55,7 +65,7 @@
                                             data-placeholder="@lang('message.select', ['item' => __('message.card')])"
                                             class="form-select form-select-solid">
                                         <option value="">@lang('message.select', ['item' => __('message.card')])</option>
-                                        @foreach($cards as $card)
+                                    @foreach($cards as $card)
                                             <option value="{{ $card->id }}" data-type="{{ $card->name }}">
                                                 {{ $card->name }}
                                             </option>
@@ -192,4 +202,27 @@
             });
         });
     </script>
+    <script>
+        let allUsers = @json($users);
+
+        $(document).ready(function () {
+
+            let userSelect = $('#user_id');
+
+            $('select[name="role_id"]').on('change', function () {
+                let roleId = $(this).val();
+                userSelect.empty();
+
+                if (roleId) {
+                    let filteredUsers = allUsers.filter(u => u.role_id == roleId);
+
+                    filteredUsers.forEach(user => {
+                        userSelect.append('<option value="' + user.id + '">' + user.full_name + '</option>');
+                    });
+                    userSelect.trigger('change'); // تحديث select2
+                }
+            });
+        });
+    </script>
+
 @endpush

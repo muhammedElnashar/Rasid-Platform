@@ -49,6 +49,17 @@ class School extends Model
             'id'         // مفتاح الطالب في users
         );
     }
+    public function studentSubjects()
+    {
+        return $this->hasManyThrough(
+            StudentSubject::class,
+            User::class,
+            'school_id',
+            'student_id',
+            'id',
+            'id'
+        );
+    }
     public function studentGuardians()
     {
      return   $this->hasManyThrough(
@@ -66,10 +77,9 @@ class School extends Model
     }
 
     // في School.php
-    public function pendingIssues()
+    public function issues()
     {
         return CardIssues::query()
-            ->where('status', StatusCardEnum::Pending)
             ->whereHas('cardItem.category.card', function ($q) {
                 $q->where('school_id', $this->id);
             });
@@ -89,6 +99,11 @@ class School extends Model
             ->whereHas('cardItem.category.card', function ($q) {
                 $q->where('school_id', $this->id);
             });
+    }
+
+    public function rechargeCards()
+    {
+        return $this->hasMany(RechargeCard::class);
     }
 
 

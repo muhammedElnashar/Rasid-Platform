@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('status')->default(true);
             $table->integer('fixed_points')->default(0);
             $table->integer('flexible_points')->default(0);
+            $table->integer('current_negative_points')->default(0);
+            $table->unsignedInteger('current_cycle')->default(1);
             $table->string('settlement_code')->nullable()->unique();
             $table->rememberToken();
             $table->timestamps();

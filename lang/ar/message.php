@@ -53,6 +53,25 @@ return [
     'fixed_points'=> 'النقاط الثابته',
     'flexible_points'=> 'النقاط المرنة',
     'pay'=>'سدد',
+    'gift'=>'هدية',
+    'reward'=>'مكافأة',
+    'friendship'=>'صداقة',
+    'appreciation'=>'تقدير',
+    'another'=>'سبب اخر',
+    'point'=>'نقطة',
+    'recharge_card'=>'بطاقة شحن',
+    'recharge_cards'=>'بطاقات الشحن',
+    'recharge_code'=>'كود الشحن',
+    'recharge'=>'شحن',
+    'recharged'=>'تم الشحن',
+    'max_uses'=>'الحد الأقصى للاستخدامات',
+    'used_count'=>'عدد الاستخدامات',
+    'remaining_points'=>'النقاط المتبقية',
+    'student_subject'=> 'مواد الطلاب',
+    'alert'=>'تنبيه',
+    'deduct'=>'خصم',
+    'warning'=>'تحذير',
+
 
 
 
@@ -81,7 +100,8 @@ return [
     'created' => 'تم إنشاء :item بنجاح',
     'updated' => 'تم تحديث :item بنجاح',
     'deleted' => 'تم حذف :item بنجاح',
-    'approved' => 'تم اعتماد :item بنجاح',
+    'Approved' => 'تم اعتماد :item بنجاح',
+    'Rejected' => 'تم رفض :item بنجاح',
     'paid' => 'تم سداد :item بنجاح',
     'are_you_sure' => 'هل أنت متأكد أنك تريد حذف هذا السجل؟',
     'yes_delete' => 'نعم، احذفه',
@@ -116,6 +136,40 @@ return [
     'ministerial_number'=> 'الرقم الوزاري',
     'logo' => 'شعار المدرسة',
     'documents' => 'المستندات',
-    'view_file' => 'عرض الملف'
+    'view_file' => 'عرض الملف',
+    'transfer'=>'تحويل',
+    'transfers'=>'التحويلات',
+    'sender'=>'المرسل' ,
+    'receiver'=> 'المستلم' ,
+    'receivers'=> 'المستلمون' ,
+    'transfer_points'=> 'النقاط المحوله' ,
+    'reason_transfer'=> 'سبب التحويل' ,
+    'purpose'=> 'الغرض' ,
+    'pending'=>'قيد الانتظار',
+    'approved'=>'المعتمده',
+    'rejected'=>'المرفوضة',
+    'all'=>'الجميع',
+    'deduction_card'=>'بطاقة الحسم',
+    'deduction_cards'=>'بطاقات الحسم',
+    'description'=>'الوصف',
+    'color'=>'اللون',
+    'deduction_percent'=>'نسبة الخصم',
+    'threshold'=> 'الحد الأدنى للنقاط',
+    'type'=>'النوع',
+    'cycle_number'=>'رقم الدورة',
+    'applied_at'=>'تاريخ التطبيق',
+    'negative_points_at_time'=>'النقاط السالبة في ذلك الوقت',
+    'current_negative_points'=>'النقاط السالبة الحالية',
+
+
+
+
+    //custom Validation
+    'transfer_created'       => 'تم إنشاء التحويل بنجاح.',
+    'not_enough_balance'     => 'رصيدك غير كافي لإجراء هذا التحويل.',
+    'negative_balance'       => 'لا يمكنك التحويل ورصيدك بالسالب.',
+    'weekly_limit_exceeded'  => 'لقد تجاوزت الحد الأسبوعي المسموح (300 نقطة).',
+    'monthly_limit_exceeded' => 'لقد تجاوزت الحد الشهري المسموح (1000 نقطة).',
+    'transfer_invalid'       => 'عملية التحويل غير صالحة.',
 
 ];

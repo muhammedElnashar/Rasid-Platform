@@ -14,4 +14,8 @@ class Role extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function scopeExpectModeratorAndAdmin($query)
+    {
+        return $query->whereNotIn('name', ['super_admin', 'school_admin', 'moderator']);
+    }
 }

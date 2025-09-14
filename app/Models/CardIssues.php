@@ -16,11 +16,14 @@ class CardIssues extends Model
     protected $casts = [
         'deduction_type' => DeductionTypeEnum::class,
         'status' => StatusCardEnum::class,
-        'issue_date' => 'date',
+        'issue_date' => 'datetime',
         'deduction_deadline' => 'date',
         'applied_at'=> 'date',
     ];
-
+    public function isPending(): bool
+    {
+        return $this->status === \App\Enum\StatusCardEnum::Pending;
+    }
 
     public function user()
     {
