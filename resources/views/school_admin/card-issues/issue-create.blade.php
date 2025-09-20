@@ -106,11 +106,25 @@
                                     </select>
                                 </div>
 
+
                                 <div class="fv-row mb-7 d-none" id="deadlineWrapper">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class="required"> @lang('message.deduction_deadline')</span>
                                     </label>
                                     <input type="number" name="deduction_duration_days" value="1" class="form-control form-control-solid"/>
+                                </div>
+
+                                <div class="fv-row mb-7 d-none " id="restricted" >
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">التقييد</span>
+                                    </label>
+
+                                    <div class="input-group  mb-5">
+                                        <input type="checkbox" value="{{old("is_restricted",1)}}"
+                                               name="is_restricted"/>
+
+                                    </div>
+
                                 </div>
 
 
@@ -146,6 +160,7 @@
             let $itemSelect       = $('#itemSelect');
             let $paymentTypeWrap  = $('#paymentTypeWrapper');
             let $deadlineWrapper  = $('#deadlineWrapper');
+            let $restricted      = $('#restricted');
 
             $('#cardSelect').on('change', function () {
                 let cardId   = $(this).val();
@@ -196,6 +211,8 @@
                 if ($(this).val() === 'deferred') {
 
                     $deadlineWrapper.removeClass('d-none');
+                    $restricted.removeClass('d-none');
+
                 } else {
                     $deadlineWrapper.addClass('d-none');
                 }

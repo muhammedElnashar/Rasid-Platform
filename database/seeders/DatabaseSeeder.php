@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(SchoolSeeder::class);
         $this->call(CardSeeder::class);
+        $this->call(CategoryLayerLevelSeeder::class);
 
         User::factory()->create([
             'username' => 'sub-1',
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'superadmin@gmail.com',
             'password' => Hash::make('Admin@123'),
             'role_id' => 1,
+            'settlement_code' => 12345678,
         ]);
         User::factory()->create([
             'school_id' => 1,
@@ -36,6 +38,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('Admin@123'),
             'role_id' => 2,
+            'settlement_code' => 87654321,
         ]);
         User::factory()->create([
             'school_id' => 1,
@@ -44,6 +47,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'student@gmail.com',
             'password' => Hash::make('Admin@123'),
             'role_id' => 3,
+            'settlement_code' => 11112222,
         ]);
         User::factory()->create([
             'school_id' => 1,
@@ -52,6 +56,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'teacher@gmail.com',
             'password' => Hash::make('Admin@123'),
             'role_id' => 4,
+            'settlement_code' => 33334444,
         ]);
         User::factory()->create([
             'school_id' => 1,
@@ -60,6 +65,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'parent@gmail.com',
             'password' => Hash::make('Admin@123'),
             'role_id' => 5,
+            'settlement_code' => 55556666,
         ]);
         User::factory()->create([
             'school_id' => 1,
@@ -68,6 +74,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'moderator@gmail.com',
             'password' => Hash::make('Admin@123'),
             'role_id' => 6,
+            'settlement_code' => 77778888,
         ]);
     }
 }

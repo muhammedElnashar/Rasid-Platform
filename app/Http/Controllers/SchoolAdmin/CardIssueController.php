@@ -129,11 +129,11 @@ class CardIssueController extends Controller
 
 
     }
-/*    public function rejectedIssues()
+
+    public function unrestricted(CardIssues $issue)
     {
-        $this->authorize('viewAny',CardIssues::class);
-        $school = auth()->user()->school;
-        $rejectedIssues = $school->rejectedIssues()->with(['user', 'cardItem.category.card', 'issuer'])->get();
-        return view('school_admin.card-issues.rejected-issue',compact('rejectedIssues'));
-    }*/
+        $this->authorize('unrestricted', $issue);
+        $this->cardIssueService->unrestricted($issue);
+        return to_route('issues.index')->with('success','تم فك القيد بنجاح');
+    }
 }

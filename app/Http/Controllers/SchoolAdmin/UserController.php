@@ -95,4 +95,22 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('users.index')->with('success', __('message.deleted', ['item' => __('message.user')]));
     }
+
+    public function activate(User $user)
+    {
+        $this->userServices->activateUser($user);
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'تم التفعيل بنجاح');
+    }
+
+    public function deactivate(User $user)
+    {
+        $this->userServices->suspendUser($user);
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'تم التعطيل بنجاح');
+    }
+
+
 }

@@ -38,6 +38,7 @@
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-25px">@lang('message.issue_number')</th>
+                            <th class="min-w-25px">نوع الكرت</th>
                             <th class="min-w-25px">@lang('message.user')</th>
                             <th class="min-w-25px">@lang('message.issued_by')</th>
                             <th class="min-w-25px">@lang('message.item')</th>
@@ -53,12 +54,20 @@
                         @foreach($approvedIssues as $issue)
 
                             <tr>
+
                                 <td> <span class="badge badge-light-success"> {{ $issue->issue_number }}</span> </td>
+                                @if($issue->points > 0 )
+                                    <td> <span class="badge badge-light-success">دعم ايجابي</span> </td>
+                                @else
+                                    <td> <span class="badge badge-light-danger"> حسم سلبي </span> </td>
+                                @endif
                                 <td>{{ $issue->user->full_name }}</td>
                                 <td>{{ $issue->issuer->full_name }}</td>
                                 <td>{{ $issue->cardItem->name }}</td>
                                 <td>{{ $issue->cardItem->points }}</td>
-                                <td>@lang('message.'.$issue->deduction_type->value)</td>
+                                <td>
+                                    {{ $issue->deduction_type?->value ? __('message.' . $issue->deduction_type->value) : '' }}
+                                </td>
                                 <td>{{ date_format($issue->issue_date ,'Y-m-d')}}</td>
                                 <td>{{ optional($issue->deduction_deadline)->format('Y-m-d') }}</td>
                             </tr>

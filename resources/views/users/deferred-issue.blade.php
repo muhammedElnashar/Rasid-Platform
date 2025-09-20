@@ -43,7 +43,7 @@
                                 <td>{{ $card->points }}</td>
                                 <td>{{ $card->remaining_points }}</td>
                                 <td>{{date_format($card->issue_date,'Y-m-d')}}</td>
-                                <td>{{date_format($card->deduction_deadline,'Y-m-d')}}</td>
+                                <td>{{date_format($card->deduction_deadline,'Y-m-d')??""}}</td>
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">

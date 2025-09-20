@@ -194,6 +194,27 @@
 
                                             </button>
                                         </form>
+                                        @if($admin->status === 1 )
+                                            <form method="POST" action="{{ route('admin.deactivate', $admin) }}">
+                                                @csrf
+                                                @method('POST')
+                                                <button type="submit" class="btn btn-danger text-white btn-sm ms-2">
+                                                    <span>تعطيل</span>
+
+                                                </button>
+                                            </form>
+
+                                        @elseif($admin->status === 0)
+                                            <form method="POST" action="{{ route('admin.activate', $admin) }}">
+                                                @csrf
+                                                @method('POST')
+                                                <button type="submit" class="btn btn-success text-white btn-sm ms-2">
+                                                    <span>تفعيل</span>
+
+                                                </button>
+                                            </form>
+
+                                        @endif
 
 
                                     </div>

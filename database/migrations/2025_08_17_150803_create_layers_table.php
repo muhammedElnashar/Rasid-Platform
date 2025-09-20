@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('layers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->constrained('schools');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('name'); // e.g., ذهبية
-            $table->string('color');
             $table->integer('reward_value')->default(0); // مكافأة كبيرة
             $table->timestamps();
         });

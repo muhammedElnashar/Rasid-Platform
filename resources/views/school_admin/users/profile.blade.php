@@ -2,6 +2,356 @@
 @section('title')
 @lang('message.profile')
 @endsection
+@push('css')
+    <style>
+        .progress-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; transform: rotate(0deg); }
+            50% { opacity: 0.8; transform: rotate(180deg); }
+        }
+
+        .progress-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .progress-icon {
+            font-size: 2rem;
+            margin-left: 1rem;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .progress-body {
+            padding: 2.5rem;
+            background: white;
+        }
+
+        .info-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .info-badge-item {
+            display: flex;
+            align-items: center;
+            padding: 1.2rem 1.8rem;
+            background: #fafbfc;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-badge-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .info-badge-item:hover::before {
+            transform: translateX(100%);
+        }
+
+        .info-badge-item:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .info-badge-item.category {
+            border-color: rgba(99, 102, 241, 0.2);
+            color: #4338ca;
+        }
+
+        .info-badge-item.layer {
+            border-color: rgba(16, 185, 129, 0.2);
+            color: #047857;
+        }
+
+        .info-badge-item.level {
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #b45309;
+        }
+
+        .badge-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-left: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .badge-icon.category {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .badge-icon.layer {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+        .badge-icon.level {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        }
+
+        .badge-content h5 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .badge-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .progress-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3rem 0;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .level-circle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .level-circle.completed {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .level-circle.current {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            color: white;
+            box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+            animation: currentGlow 2s ease-in-out infinite;
+        }
+
+        .level-circle.upcoming {
+            background: #f8f9fa;
+            color: #9ca3af;
+            border: 3px solid #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        @keyframes currentGlow {
+            0%, 100% {
+                box-shadow: 0 8px 30px rgba(245, 158, 11, 0.5);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 12px 40px rgba(245, 158, 11, 0.7);
+                transform: scale(1.05);
+            }
+        }
+
+        .level-circle:hover {
+            transform: scale(1.1);
+        }
+
+        .level-tooltip {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .level-circle:hover .level-tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        .connector {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            position: relative;
+            margin: 0 -12px;
+            z-index: 1;
+            transition: all 0.6s ease;
+        }
+
+        .connector.completed {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .connector.upcoming {
+            background: #e5e7eb;
+        }
+
+        .progress-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2.5rem 0;
+            padding: 1.8rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 18px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .current-position {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 1rem 1.8rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .remaining-alert {
+            margin-top: 2rem;
+            padding: 1.8rem;
+            border-radius: 18px;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+        }
+
+        .remaining-alert.alert-info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.05));
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .remaining-alert.alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.05));
+            border-left: 4px solid #10b981;
+            color: #047857;
+        }
+
+        .remaining-alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            animation: progressLine 3s ease-in-out infinite;
+        }
+
+        @keyframes progressLine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        @media (max-width: 768px) {
+            .progress-track {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .connector {
+                width: 6px;
+                height: 25px;
+                margin: -8px 0;
+            }
+
+            .level-circle {
+                width: 55px;
+                height: 55px;
+                font-size: 1.1rem;
+            }
+
+            .info-badges {
+                gap: 1rem;
+            }
+
+            .progress-body {
+                padding: 1.8rem;
+            }
+
+            .progress-header {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+
+@endpush
 @section('content')
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 
@@ -85,7 +435,10 @@
                     <div class="flex-lg-row-fluid ms-lg-15">
                         <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-bold mb-8">
                             <li class="nav-item">
-                                    <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_user_view_overview_security">البيانات الاساسية</a>
+                                    <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_user_view_overview">الترقيات</a>
+                                </li>
+                            <li class="nav-item">
+                                    <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" href="#kt_user_view_overview_security">البيانات الاساسية</a>
                                 </li>
                             @if(\Illuminate\Support\Facades\Auth::user()->isTeacher())
                                 <li class="nav-item">
@@ -95,7 +448,91 @@
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active " id="kt_user_view_overview_security" role="tabpanel">
+
+                            <div class="tab-pane fade show active " id="kt_user_view_overview" role="tabpanel">
+
+                                <div class="progress-container">
+                                    @if($currentLayer && $currentLevel)
+                                        <div class="progress-header">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-trophy-fill text-white progress-icon"></i>
+                                                <h2 class="progress-title">رحلة التقدم</h2>
+                                            </div>
+                                        </div>
+
+                                        <div class="progress-body">
+                                            <div class="info-badges">
+                                                <div class="info-badge-item category">
+                                                    <div class="badge-icon category">
+                                                        <i class="bi bi-collection text-white"></i>
+                                                    </div>
+                                                    <div class="badge-content">
+                                                        <div class="badge-label">الفئة</div>
+                                                        <h5>{{ $currentLayer->category->name }}</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="info-badge-item layer">
+                                                    <div class="badge-icon layer">
+                                                        <i class="bi bi-layers text-white"></i>
+                                                    </div>
+                                                    <div class="badge-content">
+                                                        <div class="badge-label">الطبقة</div>
+                                                        <h5>{{ $currentLayer->name }}</h5>
+                                                    </div>
+                                                </div>
+
+                                                <div class="info-badge-item level">
+                                                    <div class="badge-icon level">
+                                                        <i class="bi bi-star-fill text-white"></i>
+                                                    </div>
+                                                    <div class="badge-content">
+                                                        <div class="badge-label">المستوى الحالي</div>
+                                                        <h5>{{ $currentLevel->name }}</h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- شريط التقدم -->
+                                            <div class="progress-track">
+                                                @foreach($levelsInLayer as $level)
+                                                    <div class="level-circle {{ $level->id == $currentLevel->id ? 'current' : ($level->points_required <= $currentLevel->points_required ? 'completed' : 'upcoming') }}">
+                                                        {{ $loop->iteration }}
+                                                        <div class="level-tooltip">
+                                                            {{ $level->id == $currentLevel->id ? 'المستوى الحالي' : ($level->points_required <= $currentLevel->points_required ? 'مكتمل' : 'القادم') }} - {{ $level->points_required }} نقطة
+                                                        </div>
+                                                    </div>
+                                                    @if(!$loop->last)
+                                                        <div class="connector {{ $level->points_required <= $currentLevel->points_required ? 'completed' : 'upcoming' }}"></div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+
+                                            <div class="progress-stats">
+                                                <span class="current-position">{{ $levelsInLayer->search(fn($lvl) => $lvl->id == $currentLevel->id) + 1 }}</span>
+                                                <span class="text-muted fw-semibold">/ {{ $levelsInLayer->count() }} مستوى داخل الطبقة {{ $currentLayer->name }}</span>
+                                            </div>
+
+                                            <!-- رسالة المتبقي للوصول للطبقة التالية -->
+                                            @if($user->remaining_for_next_layer > 0)
+                                                <div class="remaining-alert alert-info">
+                                                    🎯 متبقي <strong>{{ $user->remaining_for_next_layer }} نقطة</strong> لإنهاء الطبقة <strong>{{ $currentLayer->name }}</strong>
+                                                    والانتقال إلى الطبقة التالية 🚀
+                                                </div>
+                                            @else
+                                                <div class="remaining-alert alert-success">
+                                                    🎉 مبروك! أنهيت الطبقة <strong>{{ $currentLayer->name }}</strong>، ستنتقل تلقائيًا إلى الطبقة الأعلى.
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                                <!--end::Card-->
+
+
+                            </div>
+
+                            <div class="tab-pane fade show " id="kt_user_view_overview_security" role="tabpanel">
                                 <div class="card pt-4 mb-6 mb-xl-9">
                                     <div class="card-header border-0">
                                         <div class="card-title">
@@ -135,6 +572,7 @@
 
 
                             </div>
+
                             @if(\Illuminate\Support\Facades\Auth::user()->isTeacher())
                             <div class="tab-pane fade " id="kt_user_view_overview_tab" role="tabpanel">
 

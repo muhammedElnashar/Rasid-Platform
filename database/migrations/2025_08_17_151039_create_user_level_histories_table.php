@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('user_level_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('layer_id')->constrained('layers');
             $table->foreignId('level_id')->constrained('levels');
             $table->date('change_date');
             $table->boolean('notification_sent')->default(false);

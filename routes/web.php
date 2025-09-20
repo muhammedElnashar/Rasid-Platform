@@ -1,6 +1,9 @@
 <?php
 
+use App\Enum\DeductionTypeEnum;
+use App\Enum\StatusCardEnum;
 use App\Http\Controllers\Auth\CustomResetPasswordController;
+use App\Models\CardIssues;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +22,8 @@ Route::middleware('guest')->group(function () {
 });
 Route::middleware('auth')->middleware('isSuperAdmin')->group(function () {
     Route::resource('admin', \App\Http\Controllers\SuperAdmin\SchoolAdminController::class);
+    Route::post('admin/activate/{admin}', [\App\Http\Controllers\SuperAdmin\SchoolAdminController::class, 'activate'])->name('admin.activate');
+    Route::post('admin/deactivate/{admin}', [\App\Http\Controllers\SuperAdmin\SchoolAdminController::class, 'deactivate'])->name('admin.deactivate');
     Route::resource('school', \App\Http\Controllers\SuperAdmin\SchoolController::class);
 
 });
@@ -27,8 +32,11 @@ Route::middleware('auth')->middleware('isSuperAdmin')->group(function () {
 
 
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::resource('users', \App\Http\Controllers\SchoolAdmin\UserController::class);
+    Route::post('user/activate/{user}', [\App\Http\Controllers\SchoolAdmin\UserController::class, 'activate'])->name('user.activate');
+    Route::post('user/deactivate/{user}', [\App\Http\Controllers\SchoolAdmin\UserController::class, 'deactivate'])->name('user.deactivate');
+
     Route::get('profile',[\App\Http\Controllers\SchoolAdmin\ProfileController::class,'UserProfile'])->name('profile');
     Route::resource('subjects', \App\Http\Controllers\SchoolAdmin\SubjectController::class);
     Route::resource('teacher-subject-classes', \App\Http\Controllers\SchoolAdmin\TeacherSubjectClassController::class);
@@ -44,9 +52,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('issues', \App\Http\Controllers\SchoolAdmin\CardIssueController::class);
     Route::resource('deduction-cards', \App\Http\Controllers\SchoolAdmin\DeductionCardController::class);
     Route::resource('recharge-cards', \App\Http\Controllers\SchoolAdmin\RechargeCardController::class);
+    Route::resource('categories', \App\Http\Controllers\SchoolAdmin\CategoryController::class);
+    Route::resource('categories.layers', \App\Http\Controllers\SchoolAdmin\LayersController::class);
+    Route::resource('categories.layers.levels', \App\Http\Controllers\SchoolAdmin\LevelController::class);
     Route::put('issues/approved/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'approved'])->name('issues.approved');
-/*    Route::get('rejected-issues',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'rejectedIssues'])->name('issues.rejected.index');*/
     Route::put('issues/rejected/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'rejected'])->name('issues.rejected');
+    Route::put('issues/unrestricted/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'unrestricted'])->name('issues.unrestricted');
     Route::put('settle/{issue}',[\App\Http\Controllers\SchoolAdmin\ProfileController::class,'settle'])->name('issue.settle');
     Route::get('school-data', [App\Http\Controllers\SchoolAdmin\SchoolDataController::class, 'edit'])->name('school.data.edit');
     Route::put('school-data', [App\Http\Controllers\SchoolAdmin\SchoolDataController::class, 'update'])->name('school.data.update');

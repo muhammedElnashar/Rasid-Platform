@@ -107,12 +107,13 @@
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-20px">@lang('message.issue_number')</th>
                             <th class="min-w-25px">@lang('message.user')</th>
-                            <th class="min-w-50px">@lang('message.issued_by')</th>
+                            <th class="min-w-50px">بواسطه</th>
                             <th class="min-w-25px">@lang('message.item')</th>
                             <th class="min-w-25px">@lang('message.points')</th>
                             <th class="min-w-25px">@lang('message.deduction_type')</th>
-                            <th class="min-w-50px">@lang('message.deduction_deadline')</th>
-                            <th class="min-w-50px">@lang('message.status')</th>
+                            <th class="min-w-50px">موعد السداد</th>
+                            <th class="min-w-25px">@lang('message.status')</th>
+                            <th class="min-w-25px">التقييد</th>
                             <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
@@ -134,9 +135,14 @@
                                 @elseif($issue->status === \App\Enum\StatusCardEnum::Approved)
                                     <td> <span class="badge badge-light-success">@lang('message.'.$issue->status->value)</span></td>
                                 @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
-                                    <td> <span class="badge badge-light-danger">@lang('message.'.$issue->status->value)</span></td>
+                                     <td> <span class="badge badge-light-danger">@lang('message.'.$issue->status->value)</span></td>
                                 @endif
+                                @if($issue->is_restricted === 1)
+                                    <td> <span class="badge badge-light-danger">مقيد</span></td>
 
+                                @elseif($issue->is_restricted === 0)
+                                    <td> <span class="badge badge-light-success">غير مقيد</span></td>
+                                @endif
                                 <td>
                                     @if($issue->status === \App\Enum\StatusCardEnum::Pending)
                                         <div class="d-flex justify-content-center flex-shrink-0">
@@ -201,6 +207,17 @@
                                             <button type="submit"
                                                     class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
                                                 @lang('message.reject')
+                                            </button>
+                                        </form>
+                                        @endcan
+                                        @can('unrestricted',$issue)
+                                        <form method="POST"
+                                              action="{{ route('issues.unrestricted',$issue) }}">
+                                            @csrf
+                                            @method('put')
+                                            <button type="submit"
+                                                    class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
+                                                فك القيد
                                             </button>
                                         </form>
                                         @endcan

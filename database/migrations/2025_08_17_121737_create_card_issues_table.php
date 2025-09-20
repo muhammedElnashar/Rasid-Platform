@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('deduction_deadline')->nullable();
             $table->dateTime('applied_at')->nullable();
             $table->string('status'); // approved,pending,rejected
+            $table->boolean('is_restricted')->default(false);
 
             $table->timestamps();
         });

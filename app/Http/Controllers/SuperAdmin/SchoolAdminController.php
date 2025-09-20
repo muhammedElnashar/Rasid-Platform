@@ -99,4 +99,20 @@ class SchoolAdminController extends Controller
             ->with('success', __('message.deleted', ['item' => __('message.admin')]));
     }
 
+    public function activate(User $admin)
+    {
+        $this->userServices->activateUser($admin);
+        return redirect()
+            ->route('admin.index')
+            ->with('success', 'تم التفعيل بنجاح');
+    }
+
+    public function deactivate(User $admin)
+    {
+        $this->userServices->suspendUser($admin);
+        return redirect()
+            ->route('admin.index')
+            ->with('success', 'تم التعطيل بنجاح');
+    }
+
 }

@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             "isSuperAdmin" =>IsSuperAdminMiddleware::class,
+            'check.user.status'=> App\Http\Middleware\CheckUserStatusMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

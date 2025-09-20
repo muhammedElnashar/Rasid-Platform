@@ -29,6 +29,7 @@ class User extends Authenticatable
         'flexible_points',
         'current_negative_points',
         'status',
+        'settlement_code'
     ];
 
     /**
@@ -238,4 +239,74 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function getCalculatedLevelAttribute()
+    {
+        return Level::where('points_required', '<=', $this->fixed_points)
+            ->orderBy('points_required', 'desc')
+            ->first();
+    }
+    public function levelHistories()
+    {
+        return $this->hasMany(UserLevelHistory::class, 'user_id');
+    }
+    public function getRemainingForNextLayerAttribute()
+    {
+        $currentLevel = $this->current_level;
+
+        if (!$currentLevel) {
+            return null;
+        }
+
+        $currentLayer = $currentLevel->layer;
+
+        $totalPointsLayer = $currentLayer->levels()->max('points_required');
+
+        $userPoints = $this->fixed_points;
+
+
+        $remaining = $totalPointsLayer - $userPoints;
+
+        return $remaining > 0 ? $remaining : 0;
+    }
+
+
+    public function saveLevelHistory()
+    {
+        $currentLevel = $this->calculatedLevel;
+        if (!$currentLevel) return;
+
+        $layer    = $currentLevel->layer;
+        $category = $layer->category;
+
+        $lastHistory = $this->levelHistories()->latest()->first();
+
+        if (!$lastHistory || $lastHistory->level_id !== $currentLevel->id) {
+
+            $this->levelHistories()->create([
+                'category_id'       => $category->id,
+                'layer_id'          => $layer->id,
+                'level_id'          => $currentLevel->id,
+                'change_date'       => now(),
+                'is_upgrade'        => $lastHistory
+                    ? $currentLevel->points_required > $lastHistory->level->points_required
+                    : true,
+                'notification_sent' => false,
+            ]);
+        }
+    }
+
+    public function currentLevelHistory()
+    {
+        return $this->hasOne(UserLevelHistory::class)->latestOfMany('change_date');
+    }
+
+    public function getCurrentLayerAttribute()
+    {
+        return $this->currentLevelHistory?->layer;
+    }
+
+    public function getCurrentLevelAttribute()
+    {
+        return $this->currentLevelHistory?->level;
+    }
 }

@@ -10,7 +10,7 @@ class CardItem extends Model
 
     public function category()
     {
-        return $this->belongsTo(CardCategory::class, 'card_category_id'); // لاحظ اسم العمود
+        return $this->belongsTo(CardCategory::class, 'card_category_id');
     }
     public function issues()
     {

@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Role;
 use App\Models\User;
+use Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class UserServices
@@ -27,6 +29,9 @@ class UserServices
             $username = Str::lower($rolePrefix . $randomNumber);
         } while (User::where('username', $username)->exists());
 
+        do {
+            $settlementCode = rand(10000000, 99999999);
+        } while (User::where('settlement_code', $settlementCode)->exists());
         $user = User::create([
             'username'  => $username,
             'full_name' => $data['full_name'],
@@ -35,10 +40,24 @@ class UserServices
             'role_id'   => $role->id,
             'school_id' => $schoolId,
             'password'  => bcrypt(Str::random(16)),
+            'settlement_code' => $settlementCode,
         ]);
 
         $this->passwordResetService->sendResetLink($user);
 
         return $user;
+    }
+    public function suspendUser(User $user)
+    {
+        $user->status = false;
+        $user->save();
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+    }
+    public function activateUser(User $user)
+    {
+        DB::table('recharge_failed_attempts')->where('user_id', $user->id)->delete();
+        $user->status = true;
+        $user->save();
+
     }
 }

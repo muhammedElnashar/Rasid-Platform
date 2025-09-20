@@ -25,6 +25,7 @@ class CardIssueService
             'points' => $cardItem->points,
             'deduction_type' => $data['deduction_type'] ?? null,
             'deduction_duration_days' => $data['deduction_duration_days'] ?? null,
+            'is_restricted' => $data['is_restricted'] ?? false,
         ]);
         return $cardIssue;
     }
@@ -47,6 +48,7 @@ class CardIssueService
             'deduction_duration_days' => $data['deduction_duration_days'] ?? null,
             'deduction_deadline' => $deductionDeadline,
             'status' => $status,
+            'is_restricted' => $data['is_restricted'] ?? false,
         ]);
 
         return $cardIssue;
@@ -98,7 +100,8 @@ class CardIssueService
             ->chunk(100, function ($expiredCards) {
                 foreach ($expiredCards as $card) {
                     try {
-                        $this->applyPoints($card);
+                        // ✅ خصم كامل المتبقي حتى لو الرصيد صفر
+                        $this->applyPoints($card, $card->remaining_points ?? abs($card->points));
                     } catch (\Throwable $e) {
                         \Log::error("Failed to apply deferred discount for card {$card->id}: {$e->getMessage()}");
                     }
@@ -108,9 +111,14 @@ class CardIssueService
 
 
 
+
     private function applyPoints(CardIssues $cardIssue, ?int $amount = null)
     {
         if ($cardIssue->points < 0 && $cardIssue->deduction_type === DeductionTypeEnum::Deferred) {
+            if ($cardIssue->is_restricted) {
+                return to_route('profile')->with('error', 'لا يمكنك السداد حالياً، الكرت مقيد');
+            }
+
             $remaining = $cardIssue->remaining_points ?? abs($cardIssue->points);
 
             if ($remaining <= 0) {
@@ -121,8 +129,15 @@ class CardIssueService
             $amountToApply = min($amountToApply, $remaining);
             $user = $cardIssue->user;
 
+            // ✅ السماح بالخصم بعد deadline حتى لو الرصيد صفر/سالب
             if ($user->fixed_points < $amountToApply) {
-                return to_route('profile')->with('error','ليس لديك رصيد كافي');
+                if ($cardIssue->deduction_deadline && now()->gte($cardIssue->deduction_deadline)) {
+                    // نخصم كامل المبلغ ويصبح الرصيد بالسالب
+                    $amountToApply = $remaining;
+                } else {
+                    // منطق طبيعي (لا خصم إلا لو فيه رصيد كافي)
+                    return to_route('profile')->with('error','ليس لديك رصيد كافي');
+                }
             }
 
             $signedAmount = -$amountToApply;
@@ -147,6 +162,7 @@ class CardIssueService
             return;
         }
 
+        // باقي الحالات (Support أو Immediate)
         $signedAmount = $cardIssue->points;
         $user = $cardIssue->user;
         $user->fixed_points += $signedAmount;
@@ -183,5 +199,9 @@ class CardIssueService
         return now()->addDays($days);
     }
 
+    public function unrestricted(CardIssues $cardIssue)
+    {
+       return $cardIssue->update(['is_restricted' => false]);
+    }
 }
 

@@ -110,6 +110,7 @@
                                     </select>
                                 </div>
 
+
                                 <div class="fv-row mb-7 {{ ($issue->deduction_type?->value !== 'deferred') ? 'd-none' : '' }}" id="deadlineWrapper">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class="required"> @lang('message.deduction_deadline')</span>
@@ -117,6 +118,22 @@
                                     <input type="number" name="deduction_duration_days"
                                            value="{{ old('deduction_duration_days', $issue->deduction_duration_days ?? 1) }}"
                                            class="form-control form-control-solid"/>
+
+
+
+                                </div>
+
+                                <div class="fv-row mb-7 d-none " id="restricted" >
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">التقييد</span>
+                                    </label>
+
+                                    <div class="input-group  mb-5">
+                                        <input type="checkbox" name="is_restricted" value="1" {{ old('is_restricted', $issue->is_restricted) ? 'checked' : '' }}>
+
+
+                                    </div>
+
                                 </div>
 
                                 <div class="text-center pt-15">
@@ -130,6 +147,7 @@
                                         </span>
                                     </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>
@@ -151,6 +169,7 @@
             let $paymentTypeWrap  = $('#paymentTypeWrapper');
             let $deadlineWrapper  = $('#deadlineWrapper');
             let $deductionType    = $('#deduction_type');
+            let $restricted       = $('#restricted');
 
             // تحميل البيانات الحالية عند فتح الصفحة
             function loadExistingData() {
@@ -195,6 +214,8 @@
                             // إظهار حقل المدة إذا كان النوع مؤجل
                             if (issue.deduction_type === 'deferred') {
                                 $deadlineWrapper.removeClass('d-none');
+                                $restricted.removeClass('d-none');
+
                             }
                         }
                     }
@@ -216,6 +237,8 @@
                 $itemSelect.empty().append('<option value="">اختر العنصر</option>');
                 $paymentTypeWrap.addClass('d-none');
                 $deadlineWrapper.addClass('d-none');
+                $restricted.addClass('d-none');
+
 
                 if (card && card.categories && card.categories.length > 0) {
                     $.each(card.categories, function (i, cat) {
@@ -253,8 +276,12 @@
             $('#deduction_type').on('change', function () {
                 if ($(this).val() === 'deferred') {
                     $deadlineWrapper.removeClass('d-none');
+                    $restricted.removeClass('d-none');
+
                 } else {
                     $deadlineWrapper.addClass('d-none');
+                    $restricted.addClass('d-none');
+
                 }
             });
         });

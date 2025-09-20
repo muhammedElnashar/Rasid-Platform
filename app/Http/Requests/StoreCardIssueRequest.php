@@ -26,6 +26,7 @@ class StoreCardIssueRequest extends FormRequest
             'card_item_id'     => ['required', 'exists:card_items,id'],
             'deduction_type'     => ['nullable', 'in:immediate,deferred'],
             'deduction_duration_days' => ['nullable', 'integer', 'required_if:deduction_type,deferred'],
+            'is_restricted'   => ['nullable', 'boolean'],
         ];
     }
 }

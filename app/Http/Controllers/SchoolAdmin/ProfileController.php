@@ -61,9 +61,16 @@ class ProfileController extends Controller
         $user=auth()->user();
         $subjectClasses= $user->subjectsForUser();
         $parents= $user->guardians()->get();
+        $currentLevel = $user->currentLevel;
+        $currentLayer = $user->currentLayer;
+        $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();
 
 
-        return view('school_admin.users.profile',compact('user','subjectClasses','parents'));
+
+        return view('school_admin.users.profile',compact(
+            'user','subjectClasses','parents'
+            ,'currentLevel','currentLayer','levelsInLayer'
+        ));
     }
 
     public function settle(CardIssues $issue, Request $request)
@@ -97,11 +104,8 @@ class ProfileController extends Controller
             'code' => 'required|string',
             'settlement_code' => 'required|string',
         ]);
-
         $user = auth()->user();
-
         $result = $rechargeService->recharge($user, $data['code'], $data['settlement_code']);
-
         if (!$result['status']) {
             return back()->withErrors(['error' => $result['message']]);
         }

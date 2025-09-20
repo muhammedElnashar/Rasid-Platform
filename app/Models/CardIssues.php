@@ -12,6 +12,7 @@ class CardIssues extends Model
         'issue_number', 'user_id', 'card_item_id', 'issued_by',
         'points', 'remaining_points','deduction_type', 'issue_date', 'deduction_deadline', 'status',
         'deduction_duration_days', 'applied_at'
+        ,'is_restricted',
     ];
     protected $casts = [
         'deduction_type' => DeductionTypeEnum::class,
@@ -23,6 +24,10 @@ class CardIssues extends Model
     public function isPending(): bool
     {
         return $this->status === \App\Enum\StatusCardEnum::Pending;
+    }
+    public function isApproved(): bool
+    {
+        return $this->status === \App\Enum\StatusCardEnum::Approved;
     }
 
     public function user()

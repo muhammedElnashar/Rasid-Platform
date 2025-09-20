@@ -10,15 +10,16 @@ class CardIssuePolicy
 {
     protected function hasAccess(User $user, CardIssues $cardIssues): bool
     {
-        return ($user->isSchoolAdmin() || $user->isModerator()||$user->isTeacher())
+        return ($user->isSchoolAdmin() || $user->isModerator() || $user->isTeacher())
             && $user->school_id === $cardIssues->cardItem->category->card->school_id;
     }
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isSchoolAdmin() || $user->isModerator()||$user->isTeacher();
+        return $user->isSchoolAdmin() || $user->isModerator() || $user->isTeacher();
     }
 
     /**
@@ -34,7 +35,7 @@ class CardIssuePolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSchoolAdmin() || $user->isModerator()||$user->isTeacher();
+        return $user->isSchoolAdmin() || $user->isModerator() || $user->isTeacher();
     }
 
     /**
@@ -68,6 +69,7 @@ class CardIssuePolicy
     {
         return false;
     }
+
     public function approve(User $user, CardIssues $cardIssues): bool
     {
         return $this->hasAccess($user, $cardIssues) && $cardIssues->isPending();
@@ -75,6 +77,15 @@ class CardIssuePolicy
 
     public function reject(User $user, CardIssues $cardIssues): bool
     {
-        return $this->hasAccess($user, $cardIssues)&&$cardIssues->isPending();
+        return $this->hasAccess($user, $cardIssues) && $cardIssues->isPending();
+    }
+
+    public function unrestricted(User $user, CardIssues $cardIssues): bool
+    {
+        return $this->hasAccess($user, $cardIssues)
+            &&
+            $cardIssues->isApproved()
+            &&
+            $cardIssues->is_restricted === 1;
     }
 }
