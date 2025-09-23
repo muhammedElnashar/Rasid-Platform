@@ -31,6 +31,72 @@
                                    placeholder="@lang('message.search')"/>
                         </div>
                     </div>
+                    <div class="card-toolbar">
+                        <div class="kt-table-filter-container">
+                            <a type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
+                               data-kt-menu-placement="bottom-end">
+                            	<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
+											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 viewBox="0 0 24 24" fill="none">
+												<path
+                                                    d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z"
+                                                    fill="black"/>
+											</svg>
+										</span>
+                                @lang('message.filter')
+                            </a>
+
+                            <!-- القائمة -->
+                            <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
+                                <div class="px-7 py-5">
+                                    <!-- فلتر Status -->
+                                    <div class="mb-10">
+                                        <label class="form-label fs-5 fw-bold mb-3">@lang('message.status')</label>
+                                        <div class="d-flex flex-column flex-wrap fw-bold">
+                                            <label
+                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.all')" checked/>
+                                                <span class="form-check-label text-gray-600">@lang('message.all')</span>
+                                            </label>
+                                            <label
+                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.pending')"/>
+                                                <span
+                                                    class="form-check-label text-gray-600">@lang('message.pending')</span>
+                                            </label>
+                                            <label
+                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.approved')"/>
+                                                <span
+                                                    class="form-check-label text-gray-600">@lang('message.approved')</span>
+                                            </label>
+                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <input class="form-check-input" type="radio" name="status"
+                                                       value="@lang('message.rejected')"/>
+                                                <span
+                                                    class="form-check-label text-gray-600">@lang('message.rejected')</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- أزرار -->
+                                    <div class="d-flex justify-content-end">
+                                        <button type="reset" class="btn btn-light btn-active-light-primary me-2"
+                                                data-kt-menu-dismiss="true" data-kt-table-filter="reset">Reset
+                                        </button>
+                                        <button type="button" class="btn btn-primary" data-kt-menu-dismiss="true"
+                                                data-kt-table-filter="filter">Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
 
                 </div>
                 <div class="card-body pt-0">
@@ -46,6 +112,7 @@
                             <th class="min-w-25px">@lang('message.deduction_type')</th>
                             <th class="min-w-50px">@lang('message.issue_date')</th>
                             <th class="min-w-50px">@lang('message.deduction_deadline')</th>
+                            <th class="min-w-25px">@lang('message.status')</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-center  text-gray-600">
@@ -54,8 +121,13 @@
                         @foreach($approvedIssues as $issue)
 
                             <tr>
-
+                                @if($issue->status === \App\Enum\StatusCardEnum::Approved)
                                 <td> <span class="badge badge-light-success"> {{ $issue->issue_number }}</span> </td>
+                                @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
+                                    <td> <span class="badge badge-light-danger"> {{ $issue->issue_number }}</span> </td>
+                                @else
+                                    <td> <span class="badge badge-light-warning"> {{ $issue->issue_number }}</span> </td>
+                                @endif
                                 @if($issue->points > 0 )
                                     <td> <span class="badge badge-light-success">دعم ايجابي</span> </td>
                                 @else
@@ -70,7 +142,13 @@
                                 </td>
                                 <td>{{ date_format($issue->issue_date ,'Y-m-d')}}</td>
                                 <td>{{ optional($issue->deduction_deadline)->format('Y-m-d') }}</td>
-                            </tr>
+                                    @if($issue->status === \App\Enum\StatusCardEnum::Approved)
+                                        <td> <span class="badge badge-light-success">@lang('message.'.$issue->status->value)</span> </td>
+                                    @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
+                                        <td> <span class="badge badge-light-danger">@lang('message.'.$issue->status->value)</span> </td>
+                                    @else
+                                        <td> <span class="badge badge-light-warning">@lang('message.'.$issue->status->value)</span> </td>
+                                    @endif                            </tr>
 
                         @endforeach
 

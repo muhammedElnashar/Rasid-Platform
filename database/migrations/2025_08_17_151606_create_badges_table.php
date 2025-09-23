@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('badges', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->constrained('schools');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->text('conditions');
+            $table->integer('required_points');
             $table->integer('points_awarded')->default(0);
+            $table->string('image');
             $table->timestamps();
         });
     }

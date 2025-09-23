@@ -55,6 +55,10 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::resource('categories', \App\Http\Controllers\SchoolAdmin\CategoryController::class);
     Route::resource('categories.layers', \App\Http\Controllers\SchoolAdmin\LayersController::class);
     Route::resource('categories.layers.levels', \App\Http\Controllers\SchoolAdmin\LevelController::class);
+    Route::resource('insignias', \App\Http\Controllers\SchoolAdmin\InsigniaController::class);
+    Route::resource('badges', \App\Http\Controllers\SchoolAdmin\BadgeController::class);
+    Route::get('insignias/assign/page', [\App\Http\Controllers\SchoolAdmin\InsigniaController::class,'assignPage'])->name('insignias.assign.page');
+    Route::post('insignias/assign', [\App\Http\Controllers\SchoolAdmin\InsigniaController::class,'assign'])->name('insignias.assign');
     Route::put('issues/approved/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'approved'])->name('issues.approved');
     Route::put('issues/rejected/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'rejected'])->name('issues.rejected');
     Route::put('issues/unrestricted/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'unrestricted'])->name('issues.unrestricted');

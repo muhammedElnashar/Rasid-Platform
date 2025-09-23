@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -245,10 +246,12 @@ class User extends Authenticatable
             ->orderBy('points_required', 'desc')
             ->first();
     }
+
     public function levelHistories()
     {
         return $this->hasMany(UserLevelHistory::class, 'user_id');
     }
+
     public function getRemainingForNextLayerAttribute()
     {
         $currentLevel = $this->current_level;
@@ -275,7 +278,7 @@ class User extends Authenticatable
         $currentLevel = $this->calculatedLevel;
         if (!$currentLevel) return;
 
-        $layer    = $currentLevel->layer;
+        $layer = $currentLevel->layer;
         $category = $layer->category;
 
         $lastHistory = $this->levelHistories()->latest()->first();
@@ -283,11 +286,11 @@ class User extends Authenticatable
         if (!$lastHistory || $lastHistory->level_id !== $currentLevel->id) {
 
             $this->levelHistories()->create([
-                'category_id'       => $category->id,
-                'layer_id'          => $layer->id,
-                'level_id'          => $currentLevel->id,
-                'change_date'       => now(),
-                'is_upgrade'        => $lastHistory
+                'category_id' => $category->id,
+                'layer_id' => $layer->id,
+                'level_id' => $currentLevel->id,
+                'change_date' => now(),
+                'is_upgrade' => $lastHistory
                     ? $currentLevel->points_required > $lastHistory->level->points_required
                     : true,
                 'notification_sent' => false,
@@ -309,4 +312,17 @@ class User extends Authenticatable
     {
         return $this->currentLevelHistory?->level;
     }
+
+    public function insignias()
+    {
+        return $this->belongsToMany(Insignia::class, 'user_insignias')
+            ->withPivot('award_date');
+    }
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+            ->withPivot('award_date')
+            ->withTimestamps();
+    }
+
 }

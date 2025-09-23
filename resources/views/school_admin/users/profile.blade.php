@@ -438,6 +438,12 @@
                                     <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_user_view_overview">الترقيات</a>
                                 </li>
                             <li class="nav-item">
+                                    <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" href="#kt_user_insignias">الشارات</a>
+                                </li>
+                            <li class="nav-item">
+                                    <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" href="#kt_user_badges">الاوسمة و الميداليات</a>
+                                </li>
+                            <li class="nav-item">
                                     <a class="nav-link text-active-primary pb-4 " data-bs-toggle="tab" href="#kt_user_view_overview_security">البيانات الاساسية</a>
                                 </li>
                             @if(\Illuminate\Support\Facades\Auth::user()->isTeacher())
@@ -448,9 +454,7 @@
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
-
                             <div class="tab-pane fade show active " id="kt_user_view_overview" role="tabpanel">
-
                                 <div class="progress-container">
                                     @if($currentLayer && $currentLevel)
                                         <div class="progress-header">
@@ -525,13 +529,127 @@
                                                 </div>
                                             @endif
                                         </div>
+                                    @else
+                                        <!-- حالة عدم وجود طبقة/مستوى/فئة -->
+                                        <div class="progress-header">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-emoji-smile text-white progress-icon"></i>
+                                                <h2 class="progress-title">رحلة التقدم</h2>
+                                            </div>
+                                        </div>
+
+                                        <div class="progress-body text-center py-10">
+                                            <div class="mb-4">
+                                                <i class="bi bi-flag-fill fs-1 text-primary opacity-75"></i>
+                                            </div>
+                                            <h4 class="fw-bold text-gray-700">لم تبدأ رحلتك بعد 🚀</h4>
+                                            <p class="text-muted mb-0">
+                                                لم يتم تعيين <strong>فئة</strong> أو <strong>طبقة</strong> أو <strong>مستوى</strong> لك حتى الآن.
+                                                بمجرد تسجيل التقدم، ستظهر رحلتك هنا خطوة بخطوة.
+                                            </p>
+                                        </div>
                                     @endif
                                 </div>
-                                <!--end::Card-->
+                            </div>
+
+                            <div class="tab-pane fade show " id="kt_user_insignias" role="tabpanel">
+                                <div class="row g-4">
+                                    @forelse($insignias as $insignia)
+                                        <div class="col-md-4 col-lg-3">
+                                            <div class="card h-100 shadow-sm border-0 rounded-4 hover-elevate-up">
+                                                <div class="card-body text-center p-4">
+                                                    <!-- صورة الشارة -->
+                                                    <div class="mb-3">
+                                                        <img src="{{ $insignia->getImageUrlAttribute() }}"
+                                                             alt="{{ $insignia->name }}"
+                                                             class="img-fluid rounded-circle border border-3 border-primary shadow-sm"
+                                                             style="width:90px; height:90px; object-fit:cover;">
+                                                    </div>
+
+                                                    <!-- الاسم -->
+                                                    <h5 class="fw-bold text-primary mb-2">
+                                                        {{ $insignia->name }}
+                                                    </h5>
+
+                                                    <!-- النقاط -->
+                                                    <span class="badge bg-primary text-white fw-semibold fs-6 px-3 py-2 mb-3">
+                        +{{ $insignia->points_value }} نقطة
+                    </span>
+
+                                                    <!-- تاريخ المنح -->
+                                                    <p class="text-muted small mb-0">
+                                                        <i class="fas fa-calendar-alt me-1 text-primary"></i>
+                                                        {{ \Carbon\Carbon::parse($insignia->pivot->award_date)->format('Y-m-d') }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="col-12">
+                                            <div class="text-center py-10">
+                                                <div class="mb-4">
+                                                    <i class="fas fa-award fa-4x text-primary opacity-50"></i>
+                                                </div>
+                                                <h4 class="fw-bold text-gray-700">لا توجد شارات حتى الآن</h4>
+                                                <p class="text-muted mb-0">
+                                                    لم يتم منحك أي شارات بعد. اجمع النقاط واحصل على أول شارة لك! 🎯
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endforelse
+                                </div>
 
 
                             </div>
+                            <div class="tab-pane fade show " id="kt_user_badges" role="tabpanel">
+                                <div class="row g-4">
+                                    @forelse($badges as $badge)
+                                        <div class="col-md-4 col-lg-3">
+                                            <div class="card h-100 shadow-sm border-0 rounded-4 hover-elevate-up">
+                                                <div class="card-body text-center p-4">
+                                                    <!-- صورة الشارة -->
+                                                    <div class="mb-3">
+                                                        <img src="{{ $badge->getImageUrlAttribute() }}"
+                                                             alt="{{ $badge->name }}"
+                                                             class="img-fluid rounded-circle border border-3 border-primary shadow-sm"
+                                                             style="width:90px; height:90px; object-fit:cover;">
+                                                    </div>
 
+                                                    <!-- الاسم -->
+                                                    <h5 class="fw-bold text-primary mb-2">
+                                                        {{ $badge->name }}
+                                                    </h5>
+
+                                                    <!-- النقاط -->
+                                                    <span class="badge bg-primary text-white fw-semibold fs-6 px-3 py-2 mb-3">
+                                                     +{{ $badge->points_awarded }} نقطة
+                                                    </span>
+
+                                                    <!-- تاريخ المنح -->
+                                                    <p class="text-muted small mb-0">
+                                                        <i class="fas fa-calendar-alt me-1 text-primary"></i>
+                                                        {{ \Carbon\Carbon::parse($badge->pivot->award_date)->format('Y-m-d') }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="col-12">
+                                            <div class="text-center py-10">
+                                                <div class="mb-4">
+                                                    <i class="fas fa-award fa-4x text-primary opacity-50"></i>
+                                                </div>
+                                                <h4 class="fw-bold text-gray-700">لا توجد شارات حتى الآن</h4>
+                                                <p class="text-muted mb-0">
+                                                    لم يتم منحك أي شارات بعد. اجمع النقاط واحصل على أول شارة لك! 🎯
+                                                </p>
+                                            </div>
+                                        </div>
+                                    @endforelse
+                                </div>
+
+
+                            </div>
                             <div class="tab-pane fade show " id="kt_user_view_overview_security" role="tabpanel">
                                 <div class="card pt-4 mb-6 mb-xl-9">
                                     <div class="card-header border-0">

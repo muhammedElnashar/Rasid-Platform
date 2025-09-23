@@ -106,6 +106,15 @@ class School extends Model
         return $this->hasMany(RechargeCard::class);
     }
 
+    public function insignias()
+    {
+        return $this->hasMany(Insignia::class);
+    }
+    public function badges()
+    {
+        return $this->hasMany(Badge::class);
+    }
+
 
 
 

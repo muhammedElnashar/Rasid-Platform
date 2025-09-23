@@ -46,14 +46,25 @@ class ProfileController extends Controller
 
     public function approvedIssue()
     {
-        $user=auth()->user();
+        $user = auth()->user();
+
         $approvedIssues = $user->cardIssues()
             ->with(['user', 'cardItem.category.card', 'issuer'])
-            ->where('status', StatusCardEnum::Approved)
-            ->whereNotNull('applied_at')
+            ->where(function ($query) {
+                $query->where(function ($q) {
+                    $q->where('status', StatusCardEnum::Approved)
+                        ->whereNotNull('applied_at');
+                })
+                    ->orWhereIn('status', [
+                        StatusCardEnum::Pending,
+                        StatusCardEnum::Rejected,
+                    ]);
+            })
             ->get();
-        return view('users.approved-issue',compact('approvedIssues'));
+
+        return view('users.approved-issue', compact('approvedIssues'));
     }
+
 
     public function UserProfile()
     {
@@ -64,12 +75,14 @@ class ProfileController extends Controller
         $currentLevel = $user->currentLevel;
         $currentLayer = $user->currentLayer;
         $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();
+        $insignias = $user->insignias;
+        $badges = $user->badges;
 
 
 
         return view('school_admin.users.profile',compact(
             'user','subjectClasses','parents'
-            ,'currentLevel','currentLayer','levelsInLayer'
+            ,'currentLevel','currentLayer','levelsInLayer','insignias','badges'
         ));
     }
 
@@ -112,5 +125,6 @@ class ProfileController extends Controller
 
         return back()->with('success', $result['message']);
     }
+
 
 }

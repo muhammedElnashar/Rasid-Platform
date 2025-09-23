@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('school_id')->constrained('schools');
             $table->string('name');
             $table->integer('points_value');
+            $table->string('image');
             $table->timestamps();
         });
     }
