@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enum\CardNameEnum;
 use Illuminate\Database\Seeder;
 use App\Models\Card;
 use App\Models\CardCategory;
@@ -26,7 +27,7 @@ class CardSeeder extends Seeder
         // الكرت الأول: الدعم الإيجابي
         $positiveCard = Card::create([
             'school_id' => $school->id,
-            'name' => 'دعم إيجابي',
+            'name' => CardNameEnum::Positive_Support,
         ]);
 
         $positiveCategory = CardCategory::create([
@@ -51,7 +52,7 @@ class CardSeeder extends Seeder
         // الكرت الثاني: الحسم السلبي
         $negativeCard = Card::create([
             'school_id' => $school->id,
-            'name' => 'حسم السلبي',
+            'name' => CardNameEnum::Negative_Discount,
         ]);
 
         $negativeCategory = CardCategory::create([

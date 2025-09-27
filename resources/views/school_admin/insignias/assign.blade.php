@@ -114,7 +114,7 @@
                     let filteredUsers = allUsers.filter(u => u.role_id == roleId);
 
                     filteredUsers.forEach(user => {
-                        userSelect.append('<option value="' + user.id + '">' + user.full_name + '</option>');
+                        userSelect.append('<option value="' + user.id + '">' + user.full_name + ' - ' + user.username + '</option>');
                     });
                     userSelect.trigger('change'); // تحديث select2
                 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBadgeRequest;
 use App\Http\Requests\UpdateBadgeRequest;
 use App\Models\Badge;
+use App\Models\UserBadge;
 use Illuminate\Http\Request;
 
 class BadgeController extends Controller
@@ -85,5 +86,17 @@ class BadgeController extends Controller
         \Storage::disk('images')->delete($badge->image);
         $badge->delete();
         return redirect()->route('badges.index')->with('success', 'تم الحذف بنجاح.');
+    }
+
+    public function list()
+    {
+        $school= auth()->user()->school;
+        $badges = UserBadge::with(['badge', 'user',])
+            ->whereHas('badge', function ($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->get();
+    return view('school_admin.badges.assign-list', compact('badges'));
+
     }
 }

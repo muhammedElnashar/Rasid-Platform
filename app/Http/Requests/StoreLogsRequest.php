@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enum\CardNameEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
-class StoreAndUpdateNameRequest extends FormRequest
+class StoreLogsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +22,9 @@ class StoreAndUpdateNameRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', new Enum(CardNameEnum::class)],
+            'user_id' => 'required|exists:users,id',
+            'card_item_id'     => 'required|exists:card_items,id',
+            'active'            => 'nullable|boolean',
         ];
     }
 }

@@ -101,7 +101,7 @@ class InsigniaController extends Controller
     {
         $roles = Role::ExpectModeratorAndAdmin()->get();
         $insignias = Insignia::all();
-        $users = User::select('id', 'full_name', 'role_id')
+        $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
      return view('school_admin.insignias.assign',compact('roles','insignias','users'));
@@ -115,6 +115,17 @@ class InsigniaController extends Controller
         return redirect()
             ->route('insignias.index')
             ->with('success', 'تم اضافة الشاره للمستخدم بنجاح');
+    }
+
+    public function listPage()
+    {
+        $school = auth()->user()->school;
+        $insignias = UserInsignia::with(['insignia', 'user', 'issuer'])
+            ->whereHas('insignia', function ($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->get();
+        return view('school_admin.insignias.assign-list', compact('insignias'));
     }
 
 

@@ -41,7 +41,7 @@
                                         <option value="">@lang('message.select', ['item' => __('message.student')])</option>
                                         @foreach($students as $student)
                                             <option value="{{ $student->id }}" {{ old('student_id') == $student->id ? 'selected' : '' }}>
-                                                {{ $student->username }}
+                                                {{ $student->full_name }} - {{ $student->username }}
                                             </option>
                                         @endforeach
                                     </select>

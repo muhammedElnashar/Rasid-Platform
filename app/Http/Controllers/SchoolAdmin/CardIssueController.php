@@ -40,7 +40,7 @@ class CardIssueController extends Controller
         $this->authorize('create',CardIssues::class);
         $school = auth()->user()->school;
         $roles = Role::ExpectModeratorAndAdmin()->get();
-        $users = User::select('id', 'full_name', 'role_id')
+        $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
         $cards = $school->cards()->with('categories.items')->get();
@@ -76,9 +76,10 @@ class CardIssueController extends Controller
         $this->authorize('update', $issue);
         $school = auth()->user()->school;
         $roles = Role::ExpectModeratorAndAdmin()->get();
-        $users = User::select('id', 'full_name', 'role_id')
+        $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
-            ->get();        $cards = $school->cards()->with('categories.items')->get();
+            ->get();
+        $cards = $school->cards()->with('categories.items')->get();
         return view('school_admin.card-issues.issue-edit', compact('issue', 'users', 'cards','roles'));
     }
 
@@ -113,13 +114,6 @@ class CardIssueController extends Controller
             ->with('success', __('message.approved', ['item' => __('message.issue')]));
     }
 
-/*    public function approvedIssues()
-    {
-        $this->authorize('viewAny',CardIssues::class);
-        $school = auth()->user()->school;
-        $approvedIssues = $school->approvedIssues()->with(['user', 'cardItem.category.card', 'issuer'])->get();
-        return view('school_admin.card-issues.approved-issues',compact('approvedIssues'));
-    }*/
 
     public function rejected(Request $request,CardIssues $issue)
     {

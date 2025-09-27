@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section('title')
-    @lang('message.add', ['item' => __('message.recharge_card')])
+    اضافة سجل
 @endsection
 @push("css")
 @endpush
@@ -14,7 +14,7 @@
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <h1 class="page-heading d-flex text-dark fw-bolder fs-2 flex-column justify-content-center my-0">
-                            @lang('message.create', ['item' => __('message.recharge_card')])
+                            انشاء سجل جديد
                         </h1>
 
                     </div>
@@ -27,8 +27,36 @@
 
                         <div class="card-body pt-6">
                             <form id="kt_modal_add_form" class="form" method="POST"
-                                  action="{{route("recharge-cards.store")}}">
+                                  action="{{route("logs.store")}}">
                                 @csrf
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required"> @lang('message.role')</span>
+                                    </label>
+
+                                    <select name="role_id" aria-label="Select Type" id="type" data-control="select2"
+                                            data-placeholder="@lang('message.select', ['item' => __('message.role')])"
+                                            class="form-select form-select-solid">
+                                        <option value="">@lang('message.select', ['item' => __('message.role')])</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->id }}">{{ __('message.'.$role->name) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">@lang('message.user')</span>
+                                    </label>
+
+                                    <select name="user_id" id="user_id"
+                                            data-control="select2"
+                                            data-placeholder="@lang('message.select', ['item' => __('message.user')])"
+                                            class="form-select form-select-solid">
+                                        <option value="">@lang('message.select', ['item' => __('message.user')])</option>
+                                    </select>
+                                </div>
+
+
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
@@ -64,6 +92,24 @@
                                     </select>
                                 </div>
 
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">نشاط السجل</span>
+                                    </label>
+
+                                    <div class="form-check form-check-custom form-check-solid">
+                                        <input type="hidden" name="active" value="0">
+
+                                        <input type="checkbox"
+                                               class="form-check-input"
+                                               name="active"
+                                               value="1"
+                                            {{ old('active', 1) ? 'checked' : '' }} />
+                                        <label class="form-check-label">مفعل</label>
+                                    </div>
+                                </div>
+
+
 
 
                                 <div class="text-center pt-15">
@@ -87,7 +133,6 @@
 @endsection
 
 @push('script')
-
     <script>
         $(function () {
             let cards = @json($cards);
@@ -139,5 +184,28 @@
 
         });
     </script>
+    <script>
+        let allUsers = @json($users);
+
+        $(document).ready(function () {
+
+            let userSelect = $('#user_id');
+
+            $('select[name="role_id"]').on('change', function () {
+                let roleId = $(this).val();
+                userSelect.empty();
+
+                if (roleId) {
+                    let filteredUsers = allUsers.filter(u => u.role_id == roleId);
+
+                    filteredUsers.forEach(user => {
+                        userSelect.append('<option value="' + user.id + '">' + user.full_name + ' - ' + user.username + '</option>');
+                    });
+                    userSelect.trigger('change'); // تحديث select2
+                }
+            });
+        });
+    </script>
 
 @endpush
+

@@ -115,6 +115,11 @@ class School extends Model
         return $this->hasMany(Badge::class);
     }
 
+    public function logs()
+    {
+        return $this->hasMany(BehaviorLog::class);
+    }
+
 
 
 

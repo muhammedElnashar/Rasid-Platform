@@ -126,5 +126,9 @@ class ProfileController extends Controller
         return back()->with('success', $result['message']);
     }
 
+    public function userLogs()
+    {
+
+    }
 
 }

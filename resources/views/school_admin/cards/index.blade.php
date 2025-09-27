@@ -39,7 +39,7 @@
                         @foreach($cards as $card)
 
                             <tr>
-                                <td>{{ $card->name }}</td>
+                                <td>{{ $card->name->label() }}</td>
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">

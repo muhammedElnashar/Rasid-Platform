@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\BehaviorLog;
 use App\Models\Card;
 use App\Models\CardCategory;
 use App\Models\CardIssues;
@@ -32,6 +33,7 @@ use App\Policies\ClassesPolicy;
 use App\Policies\DeductionCardPolicy;
 use App\Policies\LayerPolicy;
 use App\Policies\LevelPolicy;
+use App\Policies\LogPolicy;
 use App\Policies\PointTransferPolicy;
 use App\Policies\RechargeCardPolicy;
 use App\Policies\SchoolPolicy;
@@ -83,6 +85,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Category::class, CategoryPolicy::class);
         Gate::policy(Layer::class, LayerPolicy::class);
         Gate::policy(Level::class, LevelPolicy::class);
+        Gate::policy(BehaviorLog::class, LogPolicy::class);
+
 
 
 

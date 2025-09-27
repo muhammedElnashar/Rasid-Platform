@@ -41,12 +41,12 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-150px">@lang('message.name')</th>
-                            <th class="min-w-150px">@lang('message.username')</th>
-                            <th class="min-w-150px">@lang('message.max_uses')</th>
-                            <th class="min-w-150px">@lang('message.used_count')</th>
-                            <th class="min-w-150px">@lang('message.created_by')</th>
-
+                            <th class="min-w-100px">@lang('message.name')</th>
+                            <th class="min-w-100px">@lang('message.username')</th>
+                            <th class="min-w-100px">@lang('message.max_uses')</th>
+                            <th class="min-w-100px">@lang('message.used_count')</th>
+                            <th class="min-w-100px"> بواسطة</th>
+                            <th class="min-w-100px"> الحالة</th>
 
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
@@ -62,9 +62,22 @@
                                 <td>{{ $card->max_uses }}</td>
                                 <td>{{ $card->used_count }}</td>
                                 <td>{{ $card->assigner->full_name }}</td>
+                                @if($card->is_active === 1)
+                                    <td><span class="badge badge-light-success">نشط</span></td>
+                                @else
+                                    <td><span class="badge badge-light-danger">غير نشط</span></td>
+
+                                @endif
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
+                                        <form method="POST" action="{{ route('recharge-cards.activation', $card) }}">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="btn btn-sm text-white ms-2 {{ $card->is_active ? 'btn-danger' : 'btn-success' }}">
+                                                {{ $card->is_active ? 'تعطيل' : 'تفعيل' }}
+                                            </button>
+                                        </form>
 
 
                                     </div>

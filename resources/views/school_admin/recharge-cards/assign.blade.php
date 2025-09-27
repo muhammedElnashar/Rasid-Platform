@@ -14,7 +14,7 @@
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <h1 class="page-heading d-flex text-dark fw-bolder fs-2 flex-column justify-content-center my-0">
-                            @lang('message.create', ['item' => __('message.recharge_card')])
+                            اصدار بطاقات الشحن
                         </h1>
 
                     </div>
@@ -68,7 +68,7 @@
                                             class="form-select form-select-solid">
                                         <option value="">@lang('message.select', ['item' => __('message.recharge_card')])</option>
                                         @foreach($cards as $card)
-                                            <option value="{{ $card->id }}">{{ $card->code }} - @lang('message.points') ( {{$card->points}} )</option>
+                                            <option value="{{ $card->id }}">{{ $card->code }} - @lang('message.points') ( {{$card->points}} - {{$card->cardItem->name}} )</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -128,7 +128,7 @@
                     let filteredUsers = allUsers.filter(u => u.role_id == roleId);
 
                     filteredUsers.forEach(user => {
-                        userSelect.append('<option value="' + user.id + '">' + user.full_name + '</option>');
+                        userSelect.append('<option value="' + user.id + '">' + user.full_name+' - ' + user.username + '</option>');
                     });
                     userSelect.trigger('change'); // تحديث select2
                 }

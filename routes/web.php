@@ -57,8 +57,15 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::resource('categories.layers.levels', \App\Http\Controllers\SchoolAdmin\LevelController::class);
     Route::resource('insignias', \App\Http\Controllers\SchoolAdmin\InsigniaController::class);
     Route::resource('badges', \App\Http\Controllers\SchoolAdmin\BadgeController::class);
+    Route::resource('logs', \App\Http\Controllers\SchoolAdmin\BehaviorLogController::class);
+    Route::post('activation/logs/{log}',[\App\Http\Controllers\SchoolAdmin\BehaviorLogController::class,'activation'])->name('activation.logs');
+    Route::get('user/logs',[\App\Http\Controllers\SchoolAdmin\ProfileController::class,'logs'])->name('user.logs');
+    Route::put('logs/approve/{log}', [\App\Http\Controllers\SchoolAdmin\BehaviorLogController::class, 'approve'])->name('logs.approve');
+    Route::put('logs/reject/{log}', [\App\Http\Controllers\SchoolAdmin\BehaviorLogController::class, 'reject'])->name('logs.reject');
+    Route::get('users/badges/list', [\App\Http\Controllers\SchoolAdmin\BadgeController::class,'list'])->name('users.badges.list');
     Route::get('insignias/assign/page', [\App\Http\Controllers\SchoolAdmin\InsigniaController::class,'assignPage'])->name('insignias.assign.page');
     Route::post('insignias/assign', [\App\Http\Controllers\SchoolAdmin\InsigniaController::class,'assign'])->name('insignias.assign');
+    Route::get('users/insignias/list', [\App\Http\Controllers\SchoolAdmin\InsigniaController::class,'listPage'])->name('users.insignias.list');
     Route::put('issues/approved/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'approved'])->name('issues.approved');
     Route::put('issues/rejected/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'rejected'])->name('issues.rejected');
     Route::put('issues/unrestricted/{issue}',[\App\Http\Controllers\SchoolAdmin\CardIssueController::class,'unrestricted'])->name('issues.unrestricted');
@@ -80,6 +87,6 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::get('user-recharge-cards',[\App\Http\Controllers\SchoolAdmin\ProfileController::class,'userCard'])->name('user.recharge.cards');
     Route::get('user-recharge-page',[\App\Http\Controllers\SchoolAdmin\ProfileController::class,'rechargePage'])->name('user.recharge.page');
     Route::post('user-recharge',[\App\Http\Controllers\SchoolAdmin\ProfileController::class,'recharge'])->name('user.recharge');
-
+    Route::post('recharge-cards/activation/{rechargeCard}',[\App\Http\Controllers\SchoolAdmin\RechargeCardController::class,'active'])->name('recharge-cards.activation');
 });
 

@@ -29,7 +29,7 @@ class PointTransferController extends Controller
     {
         $this->authorize('create',PointTransfer::class);
         $roles = Role::ExpectModeratorAndAdmin()->get();
-        $users = User::select('id', 'full_name', 'role_id')
+        $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)->where('id', '!=', auth()->id())
             ->get();
         return view('school_admin.point-transfers.create',compact('users','roles'));

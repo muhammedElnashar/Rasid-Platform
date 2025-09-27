@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('recharge_cards', function (Blueprint $table) {
             $table->id();
             $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
+            $table->foreignId('card_item_id')->constrained('card_items')->onDelete('cascade');
             $table->string('code')->unique();
             $table->integer('points');
             $table->timestamps();

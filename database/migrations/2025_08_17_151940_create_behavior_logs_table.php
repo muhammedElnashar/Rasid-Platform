@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('behavior_logs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('school_id')->constrained('schools');
             $table->foreignId('user_id')->constrained('users');
-            $table->string('type');
-            $table->text('description')->nullable();
+            $table->foreignId('issuer_by')->constrained('users');
+            $table->foreignId('card_item_id')->constrained('card_items')->onDelete('cascade');
+            $table->string('issue_number', 12)->unique();
             $table->integer('points_value');
             $table->boolean('active')->default(true);
             $table->date('log_date');
+            $table->string('status');
             $table->timestamps();
         });
     }

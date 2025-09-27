@@ -17,4 +17,8 @@ class UserInsignia extends Model
     {
         return $this->belongsTo(Insignia::class);
     }
+    public function issuer()
+    {
+        return $this->belongsTo(User::class, 'issuer_id');
+    }
 }

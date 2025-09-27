@@ -71,6 +71,11 @@ return [
     'alert'=>'تنبيه',
     'deduct'=>'خصم',
     'warning'=>'تحذير',
+    'positive'=>'إيجابي',
+    'negative'=>'سلبي',
+    'educational'=>'تعليمي',
+    'behavioral'=>'سلوكي',
+    'social'=>'اجتماعي',
 
 
 

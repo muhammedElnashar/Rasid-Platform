@@ -30,19 +30,24 @@
                                   action="{{route("cards.store")}}">
                                 @csrf
 
+
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.name')</span>
+                                        <span class="required"> @lang('message.type')</span>
                                     </label>
 
-                                    <div class="input-group input-group-solid mb-5">
-                                        <input type="text" value="{{old("name")}}" class="form-control"
-                                               name="name"
-                                               placeholder="@lang('message.enter', ['item' => __('message.name')])"
-                                               autocomplete="off"/>
-
-                                    </div>
-
+                                    <select name="name" aria-label="Select Name" data-control="select2"
+                                            data-placeholder="@lang('message.select', ['item' => __('message.name')])"
+                                            class="form-select form-select-solid">
+                                        <option
+                                            value="">@lang('message.select', ['item' => __('message.name')])</option>
+                                        @foreach(\App\Enum\CardNameEnum::cases() as $name)
+                                            <option
+                                                value="{{ $name->value }}" {{ old('name') == $name->value ? 'selected' : '' }}>
+                                                {{$name->label()}}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
 

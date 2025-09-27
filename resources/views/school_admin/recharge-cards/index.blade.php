@@ -45,9 +45,11 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-250px">@lang('message.name')</th>
-                            <th class="min-w-250px">@lang('message.points')</th>
-
+                            <th class="min-w-150px">كود الشحن</th>
+                            <th class="min-w-100px">@lang('message.card')</th>
+                            <th class="min-w-100px">@lang('message.category')</th>
+                            <th class="min-w-100px">@lang('message.item')</th>
+                            <th class="min-w-50px">@lang('message.points')</th>
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
@@ -58,14 +60,16 @@
 
                             <tr>
                                 <td>{{ $card->code }}</td>
+                                <td>{{ $card->cardItem->category->card->name->label() }}</td>
+                                <td>{{ $card->cardItem->category->name }}</td>
+                                <td>{{ $card->cardItem->name }}</td>
                                 <td>{{ $card->points }}</td>
+
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
-                                        <a href="javascript:void(0)"
+                                        <a href="{{route('recharge-cards.edit',$card)}}"
                                            class="btn btn-icon btn-bg-light edit-btn btn-active-color-primary btn-sm ms-2"
-                                           data-id="{{ $card->id }}"
-                                           data-points="{{ $card->points }}"
                                         >
                                             <span class="svg-icon svg-icon-3">
 																				<svg xmlns="http://www.w3.org/2000/svg"
@@ -122,6 +126,7 @@
         </div>
     </div>
 
+{{--
     <!-- Modal with Table -->
     <div class="modal fade" id="kt_modal_card_edit" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -141,9 +146,40 @@
                     @csrf
                     @method('PUT')
                     <div class="modal-body py-10 px-lg-17">
-                        <div class="mb-5 fv-row">
-                            <label class="required fs-5 fw-bold mb-2">@lang('message.points')</label>
-                            <input type="number" min="1" class="form-control form-control-solid" name="points"/>
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold form-label mb-2 ">
+                                <span class="required"> @lang('message.card')</span>
+                            </label>
+                            <select name="card_id" id="cardSelect" data-control="select2"
+                                    data-placeholder="@lang('message.select', ['item' => __('message.card')])"
+                                    class="form-select form-select-solid">
+                                <option value="">@lang('message.select', ['item' => __('message.card')])</option>
+                                @foreach($cards as $support_card)
+
+                                    <option value="{{ $support_card->id }}" data-type="{{ $support_card->name }}"
+                                        {{ (old('card_id', $card->cardItem->category->card->id) == $support_card->id) ? 'selected' : '' }}>
+                                        {{ $support_card->name->label() }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold form-label mb-2 ">
+                                <span class="required"> @lang('message.category')</span>
+                            </label>
+                            <select id="categorySelect" class="form-select form-select-solid" aria-label="Select Type"
+                                    data-control="select2" data-placeholder="@lang('message.select', ['item' => __('message.category')])">
+                            </select>
+                        </div>
+
+                        <div class="fv-row mb-7">
+                            <label class="fs-6 fw-semibold form-label mb-2 ">
+                                <span class="required"> @lang('message.item')</span>
+                            </label>
+                            <select name="card_item_id" id="itemSelect" class="form-select form-select-solid" aria-label="Select Type"
+                                    data-control="select2" data-placeholder="@lang('message.select', ['item' => __('message.item')])">
+                            </select>
                         </div>
 
 
@@ -157,24 +193,12 @@
             </div>
         </div>
     </div>
+--}}
 
 @endsection
 
 @push("script")
-    <script>
 
-        $('.edit-btn').on('click', function() {
-            var id = $(this).data('id');
-            var points = $(this).data('points');
-
-
-            var form = $('#editCardForm');
-            form.attr('action', '/recharge-cards/' + id);
-            form.find('input[name="points"]').val(points);
-            var modal = new bootstrap.Modal($('#kt_modal_card_edit')[0]);
-            modal.show();
-        });
-    </script>
 
     <script>
         $(document).ready(function () {

@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers\SchoolAdmin;
 
+use App\Enum\CardNameEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AssignRechargeCardRequest;
+use App\Http\Requests\StoreRechargeCardRequest;
 use App\Models\RechargeCard;
 use App\Models\RechargeCardUser;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\RechargeCardService;
 use Illuminate\Http\Request;
 
 class RechargeCardController extends Controller
 {
+    protected  $rechargeService;
+
+    public function __construct(RechargeCardService $service)
+    {
+        $this->rechargeService = $service;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -19,7 +28,8 @@ class RechargeCardController extends Controller
     {
         $this->authorize('viewAny',RechargeCard::class);
         $school = auth()->user()->school;
-        $rechargeCards= $school->rechargeCards()->get();
+        $rechargeCards= $school->rechargeCards()->with('cardItem.category.card')->get();
+
         return view('school_admin.recharge-cards.index',compact('rechargeCards'));
 
     }
@@ -30,24 +40,24 @@ class RechargeCardController extends Controller
     public function create()
     {
         $this->authorize('create',RechargeCard::class);
-        return view('school_admin.recharge-cards.create');
+        $school = auth()->user()->school;
+        $cards = $school->cards()->where('name',CardNameEnum::Positive_Support)->with('categories.items')->get();
+        return view('school_admin.recharge-cards.create',compact('cards'));
 
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRechargeCardRequest $request)
     {
-        $this->authorize('create',RechargeCard::class);
-        $data =$request->validate([
-            'points'=>'required|integer|min:1',
-        ]);
-        $school=auth()->user()->school;
-        $data['code']=RechargeCard::generateUniqueCode();
-        $rechargeCard=$school->rechargeCards()->create($data);
-        return redirect()->route('recharge-cards.index')->with('success',__('message.created', ['item' => __('message.recharge_card')]));
+        $this->authorize('create', RechargeCard::class);
 
+        $this->rechargeService->create($request->validated());
+
+        return redirect()
+            ->route('recharge-cards.index')
+            ->with('success', __('message.created', ['item' => __('message.recharge_card')]));
     }
 
     /**
@@ -63,19 +73,19 @@ class RechargeCardController extends Controller
      */
     public function edit(RechargeCard $rechargeCard)
     {
-        //
+        $school = auth()->user()->school;
+        $cards = $school->cards()->where('name',CardNameEnum::Positive_Support)->with('categories.items')->get();
+        return view('school_admin.recharge-cards.edit',compact('cards','rechargeCard'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, RechargeCard $rechargeCard)
+    public function update(StoreRechargeCardRequest $request, RechargeCard $rechargeCard)
     {
         $this->authorize('update', $rechargeCard);
-        $data =$request->validate([
-            'points'=>'required|integer|min:1',
-        ]);
-        $rechargeCard->update($data);
+        $data =$request->validated();
+        $this->rechargeService->update($data,$rechargeCard);
         return redirect()->route('recharge-cards.index')->with('success',__('message.updated', ['item' => __('message.recharge_card')]));
     }
 
@@ -95,7 +105,7 @@ class RechargeCardController extends Controller
 
         $roles = Role::ExpectModeratorAndAdmin()->get();
         $cards = RechargeCard::all();
-        $users = User::select('id', 'full_name', 'role_id')
+        $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
 
@@ -129,6 +139,14 @@ class RechargeCardController extends Controller
     {
         $assignCards= RechargeCardUser::with(['user','card'])->get();
         return view('school_admin.recharge-cards.assign-list',compact('assignCards'));
+    }
+
+    public function active(RechargeCardUser $rechargeCard)
+    {
+        $newActive = !$rechargeCard->is_active;
+        $rechargeCard->update(['is_active' => $newActive]);
+        return back()->with('success', $rechargeCard->is_active ? 'تم التفعيل' : 'تم التعطيل');
+
     }
 
 

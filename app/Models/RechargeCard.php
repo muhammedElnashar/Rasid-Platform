@@ -10,6 +10,7 @@ class RechargeCard extends Model
     protected $fillable = [
         'code',
         'points',
+        'card_item_id',
     ];
 
     public function users()
@@ -26,5 +27,10 @@ class RechargeCard extends Model
         } while (self::where('code', $code)->exists());
 
         return $code;
+    }
+
+    public function cardItem()
+    {
+        return $this->belongsTo(CardItem::class);
     }
 }

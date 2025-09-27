@@ -67,7 +67,7 @@
                                         <option value="">@lang('message.select', ['item' => __('message.card')])</option>
                                     @foreach($cards as $card)
                                             <option value="{{ $card->id }}" data-type="{{ $card->name }}">
-                                                {{ $card->name }}
+                                                {{ $card->name->label() }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -180,7 +180,7 @@
                     $categorySelect.prop('disabled', false);
 
                     // لو نوع الكرت سلبي → نظهر الدفع
-                    if (cardType === 'حسم سلبي') {
+                    if (cardType === 'negative') {
                         $paymentTypeWrap.removeClass('d-none');
                     }
                 } else {
@@ -234,7 +234,7 @@
                     let filteredUsers = allUsers.filter(u => u.role_id == roleId);
 
                     filteredUsers.forEach(user => {
-                        userSelect.append('<option value="' + user.id + '">' + user.full_name + '</option>');
+                        userSelect.append('<option value="' + user.id + '">' + user.full_name + ' - '+user.username + '</option>');
                     });
                     userSelect.trigger('change'); // تحديث select2
                 }

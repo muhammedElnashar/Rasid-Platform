@@ -208,7 +208,7 @@
                         }
 
                         // إظهار حقول الخصم إذا كان النوع سلبي
-                        if (selectedCard.name === 'حسم سلبي') {
+                        if (selectedCard.name === 'negative') {
                             $paymentTypeWrap.removeClass('d-none');
 
                             // إظهار حقل المدة إذا كان النوع مؤجل
@@ -246,7 +246,7 @@
                     });
                     $categorySelect.prop('disabled', false);
 
-                    if (cardType === 'حسم سلبي') {
+                    if (cardType === 'negative') {
                         $paymentTypeWrap.removeClass('d-none');
                     }
                 } else {
@@ -304,7 +304,7 @@
 
                     filteredUsers.forEach(user => {
                         let selected = (user.id == currentUserId) ? 'selected' : '';
-                        userSelect.append('<option value="' + user.id + '" '+selected+'>' + user.full_name + '</option>');
+                        userSelect.append('<option value="' + user.id + '" '+selected+'>' + user.full_name +' - '+ user.username+ '</option>');
                     });
 
                     userSelect.trigger('change');
