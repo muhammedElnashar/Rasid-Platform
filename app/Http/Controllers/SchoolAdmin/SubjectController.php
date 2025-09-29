@@ -16,7 +16,7 @@ class SubjectController extends Controller
     {
         $this->authorize('viewAny', Subject::class);
         $school = auth()->user()->school;
-        $subjects = $school->subjects()->paginate(5);
+        $subjects = $school->subjects()->get();
         return view('school_admin.subjects.index', compact('subjects'));
     }
 

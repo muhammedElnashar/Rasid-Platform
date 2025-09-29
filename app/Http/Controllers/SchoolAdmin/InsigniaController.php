@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\UserInsignia;
 use App\Services\InsigniaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class InsigniaController extends Controller
@@ -27,6 +28,7 @@ class InsigniaController extends Controller
      */
     public function index()
     {
+        $this->authorize('view-any', Insignia::class);
         $school = auth()->user()->school;
         $insignias =$school->insignias;
         return view('school_admin.insignias.index', compact('insignias'));
@@ -37,6 +39,8 @@ class InsigniaController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Insignia::class);
+
         return view('school_admin.insignias.create');
     }
 
@@ -45,6 +49,8 @@ class InsigniaController extends Controller
      */
     public function store(InsigniaRequest $request)
     {
+        $this->authorize('create', Insignia::class);
+
         $validated = $request->validated();
         $school = auth()->user()->school;
         if ($request->hasFile('image')) {
@@ -77,12 +83,16 @@ class InsigniaController extends Controller
      */
     public function update(UpdateInsigniaRequest $request, Insignia $insignia)
     {
+        $this->authorize('update', $insignia);
         $validated = $request->validated();
         if ($request->hasFile('image')) {
-            Storage::disk('images')->delete($insignia->image);
+            if ($insignia->image && Storage::disk('images')->exists($insignia->image)) {
+                Storage::disk('images')->delete($insignia->image);
+            }
             $imagePath = $request->file('image')->store('insignias', 'images');
             $validated['image'] = $imagePath;
         }
+
         $insignia->update($validated);
         return redirect()->route('insignias.index')->with('success', 'تم تعديل الشاره بنجاح');
     }
@@ -92,15 +102,25 @@ class InsigniaController extends Controller
      */
     public function destroy(Insignia $insignia)
     {
-        Storage::disk('images')->delete($insignia->image);
+        $this->authorize('delete', $insignia);
+
+        if ($insignia->image && Storage::disk('images')->exists($insignia->image)) {
+            Storage::disk('images')->delete($insignia->image);
+        }
+
         $insignia->delete();
-        return redirect()->route('insignias.index')->with('success', 'تم حذف الشاره بنجاح');
+
+        return redirect()->route('insignias.index')
+            ->with('success', 'تم حذف الشارة بنجاح');
     }
+
 
     public function assignPage()
     {
+        $this->authorize('create', Insignia::class);
         $roles = Role::ExpectModeratorAndAdmin()->get();
-        $insignias = Insignia::all();
+        $school=Auth::user()->school;
+        $insignias = $school->insignias;
         $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
@@ -108,6 +128,7 @@ class InsigniaController extends Controller
     }
     public function assign(AssignInsigniaRequest $request)
     {
+        $this->authorize('create', Insignia::class);
         $validated = $request->validated();
         $validated['issuer_id'] = auth()->id();
         $validated['award_date']  = now();
@@ -119,6 +140,8 @@ class InsigniaController extends Controller
 
     public function listPage()
     {
+        $this->authorize('view-any', Insignia::class);
+
         $school = auth()->user()->school;
         $insignias = UserInsignia::with(['insignia', 'user', 'issuer'])
             ->whereHas('insignia', function ($query) use ($school) {

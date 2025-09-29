@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\RechargeCardService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RechargeCardController extends Controller
 {
@@ -73,6 +74,7 @@ class RechargeCardController extends Controller
      */
     public function edit(RechargeCard $rechargeCard)
     {
+        $this->authorize('update', $rechargeCard);
         $school = auth()->user()->school;
         $cards = $school->cards()->where('name',CardNameEnum::Positive_Support)->with('categories.items')->get();
         return view('school_admin.recharge-cards.edit',compact('cards','rechargeCard'));
@@ -101,8 +103,7 @@ class RechargeCardController extends Controller
 
     public function assignCard()
     {
-        $this->authorize('viewAny', RechargeCard::class);
-
+        $this->authorize('create', RechargeCard::class);
         $roles = Role::ExpectModeratorAndAdmin()->get();
         $cards = RechargeCard::all();
         $users = User::select('id', 'full_name', 'role_id','username')
@@ -115,6 +116,7 @@ class RechargeCardController extends Controller
 
     public function assign(AssignRechargeCardRequest $request)
     {
+        $this->authorize('create', RechargeCard::class);
         $validated = $request->validated();
 
         if (!empty($validated['user_id'])) {
@@ -137,15 +139,22 @@ class RechargeCardController extends Controller
 
     public function list()
     {
-        $assignCards= RechargeCardUser::with(['user','card'])->get();
+        $this->authorize('viewAny', RechargeCard::class);
+        $schoolId = Auth::user()->school_id;
+
+        $assignCards= RechargeCardUser::with(['user','card'])
+            ->whereHas('user', function($q) use ($schoolId) {
+            $q->where('school_id', $schoolId);
+        })->get();
         return view('school_admin.recharge-cards.assign-list',compact('assignCards'));
     }
 
-    public function active(RechargeCardUser $rechargeCard)
+    public function active(RechargeCardUser $rechargeCardUser)
     {
-        $newActive = !$rechargeCard->is_active;
-        $rechargeCard->update(['is_active' => $newActive]);
-        return back()->with('success', $rechargeCard->is_active ? 'تم التفعيل' : 'تم التعطيل');
+        $this->authorize('activation',$rechargeCardUser);
+        $newActive = !$rechargeCardUser->is_active;
+        $rechargeCardUser->update(['is_active' => $newActive]);
+        return back()->with('success', $rechargeCardUser->is_active ? 'تم التفعيل' : 'تم التعطيل');
 
     }
 

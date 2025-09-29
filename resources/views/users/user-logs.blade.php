@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section('title')
-    السجلات
+    سجلات المستخدم
 @endsection
 @push("css")
     <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css"/>
@@ -61,9 +61,9 @@
                             <tr>
                                 <td>{{$log->issue_number}}</td>
                                 <td>{{$log->issuedBy->full_name}}</td>
-                                <td>@lang('message.'.$log->type->value)</td>
-                                <td>@lang('message.'.$log->behavior_category->value)</td>
-                                <td>{{$log->item}}</td>
+                                <td>{{$log->cardItem->category->card->name->label()}}</td>
+                                <td>{{$log->cardItem->category->name}}</td>
+                                <td>{{$log->cardItem->name}}</td>
                                 <td>{{$log->points_value}}</td>
                                 @if($log->active === true)
                                     <td><span class="badge badge-success">نشط</span></td>

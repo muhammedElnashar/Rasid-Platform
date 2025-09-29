@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\SchoolAdmin;
+namespace App\Http\Controllers\Users;
 
 use App\Enum\StatusCardEnum;
 use App\Http\Controllers\Controller;
+use App\Models\BehaviorLog;
 use App\Models\CardIssues;
-use App\Models\RechargeCard;
-use App\Models\RechargeCardUser;
 use App\Services\CardIssueService;
 use App\Services\RechargeService;
 use Illuminate\Http\Request;
@@ -128,7 +127,8 @@ class ProfileController extends Controller
 
     public function userLogs()
     {
-
+        $logs = BehaviorLog::with(['issuedBy','cardItem'])->where('user_id',Auth::id())->get();
+        return view('users.user-logs',compact('logs'));
     }
 
 }

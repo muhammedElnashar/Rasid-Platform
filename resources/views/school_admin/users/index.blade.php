@@ -174,6 +174,7 @@
                                             </button>
                                         </form>
                                         @if($user->status === 1 )
+                                            @can('activate',$user)
                                             <form method="POST" action="{{ route('user.deactivate', $user) }}">
                                                 @csrf
                                                 @method('POST')
@@ -182,8 +183,10 @@
 
                                                 </button>
                                             </form>
+                                            @endcan
 
                                         @elseif($user->status === 0)
+                                            @can('deactivate',$user)
                                             <form method="POST" action="{{ route('user.activate', $user) }}">
                                                 @csrf
                                                 @method('POST')
@@ -192,7 +195,7 @@
 
                                                 </button>
                                             </form>
-
+                                            @endcan
                                         @endif
 
                                     </div>

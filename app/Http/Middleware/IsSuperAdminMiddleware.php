@@ -17,8 +17,7 @@ class IsSuperAdminMiddleware
     {
         // Check if the user is authenticated and has the super admin role
         if (!auth()->user()->isSuperAdmin()){
-            // If not, redirect to the home page with an error message
-            return redirect()->route('home')->with('error', __('message.unauthorized_access'));
+            abort(403,'غير مصرح لك بالدخول');
         }
         return $next($request);
     }

@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Policies;
+
+use App\Models\Badge;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+
+class BadgePolicy
+{
+    protected function hasAccess(User $user, Badge $badge): bool
+    {
+        return ($user->isSchoolAdmin() || $user->isModerator())
+            && $user->school_id === $badge->school_id;
+    }
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
+    {
+        return $user->isSchoolAdmin() || $user->isModerator();
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user, Badge $badge): bool
+    {
+        return $this->hasAccess($user,$badge);
+    }
+
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
+    {
+        return $user->isSchoolAdmin() || $user->isModerator();
+    }
+
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user, Badge $badge): bool
+    {
+        return $this->hasAccess($user,$badge);
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Badge $badge): bool
+    {
+        return $this->hasAccess($user,$badge);
+    }
+
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, Badge $badge): bool
+    {
+        return false;
+    }
+
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, Badge $badge): bool
+    {
+        return false;
+    }
+}

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SchoolAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Imports\UsersImport;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\CustomResetPassword;
@@ -12,6 +13,8 @@ use App\Services\PasswordResetService;
 use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -98,6 +101,7 @@ class UserController extends Controller
 
     public function activate(User $user)
     {
+        $this->authorize('activate', $user);
         $this->userServices->activateUser($user);
         return redirect()
             ->route('users.index')
@@ -106,10 +110,42 @@ class UserController extends Controller
 
     public function deactivate(User $user)
     {
+        $this->authorize('deactivate', $user);
         $this->userServices->suspendUser($user);
         return redirect()
             ->route('users.index')
             ->with('success', 'تم التعطيل بنجاح');
+    }
+
+    public function bulkUser()
+    {
+        $this->authorize('bulk', User::class);
+        return view('school_admin.users.bulk-users');
+    }
+
+    public function import(Request $request)
+    {
+        $this->authorize('bulk', User::class);
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        try {
+            $import = new UsersImport(auth()->user()->school_id);
+            Excel::import($import, $request->file('file'));
+
+            return redirect()->back()->with('success', count($import->newUsers) . ' مستخدم تم رفعهم بنجاح');
+
+        } catch (ValidationException $e) {
+            $messages = [];
+            foreach ($e->failures() as $failure) {
+                $row = $failure->row(); // الصف
+                foreach ($failure->errors() as $error) {
+                    $messages[] = "خطأ في الصف {$row}: {$error}";
+                }
+            }
+            return redirect()->back()->withErrors($messages);
+        }
     }
 
 

@@ -71,6 +71,7 @@
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
+                                        @can('activation',$card)
                                         <form method="POST" action="{{ route('recharge-cards.activation', $card) }}">
                                             @csrf
                                             <button type="submit"
@@ -78,8 +79,7 @@
                                                 {{ $card->is_active ? 'تعطيل' : 'تفعيل' }}
                                             </button>
                                         </form>
-
-
+                                        @endcan
                                     </div>
 
                                 </td>

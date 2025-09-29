@@ -7,13 +7,7 @@ use App\Models\User;
 
 class SchoolPolicy
 {
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct()
-    {
-        //
-    }
+
     public function update(User $user, School $model): bool
     {
         return ($user->isSchoolAdmin() || $user->isModerator())

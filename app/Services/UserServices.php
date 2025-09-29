@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendPasswordResetLinkJob;
 use App\Models\Role;
 use App\Models\User;
 use Auth;
@@ -43,7 +44,7 @@ class UserServices
             'settlement_code' => $settlementCode,
         ]);
 
-        $this->passwordResetService->sendResetLink($user);
+        dispatch(new SendPasswordResetLinkJob($user));
 
         return $user;
     }

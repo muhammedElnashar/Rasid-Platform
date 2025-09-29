@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateBadgeRequest;
 use App\Models\Badge;
 use App\Models\UserBadge;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BadgeController extends Controller
 {
@@ -16,6 +17,7 @@ class BadgeController extends Controller
      */
     public function index()
     {
+        $this->authorize('view-any', Badge::class);
         $school= auth()->user()->school;
         $badges = $school->badges;
         return view('school_admin.badges.index', compact('badges'));
@@ -26,6 +28,7 @@ class BadgeController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Badge::class);
         return view('school_admin.badges.create');
     }
 
@@ -34,6 +37,7 @@ class BadgeController extends Controller
      */
     public function store(StoreBadgeRequest $request)
     {
+        $this->authorize('create', Badge::class);
         $school= auth()->user()->school;
         // Validate the request data
         $validated = $request->validated();
@@ -67,10 +71,12 @@ class BadgeController extends Controller
      */
     public function update(UpdateBadgeRequest $request, Badge $badge)
     {
-
+        $this->authorize('update', $badge);
         $validated = $request->validated();
         if ($request->hasFile('image')) {
-            \Storage::disk('images')->delete($badge->image);
+            if ($badge->image && Storage::disk('images')->exists($badge->image)) {
+                Storage::disk('images')->delete($badge->image);
+            }
             $imagePath = $request->file('image')->store('badges', 'images');
             $validated['image'] = $imagePath;
         }
@@ -83,7 +89,10 @@ class BadgeController extends Controller
      */
     public function destroy(Badge $badge)
     {
-        \Storage::disk('images')->delete($badge->image);
+        $this->authorize('delete', $badge);
+        if ($badge->image && Storage::disk('images')->exists($badge->image)) {
+            Storage::disk('images')->delete($badge->image);
+        }
         $badge->delete();
         return redirect()->route('badges.index')->with('success', 'تم الحذف بنجاح.');
     }

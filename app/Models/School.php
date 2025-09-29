@@ -120,6 +120,12 @@ class School extends Model
         return $this->hasMany(BehaviorLog::class);
     }
 
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+
 
 
 

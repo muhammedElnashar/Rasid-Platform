@@ -65,4 +65,21 @@ class UserPolicy
     {
         return false;
     }
+
+    public function activate(User $authUser , User $user)
+    {
+        return ($authUser->isSchoolAdmin())
+            && $authUser->school_id === $user->school_id;
+    }
+
+    public function deactivate(User $authUser , User $user)
+    {
+        return ($authUser->isSchoolAdmin())
+            && $authUser->school_id === $user->school_id;
+    }
+    public function bulk(User $authUser )
+    {
+        return $authUser->isSchoolAdmin();
+    }
+
 }

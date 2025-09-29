@@ -3,11 +3,17 @@
 namespace App\Policies;
 
 use App\Models\RechargeCard;
+use App\Models\RechargeCardUser;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class RechargeCardPolicy
 {
+    protected function access(User $user, RechargeCardUser $cardUser): bool
+    {
+        return $user->isSchoolAdmin()
+            && $user->school_id === $cardUser->card->school_id;
+    }
+
     protected function hasAccess(User $user, RechargeCard $rechargeCard): bool
     {
 
@@ -69,4 +75,14 @@ class RechargeCardPolicy
     {
         return false;
     }
+
+    public function activation(User $user,RechargeCardUser $rechargeCardUser)
+    {
+        return $this->access($user,$rechargeCardUser);
+    }
+
+
+
+
+
 }

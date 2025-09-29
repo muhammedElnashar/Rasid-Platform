@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->integer('points_required');
             $table->integer('stock')->default(0);
-            $table->string('target_role')->nullable();
+            $table->foreignId('target_role')->nullable()->constrained('roles');
             $table->foreignId('target_level_id')->nullable()->constrained('levels');
             $table->timestamps();
         });

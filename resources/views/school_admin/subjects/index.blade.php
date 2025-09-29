@@ -112,11 +112,7 @@
 
                         </tbody>
                     </table>
-                    <div class="">
 
-                        {{$subjects->links()}}
-
-                    </div>
 
                 </div>
             </div>

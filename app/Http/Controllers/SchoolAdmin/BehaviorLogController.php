@@ -25,6 +25,7 @@ class BehaviorLogController extends Controller
      */
     public function index()
     {
+        $this->authorize('view-any', BehaviorLog::class);
         $logs=auth()->user()->school->logs()->with('user','issuedBy','cardItem.category.card')->get();
         return view('school_admin.logs.index',compact('logs'));
     }
@@ -34,6 +35,7 @@ class BehaviorLogController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', BehaviorLog::class);
         $school = auth()->user()->school;
         $roles = Role::ExpectModeratorAndAdmin()->get();
         $users = User::select('id', 'full_name', 'role_id','username')
@@ -49,6 +51,8 @@ class BehaviorLogController extends Controller
      */
     public function store(StoreLogsRequest $request)
     {
+        $this->authorize('create', BehaviorLog::class);
+
         $user = auth()->user();
         $data = $request->validated();
         $this->logsService->storeLogs($data, $user);
@@ -68,6 +72,7 @@ class BehaviorLogController extends Controller
      */
     public function edit(BehaviorLog $log)
     {
+        $this->authorize('update', $log);
         if ($log->status !== StatusEnum::Pending) {
             return redirect()->route('logs.index')->with('error', 'لا يمكن تعديل السجل بعد اعتماده او رفضه');
         }
@@ -89,6 +94,8 @@ class BehaviorLogController extends Controller
      */
     public function update(StoreLogsRequest $request, BehaviorLog $log)
     {
+        $this->authorize('update', $log);
+
         if ($log->status !== StatusEnum::Pending) {
             return redirect()->route('logs.index')->with('error', 'لا يمكن تعديل السجل بعد اعتماده او رفضه');
         }
@@ -103,6 +110,7 @@ class BehaviorLogController extends Controller
      */
     public function destroy(BehaviorLog $log)
     {
+        $this->authorize('delete', $log);
         if ($log->status !== StatusEnum::Pending) {
         return redirect()->route('logs.index')->with('error', 'لا يمكن تعديل السجل بعد اعتماده او رفضه');
     }
@@ -111,6 +119,7 @@ class BehaviorLogController extends Controller
     }
     public function approve(BehaviorLog $log)
     {
+        $this->authorize('approve', $log);
         if ($log->status !== StatusEnum::Pending) {
             return redirect()->route('logs.index')->with('error', 'لا يمكن اعتماد السجل بعد اعتماده او رفضه');
         }
@@ -120,6 +129,7 @@ class BehaviorLogController extends Controller
 
     public function reject(BehaviorLog $log)
     {
+        $this->authorize('reject', $log);
         if ($log->status !== StatusEnum::Pending) {
             return redirect()->route('logs.index')->with('error', 'لا يمكن اعتماد السجل بعد اعتماده او رفضه');
         }
@@ -130,6 +140,7 @@ class BehaviorLogController extends Controller
 
     public function activation(BehaviorLog $log)
     {
+        $this->authorize('activation', $log);
         $this->logsService->activation($log);
 
         return back()->with('success', $log->active ? 'تم التفعيل' : 'تم التعطيل');

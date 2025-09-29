@@ -66,7 +66,7 @@
                                                 <td>{{$log->issue_number}}</td>
                                                 <td>{{$log->user->full_name}}</td>
                                                 <td>{{$log->issuedBy->full_name}}</td>
-                                                <td>{{$log->cardItem->category->card->name}}</td>
+                                                <td>{{$log->cardItem->category->card->name->label()}}</td>
                                                 <td>{{$log->cardItem->category->name}}</td>
                                                 <td>{{$log->cardItem->name}}</td>
                                                 <td>{{$log->points_value}}</td>
