@@ -93,7 +93,9 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::get('transfers',[\App\Http\Controllers\SchoolAdmin\PointTransferController::class,'index'])->name('transfer.index');
     Route::put('transfer/approved/{transfer}',[\App\Http\Controllers\SchoolAdmin\PointTransferController::class,'approved'])->name('transfer.approved');
     Route::put('transfer/rejected/{transfer}',[\App\Http\Controllers\SchoolAdmin\PointTransferController::class,'rejected'])->name('transfer.rejected');
-
+    // Groups
+    Route::resource('groups',\App\Http\Controllers\SchoolAdmin\GroupController::class);
+    // Student - Parent - Teacher
     Route::middleware('CheckNormalUser')->group(function (){
         //market
         Route::get('market',[\App\Http\Controllers\Users\MarketController::class,'marketItem'])->name('market-item');

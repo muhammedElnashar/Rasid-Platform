@@ -155,37 +155,37 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function teacherSubjectClasses()
-    {
-        return $this->hasMany(TeacherSubjectClass::class, 'teacher_id');
-    }
 
-    public function teacherSubjects()
+/*    public function teacherSubjects()
     {
         return $this->belongsToMany(Subject::class, 'teacher_subject_classes', 'teacher_id', 'subject_id');
-    }
+    }*/
 
-    public function teacherClasses()
+  /*  public function teacherClasses()
     {
         return $this->belongsToMany(Classes::class, 'teacher_subject_classes', 'teacher_id', 'class_id');
-    }
+    }*/
 
     public function studentClasses()
     {
         return $this->hasMany(StudentClass::class, 'student_id');
     }
 
-    public function studentSubjects()
-    {
-        return $this->belongsToMany(Subject::class, 'student_classes', 'student_id', 'subject_id');
-    }
+//    public function studentSubjects()
+//    {
+//        return $this->belongsToMany(Subject::class, 'student_classes', 'student_id', 'subject_id');
+//    }
 
-    public function studentClassesRelation()
+/*    public function studentClassesRelation()
     {
         return $this->belongsToMany(Classes::class, 'student_classes', 'student_id', 'class_id');
+    }*/
+    public function teacherSubjectClasses()
+    {
+        return $this->hasMany(TeacherSubjectClass::class, 'teacher_id');
     }
 
-    public function subjectsForUser()
+    public function subjectsForTeacher()
     {
 
         if ($this->isTeacher()) {
@@ -211,6 +211,14 @@ class User extends Authenticatable
         return collect(); // لو مش طالب ولا معلم
     }
 
+    public function studentSubjects()
+    {
+        return $this->hasMany(StudentSubject::class, 'student_id');
+    }
+    public function studentClass()
+    {
+        return $this->hasOne(StudentClass::class, 'student_id');
+    }
 
     public function cardIssues()
     {

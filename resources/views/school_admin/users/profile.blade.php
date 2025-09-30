@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-@lang('message.profile')
+الصفحة الشخصية
 @endsection
 @push('css')
     <style>
@@ -416,9 +416,12 @@
                                         </div>
                                         <div class="fw-bolder mt-5">@lang('message.phone')</div>
                                         <div class="text-gray-600">{{$user->phone}}</div>
+                                        <div class="fw-bolder mt-5">كود الشحن</div>
+                                        <div class="text-gray-600">{{$user->settlement_code}}</div>
                                         @if(\Illuminate\Support\Facades\Auth::user()->isStudent())
-                                        @foreach($parents as $parent)
 
+
+                                        @foreach($parents as $parent)
                                             @if($parent->pivot->relationship === 'father')
                                                     <div class="fw-bolder mb-4 mt-5">اسم الاب</div>
                                                     <span class="fs-5  text-gray-600">{{$parent->full_name}}</span>
@@ -428,8 +431,13 @@
                                             @endif
                                         @endforeach
                                             <div class="fw-bolder mb-4 mt-5">@lang('message.subjects')</div>
-                                            @foreach($subjectClasses as $subject)
-                                                <span class="fs-5  badge badge-light-info">{{$subject->name}}</span>
+                                            @foreach($studentSubjects as $subject)
+                                                <span class="fs-5  badge badge-light-info">{{$subject->subject->name}}</span>
+                                            @endforeach
+
+                                            <div class="fw-bolder mb-4 mt-5">الفصل</div>
+                                            @foreach($studentClass as $class)
+                                                <span class="fs-5  badge badge-light-dark">{{$class->class->name}}</span>
                                             @endforeach
 
 

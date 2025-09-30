@@ -57,7 +57,7 @@
                                         <option value="">@lang('message.select', ['item' => __('message.guardian')])</option>
                                         @foreach($guardians as $guardian)
                                             <option value="{{ $guardian->id }}" {{ old('guardian_id') == $guardian->id ? 'selected' : '' }}>
-                                                {{ $guardian->fullname }} - {{ $guardian->username }}
+                                                {{ $guardian->full_name }} - {{ $guardian->username }}
                                             </option>
                                         @endforeach
                                     </select>

@@ -69,19 +69,21 @@ class ProfileController extends Controller
     {
 
         $user=auth()->user();
-        $subjectClasses= $user->subjectsForUser();
+        $subjectClasses= $user->subjectsForTeacher();
         $parents= $user->guardians()->get();
         $currentLevel = $user->currentLevel;
         $currentLayer = $user->currentLayer;
         $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();
         $insignias = $user->insignias;
         $badges = $user->badges;
+        $studentSubjects = $user->studentSubjects()->with('subject')->get();
+        $studentClass = $user->studentClass()->with('class')->get();
 
 
 
         return view('school_admin.users.profile',compact(
             'user','subjectClasses','parents'
-            ,'currentLevel','currentLayer','levelsInLayer','insignias','badges'
+            ,'currentLevel','currentLayer','levelsInLayer','insignias','badges','studentSubjects','studentClass'
         ));
     }
 

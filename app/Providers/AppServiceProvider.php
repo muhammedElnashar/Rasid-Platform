@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Classes;
 use App\Models\DeductionCard;
 use App\Models\Grade;
+use App\Models\Group;
 use App\Models\Insignia;
 use App\Models\Layer;
 use App\Models\Level;
@@ -37,6 +38,7 @@ use App\Policies\CardPolicy;
 use App\Policies\CategoryPolicy;
 use App\Policies\ClassesPolicy;
 use App\Policies\DeductionCardPolicy;
+use App\Policies\GroupPolicy;
 use App\Policies\InsigniaPolicy;
 use App\Policies\LayerPolicy;
 use App\Policies\LevelPolicy;
@@ -101,6 +103,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(BehaviorLog::class, LogPolicy::class);
         Gate::policy(StoreItem::class, StoreItemPolicy::class);
         Gate::policy(RedemptionRequest::class, RedemptionRequestPolicy::class);
+        Gate::policy(Group::class, GroupPolicy::class);
 
 
     }
