@@ -11,7 +11,8 @@ class BehaviorLog extends Model
 {
     protected $fillable = [
         'school_id',
-        'user_id',
+        'issued_to_type',
+        'issued_to_id',
         'issuer_by',
         'card_item_id',
         'issue_number',
@@ -27,10 +28,11 @@ class BehaviorLog extends Model
         'status'=>StatusEnum::class,
     ];
 
-    public function user()
+    public function issuedTo()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
+
 
     public function cardItem()
     {

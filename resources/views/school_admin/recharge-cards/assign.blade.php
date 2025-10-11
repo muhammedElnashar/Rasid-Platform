@@ -1,7 +1,7 @@
 @extends("layouts.app")
 
 @section('title')
-    @lang('message.assign', ['item' => __('message.recharge_card')])
+    اصدار بطاقه شحن
 @endsection
 @push("css")
 @endpush
@@ -32,31 +32,60 @@
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.role')</span>
+                                        <span class="required">موجه إلى</span>
                                     </label>
-
-                                    <select name="role_id" aria-label="Select Type" id="type" data-control="select2"
-                                            data-placeholder="@lang('message.select', ['item' => __('message.role')])"
-                                            class="form-select form-select-solid">
-                                        <option value="">@lang('message.select', ['item' => __('message.role')])</option>
-                                        @foreach($roles as $role)
-                                            <option value="{{ $role->id }}">{{ __('message.'.$role->name) }}</option>
-                                        @endforeach
+                                    <select name="issued_to_type" id="issued_to_type" class="form-select form-select-solid"
+                                            data-control="select2" data-placeholder="اختر نوع المستلم">
+                                        <option value="">اختر نوع المستلم</option>
+                                        <option value="App\Models\User">مستخدم</option>
+                                        <option value="App\Models\Group">مجموعة</option>
                                     </select>
                                 </div>
 
-                                <div class="fv-row mb-7">
-                                    <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required">@lang('message.user')</span>
-                                    </label>
+                                {{-- قسم المستخدم --}}
+                                <div id="userSection" style="display:none;">
+                                    <div class="fv-row mb-7">
+                                        <label class="fs-6 fw-semibold form-label mb-2 ">
+                                            <span class="required">@lang('message.role')</span>
+                                        </label>
+                                        <select name="role_id" aria-label="Select Type" id="role_id" data-control="select2"
+                                                data-placeholder="@lang('message.select', ['item' => __('message.role')])"
+                                                class="form-select form-select-solid">
+                                            <option value="">@lang('message.select', ['item' => __('message.role')])</option>
+                                            @foreach($roles as $role)
+                                                <option value="{{ $role->id }}">{{ __('message.'.$role->name) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                    <select name="user_id[]" id="user_id" multiple
-                                            data-control="select2"
-                                            data-placeholder="@lang('message.select', ['item' => __('message.user')])"
-                                            class="form-select form-select-solid">
-                                        <option value="">@lang('message.select', ['item' => __('message.user')])</option>
-                                    </select>
+                                    <div class="fv-row mb-7">
+                                        <label class="fs-6 fw-semibold form-label mb-2 ">
+                                            <span class="required">@lang('message.user')</span>
+                                        </label>
+                                        <select name="issued_to_id" id="user_id" data-control="select2"
+                                                data-placeholder="@lang('message.select', ['item' => __('message.user')])"
+                                                class="form-select form-select-solid">
+                                            <option value="">@lang('message.select', ['item' => __('message.user')])</option>
+                                        </select>
+                                    </div>
                                 </div>
+
+                                {{-- قسم المجموعة --}}
+                                <div id="groupSection" style="display:none;">
+                                    <div class="fv-row mb-7">
+                                        <label class="fs-6 fw-semibold form-label mb-2 ">
+                                            <span class="required">المجموعة</span>
+                                        </label>
+                                        <select name="issued_to_id" id="group_id" class="form-select form-select-solid"
+                                                data-control="select2" data-placeholder="اختر المجموعة" disabled>
+                                            <option value="">اختر المجموعة</option>
+                                            @foreach($groups as $group)
+                                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
@@ -68,7 +97,7 @@
                                             class="form-select form-select-solid">
                                         <option value="">@lang('message.select', ['item' => __('message.recharge_card')])</option>
                                         @foreach($cards as $card)
-                                            <option value="{{ $card->id }}">{{ $card->code }} - @lang('message.points') ( {{$card->points}} - {{$card->cardItem->name}} )</option>
+                                            <option value="{{ $card->id }}">{{ $card->name }} - @lang('message.points') ( {{$card->points}} - {{$card->cardItem->name}} )</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -109,30 +138,58 @@
 
 @push('script')
     <script>
-        let allUsers = @json($users);
-
         $(document).ready(function () {
-            $('[data-control="select2"]').select2({
-                width: '100%',
-                allowClear: true,
-                placeholder: "اختر المستخدمين"
+            let allUsers = @json($users);
+            let $issuedType   = $('#issued_to_type');
+            let $userSection  = $('#userSection');
+            let $groupSection = $('#groupSection');
+            let $roleSelect   = $('#role_id');
+            let $userSelect   = $('#user_id');
+            let $groupSelect  = $('#group_id'); // تأكد إن عندك select للمجموعة بالـ id ده
+
+            // إظهار القسم المناسب وتفعيل/تعطيل الحقول
+            $issuedType.on('change', function () {
+                if ($(this).val() === 'App\\Models\\User') {
+                    $userSection.show();
+                    $userSelect.prop('disabled', false);
+
+                    $groupSection.hide();
+                    $groupSelect.prop('disabled', true);
+
+                } else if ($(this).val() === 'App\\Models\\Group') {
+                    $groupSection.show();
+                    $groupSelect.prop('disabled', false);
+
+                    $userSection.hide();
+                    $userSelect.prop('disabled', true);
+
+                } else {
+                    $userSection.hide();
+                    $userSelect.prop('disabled', true);
+
+                    $groupSection.hide();
+                    $groupSelect.prop('disabled', true);
+                }
             });
 
-            let userSelect = $('#user_id');
-
-            $('select[name="role_id"]').on('change', function () {
+            // فلترة المستخدمين بناءً على الدور
+            $roleSelect.on('change', function () {
                 let roleId = $(this).val();
-                userSelect.empty();
+                $userSelect.empty().append('<option value="">اختر المستخدم</option>');
 
                 if (roleId) {
                     let filteredUsers = allUsers.filter(u => u.role_id == roleId);
-
                     filteredUsers.forEach(user => {
-                        userSelect.append('<option value="' + user.id + '">' + user.full_name+' - ' + user.username + '</option>');
+                        $userSelect.append(
+                            '<option value="' + user.id + '">' +
+                            user.full_name + ' - ' + user.username +
+                            '</option>'
+                        );
                     });
-                    userSelect.trigger('change'); // تحديث select2
+                    $userSelect.trigger('change');
                 }
             });
         });
+
     </script>
 @endpush

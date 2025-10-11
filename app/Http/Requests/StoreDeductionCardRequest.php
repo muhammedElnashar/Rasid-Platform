@@ -33,7 +33,6 @@ class StoreDeductionCardRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'color' => 'required|hex_color',
             'description' => 'nullable|string|max:1000',
             'threshold' => 'required|integer',
             'type' => ['required', Rule::in(array_column(DeductionCardTypeEnum::cases(), 'value'))],

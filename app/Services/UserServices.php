@@ -56,7 +56,7 @@ class UserServices
     }
     public function activateUser(User $user)
     {
-        DB::table('recharge_failed_attempts')->where('user_id', $user->id)->delete();
+        DB::table('recharge_failed_attempts')->where('issued_to_id', $user->id)->delete();
         $user->status = true;
         $user->save();
 

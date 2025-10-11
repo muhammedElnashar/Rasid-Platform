@@ -25,7 +25,19 @@
                                 @csrf
                                 @method('PUT')
 
-
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2">
+                                        <span class="required">@lang('message.name')</span>
+                                    </label>
+                                    <div class="input-group input-group-solid mb-5">
+                                        <input type="text"
+                                               class="form-control"
+                                               name="name"
+                                               value="{{ old('name', $rechargeCard->name) }}"
+                                               placeholder="@lang('message.enter', ['item' => __('message.name')])"
+                                               autocomplete="off"/>
+                                    </div>
+                                </div>
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
@@ -92,7 +104,7 @@
             let $categorySelect = $('#categorySelect');
             let $itemSelect = $('#itemSelect');
 
-            // Helper لتحديث select2 لو كانت مُستخدمة
+            // Helpers لتحديث select2 لو كانت مُستخدمة
             function refreshSelect($el) {
                 // لو تستخدم Select2
                 if ($el.hasClass('select2-hidden-accessible')) {

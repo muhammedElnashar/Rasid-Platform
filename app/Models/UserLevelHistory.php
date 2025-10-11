@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class UserLevelHistory extends Model
 {
     protected $fillable = [
-        'user_id', 'category_id', 'layer_id', 'level_id',
+        'issued_to_type','issued_to_id', 'category_id', 'layer_id', 'level_id',
         'change_date', 'notification_sent', 'is_upgrade',
     ];
 
-    public function user()
+    public function issuedTo()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 
     public function level()

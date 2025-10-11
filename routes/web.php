@@ -5,7 +5,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::check()) {
+        return to_route('home'); // أو أي route مناسب للمستخدم بعد تسجيل الدخول
+    }
+    return to_route('login');
+});
+Route::fallback(function () {
+    return redirect('/');
 });
 
 Auth::routes();
@@ -30,7 +36,6 @@ Route::middleware('auth')->middleware('isSuperAdmin')->group(function () {
 
 Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
     // ----------------------------------------schoolAdmin----------------------------------------------------------
     // -> Users
     Route::resource('users', \App\Http\Controllers\SchoolAdmin\UserController::class);
@@ -94,13 +99,20 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::put('transfer/approved/{transfer}',[\App\Http\Controllers\SchoolAdmin\PointTransferController::class,'approved'])->name('transfer.approved');
     Route::put('transfer/rejected/{transfer}',[\App\Http\Controllers\SchoolAdmin\PointTransferController::class,'rejected'])->name('transfer.rejected');
     // Groups
+    Route::resource('group-categories',\App\Http\Controllers\SchoolAdmin\GroupCategoryController::class);
     Route::resource('groups',\App\Http\Controllers\SchoolAdmin\GroupController::class);
+    Route::post('groups/activation/{group}',[\App\Http\Controllers\SchoolAdmin\GroupController::class,'activationToggle'])->name('groups.activation');
+
     // Student - Parent - Teacher
     Route::middleware('CheckNormalUser')->group(function (){
         //market
         Route::get('market',[\App\Http\Controllers\Users\MarketController::class,'marketItem'])->name('market-item');
-        Route::post('exchange',[\App\Http\Controllers\Users\MarketController::class,'exchange'])->name('market.exchange');
+        Route::post('user/exchange',[\App\Http\Controllers\Users\MarketController::class,'userExchange'])->name('user.exchange');
         Route::get('user/awards',[\App\Http\Controllers\Users\MarketController::class,'userAward'])->name('user.awards');
+        Route::post('group/exchange',[\App\Http\Controllers\Users\MarketController::class,'groupExchange'])->name('group.exchange');
+        Route::get('group/{group}/market',[\App\Http\Controllers\Users\MarketController::class,'groupMarketItem'])->name('group.market');
+        Route::put('update/profile',[App\Http\Controllers\Users\ProfileController::class,'updateProfile'])->name('update.profile');
+
         //logs
         Route::get('user/logs',[\App\Http\Controllers\Users\ProfileController::class,'userLogs'])->name('user.logs');
         //Issue
@@ -119,6 +131,14 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
         Route::post('user-recharge',[\App\Http\Controllers\Users\ProfileController::class,'recharge'])->name('user.recharge');
         //Profile
         Route::get('profile',[\App\Http\Controllers\Users\ProfileController::class,'UserProfile'])->name('profile');
+        // Groups
+        Route::get('user/groups',[\App\Http\Controllers\Users\UserGroupsController::class,'userGroups'])->name('user.groups');
+        Route::get('user/group/profile/{group}',[\App\Http\Controllers\Users\UserGroupsController::class,'userGroupProfile'])->name('user.group.profile');
+        Route::post('/groups/{group}/recharge',[\App\Http\Controllers\Users\UserGroupsController::class,'recharge'])->name('group.recharge');
+        Route::put('update/group/{group}/profile',[App\Http\Controllers\Users\UserGroupsController::class,'updateGroupProfile'])->name('update.group.profile');
+        //Parent
+        Route::get('children',[App\Http\Controllers\Users\ProfileController::class,'children'])->name('children');
+        Route::get('children/{user}/profile',[App\Http\Controllers\Users\ProfileController::class,'childrenProfile'])->name('children.profile');
     });
 
 });

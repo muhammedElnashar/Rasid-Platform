@@ -13,6 +13,11 @@ class GroupPolicy
         return ($user->isSchoolAdmin() || $user->isModerator())
             && $user->school_id === $group->school_id;
     }
+    protected function access(User $user, Group $group): bool
+    {
+        return $user->isSchoolAdmin()
+            && $user->school_id === $group->school_id;
+    }
     /**
      * Determine whether the user can view any models.
      */
@@ -67,5 +72,9 @@ class GroupPolicy
     public function forceDelete(User $user, Group $group): bool
     {
         return false;
+    }
+    public function activation(User $user,Group $group)
+    {
+        return $this->access($user,$group);
     }
 }

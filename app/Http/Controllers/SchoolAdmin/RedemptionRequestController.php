@@ -20,8 +20,8 @@ class RedemptionRequestController extends Controller
     {
         $this->authorize('viewAny',RedemptionRequest::class);
         $schoolId = Auth::user()->school_id;
-        $requests = RedemptionRequest::with(['user', 'item'])
-            ->whereHas('user', function($q) use ($schoolId) {
+        $requests = RedemptionRequest::with(['issuedTo', 'item'])
+            ->whereHas('issuedTo', function($q) use ($schoolId) {
                 $q->where('school_id', $schoolId);
             })
             ->whereHas('item', function($q) use ($schoolId) {
@@ -41,6 +41,7 @@ class RedemptionRequestController extends Controller
 
     public function rejectRequest(RedemptionRequest $request)
     {
+
         $this->authorize('reject', $request);
         $this->redemptionRequest->rejectRequest($request);
         return redirect()->back()->with('success','تم رفض الجائزة');

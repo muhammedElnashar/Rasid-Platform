@@ -13,12 +13,11 @@ use Illuminate\Support\Facades\DB;
 class RedemptionRequestServices
 {
 
-    public function exchangeItem(int $itemId)
+    public function exchangeItem(int $itemId,$model)
     {
-        $user = Auth::user();
         $item = StoreItem::findOrFail($itemId);
 
-        if ($user->flexible_points < $item->points_required) {
+        if ($model->flexible_points < $item->points_required) {
             return [
                 'success' => false,
                 'message' => 'رصيدك من النقاط غير كافي لتبديل هذا المنتج'
@@ -38,21 +37,33 @@ class RedemptionRequestServices
                 'message' => 'الجائزه غير متاحه لك'
             ];
         }
+        if ($item->target_level_id) {
+            if ($model->currentLevel === null) {
+                return [
+                    'success' => false,
+                    'message' => 'لا يوجد مستوى حالي للمستخدم، لا يمكن استبدال الجائزة'
+                ];
+            }
 
-        if ($item->target_level_id && $item->target_level_id != Auth::user()->currentLevel->id){
-            return [
-                'success' => false,
-                'message' => 'المستوي الحالي غير متاح له هذة الجائزة'
-            ];
+            // الحالة الثانية: مستوى المستخدم لا يطابق مستوى الجائزة المطلوب
+            if ($item->target_level_id != $model->currentLevel->id) {
+                return [
+                    'success' => false,
+                    'message' => 'المستوى الحالي غير متاح له هذه الجائزة'
+                ];
+            }
         }
 
 
-        DB::transaction(function () use ($item, $user) {
+
+        DB::transaction(function () use ($item, $model) {
             $item->decrement('stock', 1);
-            $user->decrement('flexible_points', $item->points_required);
+            $model->decrement('flexible_points', $item->points_required);
 
             RedemptionRequest::create([
-                'user_id' => $user->id,
+                'school_id' => $model->school_id,
+                'issued_to_id'   => $model->id,
+                'issued_to_type' => get_class($model),
                 'item_id' => $item->id,
                 'request_date' => now(),
                 'status' => StatusEnum::Pending,
@@ -78,16 +89,19 @@ class RedemptionRequestServices
 
     public function rejectRequest(RedemptionRequest $request)
     {
-        $item=StoreItem::findOrFail($request->item_id);
-        $user = User::findOrFail($request->user_id);
-        $item->increment('stock',1);
-        $user->increment('flexible_points',$item->points_required);
-        $request->update([
-            'status' => StatusEnum::Rejected
-        ]);
-        return $request ;
 
+        $item = StoreItem::findOrFail($request->item_id);
+        $entity = $request->issuedTo; // سواء User أو Group
+
+        DB::transaction(function () use ($item, $entity, $request) {
+            $item->increment('stock', 1);
+            $entity->increment('flexible_points', $item->points_required);
+            $request->update(['status' => StatusEnum::Rejected]);
+        });
+
+        return $request;
     }
+
     private function generateUniqueCode()
     {
         do {

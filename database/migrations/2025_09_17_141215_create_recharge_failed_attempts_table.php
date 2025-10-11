@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('recharge_failed_attempts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->morphs('issued_to'); // user أو group
             $table->string('code_attempted');
             $table->text('user_agent')->nullable();
             $table->timestamps();

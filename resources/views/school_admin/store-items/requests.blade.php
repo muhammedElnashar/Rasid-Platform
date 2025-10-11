@@ -53,7 +53,7 @@
                         @foreach($requests as $request)
 
                             <tr>
-                                <td>{{$request->user->full_name}}</td>
+                                <td>{{$request->issuedTo->full_name ?? $request->issuedTo->name}}</td>
                                 <td>{{$request->item->name}}</td>
                                 <td><img width="50px" height="50px" src="{{Storage::disk('images')->url($request->item->image_url)}}" alt="{{$request->item->name}}"></td>
                                 <td>{{$request->item->points_required}}</td>

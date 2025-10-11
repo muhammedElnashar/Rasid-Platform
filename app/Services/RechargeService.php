@@ -4,76 +4,89 @@ namespace App\Services;
 
 use App\Models\RechargeCard;
 use App\Models\RechargeCardUser;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class RechargeService
 {
-    protected $userService;
+    protected UserServices $userServices;
 
-    public function __construct(UserServices $userService)
+    public function __construct(UserServices $userServices)
     {
-        $this->userService = $userService;
+        $this->userServices = $userServices;
     }
+
     /**
-     * تنفيذ عملية الشحن
+     * تنفيذ عملية الشحن سواء للمستخدم أو المجموعة
      */
-    public function recharge(User $user, string $code, string $settlementCode): array
+    public function recharge($entity, string $code, string $settlementCode): array
     {
-        // التحقق من كود التسوية
-        if ($user->settlement_code !== $settlementCode) {
-            $this->logFailedAttempt($user, $code);
-            return $this->checkAccountLock($user, 'كود الشحن غير صحيح');
+        // ✅ التحقق من كود التسوية
+        if ($entity->settlement_code !== $settlementCode) {
+            $this->logFailedAttempt($entity, $code);
+            return $this->checkLock($entity, 'كود الشحن غير صحيح');
         }
 
-        // التحقق من الكرت
-        $card = RechargeCard::where('code', $code)->first();
+        // ✅ البحث عن الكرت
+        $userCard = RechargeCardUser::where('code', $code)->first();
+        if (!$userCard) {
+            $this->logFailedAttempt($entity, $code);
+            return $this->checkLock($entity, 'الكرت غير صحيح');
+        }
+
+        // ✅ جلب الكرت الأساسي
+        $card = RechargeCard::find($userCard->card_id);
         if (!$card) {
-            $this->logFailedAttempt($user, $code);
-            return $this->checkAccountLock($user, 'الكرت غير موجود');
+            $this->logFailedAttempt($entity, $code);
+            return $this->checkLock($entity, 'بيانات الكرت غير موجودة');
         }
 
-        $rechargeCardUser = RechargeCardUser::where('card_id', $card->id)
-            ->where('user_id', $user->id)
-            ->first();
-
-        if (!$rechargeCardUser) {
-            $this->logFailedAttempt($user, $code);
-            return $this->checkAccountLock($user, 'هذا الكرت غير موجه لك');
+        // ✅ التأكد من أن الكرت مخصص للكيان الحالي
+        if (
+            $userCard->issued_to_id !== $entity->id ||
+            $userCard->issued_to_type !== get_class($entity)
+        ) {
+            $this->logFailedAttempt($entity, $code);
+            return $this->checkLock($entity, 'هذا الكرت غير مخصص لك');
         }
 
-        if (!$rechargeCardUser->is_active) {
-            $this->logFailedAttempt($user, $code);
-            return $this->checkAccountLock($user, 'الكرت غير مفعل');
+        if (!$userCard->is_active) {
+            $this->logFailedAttempt($entity, $code);
+            return $this->checkLock($entity, 'الكرت غير مفعل');
         }
 
-        if ($rechargeCardUser->used_count >= $rechargeCardUser->max_uses) {
-            $this->logFailedAttempt($user, $code);
-            return $this->checkAccountLock($user, 'تم استهلاك الكرت بالكامل');
+        if ($userCard->used_count >= $userCard->max_uses) {
+            $this->logFailedAttempt($entity, $code);
+            return $this->checkLock($entity, 'تم استهلاك الكرت بالكامل');
         }
 
-        // ✅ الكود صحيح → نصفر المحاولات
-        DB::transaction(function () use ($user, $card, $rechargeCardUser) {
-            $user->fixed_points += $card->points;
-            $user->flexible_points += $card->points;
-            $user->save();
+        // ✅ تنفيذ عملية الشحن داخل معاملة
+        DB::transaction(function () use ($entity, $card, $userCard) {
+            $entity->increment('fixed_points', $card->points);
+            $entity->increment('flexible_points', $card->points);
 
-            $rechargeCardUser->increment('used_count');
+            $userCard->increment('used_count');
 
-            // تصفير المحاولات الفاشلة
-            DB::table('recharge_failed_attempts')->where('user_id', $user->id)->delete();
+            // ✅ تصفير المحاولات السابقة بعد نجاح الشحن
+            DB::table('recharge_failed_attempts')
+                ->where('issued_to_id', $entity->id)
+                ->where('issued_to_type', get_class($entity))
+                ->delete();
         });
 
-        return ['status' => true, 'message' => 'تم شحن الرصيد بنجاح'];
+        return [
+            'status' => true,
+            'message' => 'تم شحن الرصيد بنجاح ✅ (' . $card->points . ' نقطة)'
+        ];
     }
 
     /**
      * تسجيل المحاولة الفاشلة
      */
-    protected function logFailedAttempt(User $user, string $code): void
+    protected function logFailedAttempt($entity, string $code): void
     {
         DB::table('recharge_failed_attempts')->insert([
-            'user_id' => $user->id,
+            'issued_to_id' => $entity->id,
+            'issued_to_type' => get_class($entity),
             'code_attempted' => $code,
             'user_agent' => request()->userAgent(),
             'created_at' => now(),
@@ -82,23 +95,37 @@ class RechargeService
     }
 
     /**
-     * فحص عدد المحاولات وتجميد الحساب لو لزم
+     * فحص عدد المحاولات وتجميد الحساب
      */
-    protected function checkAccountLock(User $user, string $message): array
+    protected function checkLock($entity, string $message): array
     {
         $failedCount = DB::table('recharge_failed_attempts')
-            ->where('user_id', $user->id)
+            ->where('issued_to_id', $entity->id)
+            ->where('issued_to_type', get_class($entity))
             ->count();
 
         if ($failedCount >= 3) {
-            $this->userService->suspendUser($user);
+            // ✅ حذف السجل بعد القيد
+            DB::table('recharge_failed_attempts')
+                ->where('issued_to_id', $entity->id)
+                ->where('issued_to_type', get_class($entity))
+                ->delete();
+
+            if ($entity instanceof \App\Models\Group) {
+                $entity->update(['active' => false]);
+            } else {
+                $this->userServices->suspendUser($entity);
+            }
 
             return [
                 'status' => false,
-                'message' => 'تم إيقاف حسابك بعد 3 محاولات فاشلة. تواصل مع الإدارة لإعادة التفعيل.'
+                'message' => 'تم قيد المعاملات بعد 3 محاولات فاشلة. تواصل مع الإدارة لإعادة التفعيل.',
             ];
         }
 
-        return ['status' => false, 'message' => $message];
+        return [
+            'status' => false,
+            'message' => $message,
+        ];
     }
 }

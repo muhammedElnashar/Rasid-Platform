@@ -51,35 +51,6 @@
 
                     </div>
 
-                    {{--
-                    <div class="menu-item me-lg-1">
-                        <a class="menu-link {{ Request::routeIs('course.index') || Request::routeIs('course.create') || Request::routeIs('course.edit') ? 'active' : '' }}  py-3"
-                            href="{{ route('course.create') }}">
-                            <span class="menu-title fs-6">Add Course</span>
-                        </a>
-                    </div>
-                    <!-- Add this inside the header menu -->
-                    <div class="menu-item me-lg-1">
-                        <a class="menu-link {{ Request::routeIs('coupons.index') || Request::routeIs('coupons.create') || Request::routeIs('coupons.edit') ? 'active' : '' }} py-3"
-                            href="{{ route('coupons.create') }}">
-                            <span class="menu-title fs-6">Add Coupon</span>
-                        </a>
-                    </div>
-
-                    <div class="menu-item me-lg-1">
-
-                        <a class="py-3 menu-link" href="{{ route('youtube') }}">
-                            <span class="menu-title fs-6">Fetch New PLaylist</span>
-                        </a>
-                    </div>
-                    <div class="menu-item me-lg-1">
-
-                        <a class="py-3 menu-link" href="{{ route('fetchShorts') }}">
-                            <span class="menu-title fs-6">Fetch New Short Video</span>
-                        </a>
-                    </div>
-
---}}
 
                     <!--end::Menu-->
                 </div>
@@ -90,38 +61,6 @@
                 <!--begin::Toolbar wrapper-->
                 <div class="flex-shrink-0 d-flex align-items-stretch">
 
-{{--
-                    <div class="d-flex align-items-center ms-1 ms-lg-3">
-                        <!--begin::Menu wrapper-->
-                        <div class="cursor-pointer symbol symbol-30px" data-kt-menu-trigger="click"
-                             data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                            @if(app()->getLocale() === 'ar')
-                                <img src="{{ asset('assets/media/flags/saudi-arabia.svg') }}" alt="AR" class="rounded-circle"/>
-                            @else
-                                <img src="{{ asset('assets/media/flags/united-kingdom.svg') }}" alt="EN" class="rounded-circle"/>
-                            @endif
-                        </div>
-
-                        <!--begin::Menu-->
-                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg
-                menu-state-primary fw-bold fs-6 w-150px py-3" data-kt-menu="true">
-                            <div class="menu-item px-3">
-                                <a href="{{ url('locale/ar') }}"
-                                   class="menu-link px-3 {{ app()->getLocale() === 'ar' ? 'active' : '' }}">
-                                    <img src="{{ asset('assets/media/flags/saudi-arabia.svg') }}" width="18" class="me-2 rounded-circle"/>
-                                    العربية
-                                </a>
-                            </div>
-                            <div class="menu-item px-3">
-                                <a href="{{ url('locale/en') }}"
-                                   class="menu-link px-3 {{ app()->getLocale() === 'en' ? 'active' : '' }}">
-                                    <img src="{{ asset('assets/media/flags/united-kingdom.svg') }}" width="18" class="me-2 rounded-circle"/>
-                                    English
-                                </a>
-                            </div>
-                        </div>
-                    </div>
---}}
 
                     <!--begin::User-->
                     <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
@@ -130,7 +69,7 @@
                             data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                             @if(\Illuminate\Support\Facades\Auth::user()->image??"")
                                 <img alt="Logo"
-                                     src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url(\Illuminate\Support\Facades\Auth::user()->image) }}" />
+                                     src="{{ \Illuminate\Support\Facades\Storage::disk('images')->url(\Illuminate\Support\Facades\Auth::user()->image) }}" />
                             @else
 
                                 <img src="{{ asset('assets/media/avatars/150-26.jpg') }}" alt="user" />
@@ -146,7 +85,7 @@
                                     <div class="symbol symbol-50px me-5">
                                         @if(\Illuminate\Support\Facades\Auth::user()->image??"")
                                             <img alt="Logo"
-                                                 src="{{ \Illuminate\Support\Facades\Storage::disk('s3')->url(\Illuminate\Support\Facades\Auth::user()->image) }}" />
+                                                 src="{{ \Illuminate\Support\Facades\Storage::disk('images')->url(\Illuminate\Support\Facades\Auth::user()->image) }}" />
                                         @else
                                             <img alt="Logo" src="{{ asset('assets/media/avatars/150-26.jpg') }}" />
                                         @endif

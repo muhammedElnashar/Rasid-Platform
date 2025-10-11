@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('point_transfers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('receiver_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->morphs('sender');
+            $table->morphs('receiver');
             $table->integer('amount');
             $table->text('reason');
             $table->string('purpose');

@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Group;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AssignInsigniaRequest extends FormRequest
 {
@@ -21,8 +24,16 @@ class AssignInsigniaRequest extends FormRequest
      */
     public function rules(): array
     {
+        $type = $this->input('issued_to_type');
+
         return [
-            'user_id' => 'required|exists:users,id',
+            'issued_to_type' => ['required', Rule::in(['App\Models\User', 'App\Models\Group'])],
+            'issued_to_id'   => [
+                'required',
+                $type === 'App\Models\User'
+                    ? Rule::exists((new User)->getTable(), 'id')
+                    : Rule::exists((new Group)->getTable(), 'id'),
+            ],
             'insignia_id' => 'required|exists:insignias,id',
         ];
     }

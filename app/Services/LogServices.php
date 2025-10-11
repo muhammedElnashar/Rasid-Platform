@@ -2,15 +2,18 @@
 
 namespace App\Services;
 
-use App\Enum\LogsTypeEnum;
 use App\Enum\StatusEnum;
 use App\Models\BehaviorLog;
 use App\Models\CardItem;
 use App\Models\User;
+use App\Models\Group;
+use App\Traits\HasIssuedModel;
 
 class LogServices
 {
-    private function generateUniqueIssueNumber()
+    use HasIssuedModel;
+
+    private function generateUniqueIssueNumber(): string
     {
         do {
             $number = 'Re' . str_pad(random_int(0, 9999999999), 10, '0', STR_PAD_LEFT);
@@ -21,88 +24,90 @@ class LogServices
 
     public function storeLogs(array $data, User $issuer)
     {
-        $item = CardItem::find($data['card_item_id']);
-        $status = StatusEnum::Pending;
-        $logs = BehaviorLog::create([
+        $item = CardItem::findOrFail($data['card_item_id']);
+        $issuedModel = $this->getIssuedModel($data['issued_to_type'], $data['issued_to_id']);
+
+        return BehaviorLog::create([
             'school_id' => $issuer->school_id,
-            'user_id' => $data['user_id'],
+            'issued_to_id' => $issuedModel->id,
+            'issued_to_type' => $data['issued_to_type'],
             'issuer_by' => $issuer->id,
-            'card_item_id'=> $item->id,
+            'card_item_id' => $item->id,
             'issue_number' => $this->generateUniqueIssueNumber(),
             'points_value' => $item->points,
-            'active' => $data['active'],
+            'active' => $data['active'] ?? true,
             'log_date' => now(),
-            'status' => $status,
+            'status' => StatusEnum::Pending,
         ]);
-        return $logs;
     }
 
-    public function updateLogs(array $data, User $issuer, BehaviorLog $logs)
+    public function updateLogs(array $data, User $issuer, BehaviorLog $log)
     {
-        $item = CardItem::find($data['card_item_id']);
+        $item = CardItem::findOrFail($data['card_item_id']);
+        $issuedModel = $this->getIssuedModel($data['issued_to_type'], $data['issued_to_id']);
 
-        $logs->update([
-            'user_id' => $data['user_id'],
+        $log->update([
+            'issued_to_id' => $issuedModel->id,
+            'issued_to_type' => $data['issued_to_type'],
             'issuer_by' => $issuer->id,
-            'card_item_id' =>$item->id,
+            'card_item_id' => $item->id,
             'points_value' => $item->points,
-            'active' => $data['active'],
+            'active' => $data['active'] ?? true,
         ]);
-        return $logs;
+
+        return $log;
     }
 
     public function approve(BehaviorLog $log)
     {
-        if ($log->active) {
-            $user = $log->user;
-            $value = abs($log->points_value);
-            if ($log->points_value > 0){
-                $user->increment('fixed_points', $value);
-                $user->increment('flexible_points', $value);
-            }else{
-                $user->decrement('fixed_points', $value);
-                $user->decrement('flexible_points', $value);
-            }
-
+        if (!$log->active) {
+            return $log;
         }
-        $log->update(['status' => StatusEnum::Approved]);
 
+        $issuedModel = $this->getIssuedModel($log->issued_to_type, $log->issued_to_id);
+        $value = abs($log->points_value);
+
+        $this->applyPoints($issuedModel, $log->points_value, $value);
+
+        $log->update(['status' => StatusEnum::Approved]);
         return $log;
     }
 
     public function reject(BehaviorLog $log)
     {
-        $log->update(['status'=> StatusEnum::Rejected]);
+        $log->update(['status' => StatusEnum::Rejected]);
     }
-
 
     public function activation(BehaviorLog $log): void
     {
         $newActive = !$log->active;
 
         if ($log->status === StatusEnum::Approved) {
-            $user  = $log->user;
+            $issuedModel = $this->getIssuedModel($log->issued_to_type, $log->issued_to_id);
             $value = abs($log->points_value);
 
             if ($newActive) {
-                $this->applyPoints($user, $log->points_value, $value);
+                $this->applyPoints($issuedModel, $log->points_value, $value);
             } else {
-                $this->applyPoints($user, -$log->points_value, $value);
+                $this->applyPoints($issuedModel, -$log->points_value, $value);
             }
         }
 
         $log->update(['active' => $newActive]);
     }
 
-    private function applyPoints(User $user, int $points, int $value): void
+    private function applyPoints($model, int $points, int $value): void
     {
+        if (!in_array('fixed_points', $model->getFillable()) || !in_array('flexible_points', $model->getFillable())) {
+            return;
+        }
+
         if ($points > 0) {
-            $user->increment('fixed_points', $value);
-            $user->increment('flexible_points', $value);
+            $model->increment('fixed_points', $value);
+            $model->increment('flexible_points', $value);
         } else {
-            $user->decrement('fixed_points', $value);
-            $user->decrement('flexible_points', $value);
+            $model->decrement('fixed_points', $value);
+            $model->decrement('flexible_points', $value);
         }
     }
-
 }

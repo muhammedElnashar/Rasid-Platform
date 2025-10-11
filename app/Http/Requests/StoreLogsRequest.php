@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Group;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreLogsRequest extends FormRequest
 {
@@ -21,10 +24,17 @@ class StoreLogsRequest extends FormRequest
      */
     public function rules(): array
     {
+        $type = $this->input('issued_to_type');
+
         return [
-            'user_id' => 'required|exists:users,id',
-            'card_item_id'     => 'required|exists:card_items,id',
-            'active'            => 'nullable|boolean',
+            'issued_to_type' => ['required', Rule::in(['App\Models\User', 'App\Models\Group'])],
+            'issued_to_id' => [
+                'required',
+                $type === 'App\Models\User'
+                    ? Rule::exists((new User)->getTable(), 'id')
+                    : Rule::exists((new Group)->getTable(), 'id'),
+            ], 'card_item_id' => 'required|exists:card_items,id',
+            'active' => 'nullable|boolean',
         ];
     }
 }

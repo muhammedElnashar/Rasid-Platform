@@ -41,9 +41,10 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-100px">@lang('message.name')</th>
+                            <th class="min-w-50px">@lang('message.name')</th>
+                            <th class="min-w-50px">الكود</th>
                             <th class="min-w-100px">@lang('message.username')</th>
-                            <th class="min-w-100px">@lang('message.max_uses')</th>
+                            <th class="min-w-150px">@lang('message.max_uses')</th>
                             <th class="min-w-100px">@lang('message.used_count')</th>
                             <th class="min-w-100px"> بواسطة</th>
                             <th class="min-w-100px"> الحالة</th>
@@ -57,8 +58,9 @@
                         @foreach($assignCards as $card)
 
                             <tr>
-                                <td>{{ $card->user->full_name }}</td>
-                                <td>{{ $card->card->code }}</td>
+                                <td>{{ $card->card->name }}</td>
+                                <td>{{ $card->code }}</td>
+                                <td>{{ $card->issuedTo->full_name?? $card->issuedTo->name }}</td>
                                 <td>{{ $card->max_uses }}</td>
                                 <td>{{ $card->used_count }}</td>
                                 <td>{{ $card->assigner->full_name }}</td>

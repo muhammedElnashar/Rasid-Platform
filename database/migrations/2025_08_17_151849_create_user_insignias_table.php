@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_insignias', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->morphs('issued_to'); // user أو group
             $table->foreignId('insignia_id')->constrained('insignias');
             $table->foreignId('issuer_id')->constrained('users');
-            $table->date('award_date');
+            $table->dateTime('award_date');
             $table->timestamps();
         });
     }

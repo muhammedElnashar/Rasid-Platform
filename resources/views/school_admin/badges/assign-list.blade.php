@@ -55,7 +55,7 @@
 
                             <tr>
 
-                                <td>{{ $badge->user->full_name }}</td>
+                                <td>{{ $badge->issued_to->full_name ??$badge->issued_to->name }}</td>
                                 <td>{{ $badge->badge->name }}</td>
                                 <td>{{ $badge->badge->points_awarded }}</td>
                                 <td><img src="{{ $badge->badge->image_url }}" alt="{{ $badge->badge->name }}" width="50px" height="50px"></td>

@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('card_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->morphs('issued_to'); // user أو group
+            $table->string('code')->unique();
             $table->integer('max_uses')->default(1);
             $table->integer('used_count')->default(0);
             $table->boolean('is_active')->default(true);

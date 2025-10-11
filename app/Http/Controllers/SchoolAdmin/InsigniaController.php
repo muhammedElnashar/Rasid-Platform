@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AssignInsigniaRequest;
 use App\Http\Requests\InsigniaRequest;
 use App\Http\Requests\UpdateInsigniaRequest;
+use App\Models\Group;
 use App\Models\Insignia;
 use App\Models\Role;
 use App\Models\User;
@@ -124,7 +125,10 @@ class InsigniaController extends Controller
         $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
-     return view('school_admin.insignias.assign',compact('roles','insignias','users'));
+        $groups = Group::select('id', 'name')
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
+     return view('school_admin.insignias.assign',compact('roles','insignias','users','groups'));
     }
     public function assign(AssignInsigniaRequest $request)
     {
@@ -143,7 +147,7 @@ class InsigniaController extends Controller
         $this->authorize('view-any', Insignia::class);
 
         $school = auth()->user()->school;
-        $insignias = UserInsignia::with(['insignia', 'user', 'issuer'])
+        $insignias = UserInsignia::with(['insignia', 'issuedTo', 'issuer'])
             ->whereHas('insignia', function ($query) use ($school) {
                 $query->where('school_id', $school->id);
             })

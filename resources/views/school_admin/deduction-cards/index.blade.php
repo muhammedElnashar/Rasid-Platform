@@ -45,7 +45,6 @@
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-25px">@lang('message.name')</th>
                             <th class="min-w-25px">@lang('message.description')</th>
-                            <th class="min-w-25px">@lang('message.color')</th>
                             <th class="min-w-25px">@lang('message.threshold')</th>
                             <th class="min-w-25px">@lang('message.deduction_percent')</th>
                             <th class="min-w-25px">@lang('message.type')</th>
@@ -60,10 +59,9 @@
                             <tr>
                                 <td>{{$card->name}}</td>
                                 <td>{{$card->description}}</td>
-                                <td>{{$card->color}}</td>
                                 <td>{{$card->threshold}}</td>
                                 <td>{{$card->deduction_percent}}</td>
-                                <td>{{$card->type}}</td>
+                                <td>@lang('message.'. $card->type->value)</td>
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
                                         <a href="javascript:void(0)"
@@ -71,7 +69,6 @@
                                            data-id="{{ $card->id }}"
                                            data-name="{{ $card->name }}"
                                            data-description="{{ $card->description }}"
-                                           data-color="{{ $card->color }}"
                                            data-threshold="{{ $card->threshold }}"
                                            data-deduction_percent="{{ $card->deduction_percent }}"
                                            data-type="{{ $card->type }}"
@@ -164,11 +161,6 @@
                         </div>
 
                         <div class="mb-5 fv-row">
-                            <label class="required fs-5 fw-bold mb-2">@lang('message.color')</label>
-                            <input type="color" class="form-control form-control-solid" name="color"/>
-                        </div>
-
-                        <div class="mb-5 fv-row">
                             <label class="required fs-5 fw-bold mb-2">@lang('message.threshold')</label>
                             <input type="number" class="form-control form-control-solid" name="threshold"/>
                         </div>
@@ -189,7 +181,7 @@
                                 @foreach(\App\Enum\DeductionCardTypeEnum::cases() as $card)
                                     <option
                                         value="{{ $card->value }}" {{ old('type') == $card->value ? 'selected' : '' }}>
-                                        {{ $card->value }}
+                                        @lang('message.'. $card->value)
                                     </option>
                                 @endforeach
                             </select>
@@ -233,7 +225,6 @@
                 var id = $(this).data('id');
                 var name = $(this).data('name');
                 var description = $(this).data('description');
-                var color = $(this).data('color');
                 var threshold = $(this).data('threshold');
                 var deduction_percent = $(this).data('deduction_percent');
                 var type = $(this).data('type');
@@ -243,7 +234,6 @@
                 form.attr('action', '/deduction-cards/' + id);
                 form.find('input[name="name"]').val(name);
                 form.find('input[name="description"]').val(description);
-                form.find('input[name="color"]').val(color);
                 form.find('input[name="threshold"]').val(threshold);
                 form.find('input[name="deduction_percent"]').val(deduction_percent);
                 form.find('select[name="type"]').val(type).trigger('change');

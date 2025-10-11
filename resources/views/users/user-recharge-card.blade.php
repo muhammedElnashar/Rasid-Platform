@@ -42,6 +42,7 @@
                         <thead>
                         <tr class=" text-gray-400  fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-125px">@lang('message.name')</th>
+                            <th class="min-w-125px"> الكرت</th>
                             <th class="min-w-125px">@lang('message.max_uses')</th>
                             <th class="min-w-125px">@lang('message.used_count')</th>
                             <th class="min-w-125px">@lang('message.status')</th>
@@ -55,7 +56,8 @@
                         @foreach($userCards as $card)
 
                             <tr>
-                                <td>{{ $card->code }}</td>
+                                <td>{{ $card->name }}</td>
+                                <td>{{ $card->pivot->code }}</td>
                                 <td>{{ $card->pivot->max_uses }}</td>
                                 <td>{{ $card->pivot->used_count }}</td>
                                 @if($card->pivot->is_active == 1)

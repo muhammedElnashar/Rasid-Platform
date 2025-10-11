@@ -32,6 +32,10 @@ class School extends Model
     {
         return $this->hasMany(Stage::class);
     }
+    public function groupCategories()
+    {
+        return $this->hasMany(GroupCategory::class);
+    }
 
     public function subjects()
     {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class RechargeCardUser extends Model
 {
@@ -10,7 +11,9 @@ class RechargeCardUser extends Model
 
     protected $fillable = [
         'card_id',
-        'user_id',
+        'issued_to_id',
+        'issued_to_type',
+        'code',
         'max_uses',
         'used_count',
         'is_active',
@@ -22,13 +25,21 @@ class RechargeCardUser extends Model
         return $this->belongsTo(RechargeCard::class, 'card_id');
     }
 
-    public function user()
+    public function issuedTo()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->morphTo();
     }
 
-    public function Assigner()
+    public function assigner()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+    public static function generateUniqueCode($length = 10)
+    {
+        do {
+            $code = Str::upper(Str::random($length));
+        } while (self::where('code', $code)->exists());
+
+        return $code;
     }
 }

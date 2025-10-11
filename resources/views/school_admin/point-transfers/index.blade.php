@@ -116,8 +116,8 @@
                         @foreach($transfers as $transfer)
 
                             <tr>
-                                <td>{{$transfer->sender->full_name}}</td>
-                                <td>{{$transfer->receiver->full_name}}</td>
+                                <td>{{$transfer->sender->full_name??$transfer->sender->name}}</td>
+                                <td>{{$transfer->receiver->full_name??$transfer->receiver->name}}</td>
                                 <td>{{$transfer->amount}}</td>
                                 <td>{{$transfer->reason}}</td>
                                 <td>@lang('message.'.$transfer->purpose->value)</td>

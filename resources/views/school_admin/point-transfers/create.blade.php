@@ -49,13 +49,14 @@
                                         <span class="required">@lang('message.user')</span>
                                     </label>
 
-                                    <select name="user_id" id="user_id"
+                                    <select name="receiver_id" id="user_id"
                                             data-control="select2"
                                             data-placeholder="@lang('message.select', ['item' => __('message.user')])"
                                             class="form-select form-select-solid">
                                         <option value="">@lang('message.select', ['item' => __('message.user')])</option>
                                     </select>
                                 </div>
+                                <input type="hidden" name="receiver_type" value="App\Models\User"> <!-- أو Group -->
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">

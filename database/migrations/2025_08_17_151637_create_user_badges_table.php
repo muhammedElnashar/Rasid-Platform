@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_badges', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->morphs('issued_to'); // user أو group
             $table->foreignId('badge_id')->constrained('badges');
-            $table->date('award_date');
+            $table->dateTime('award_date');
             $table->timestamps();
         });
     }

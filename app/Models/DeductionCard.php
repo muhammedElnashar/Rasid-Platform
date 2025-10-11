@@ -11,7 +11,6 @@ class DeductionCard extends Model
     protected $fillable = [
         'school_id',
         'name',
-        'color',
         'type',
         'description',
         'threshold',
@@ -21,11 +20,24 @@ class DeductionCard extends Model
         'type' => DeductionCardTypeEnum::class,
     ];
 
+    // جميع المستخدمين اللي عندهم البطاقة
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_deduction_cards', 'deduction_card_id', 'user_id')
+        return $this->morphedByMany(User::class, 'issued_to', 'user_deduction_cards')
             ->withPivot(['applied_at', 'cycle_number', 'negative_points_at_time'])
             ->withTimestamps();
     }
 
+    // جميع المجموعات اللي عندها البطاقة
+    public function groups()
+    {
+        return $this->morphedByMany(Group::class, 'issued_to', 'user_deduction_cards')
+            ->withPivot(['applied_at', 'cycle_number', 'negative_points_at_time'])
+            ->withTimestamps();
+    }
+
+    public function userDeductionCards()
+    {
+        return $this->hasMany(UserDeductionCard::class);
+    }
 }

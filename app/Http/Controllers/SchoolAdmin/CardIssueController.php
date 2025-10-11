@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCardIssueRequest;
 use App\Http\Requests\UpdateCardIssueRequest;
 use App\Models\CardIssues;
+use App\Models\Group;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\CardIssueService;
@@ -28,7 +29,7 @@ class CardIssueController extends Controller
     {
         $this->authorize('viewAny',CardIssues::class);
         $school = auth()->user()->school;
-        $pendingIssues = $school->issues()->with(['user', 'cardItem.category.card', 'issuer'])->get();
+        $pendingIssues = $school->issues()->with(['issuedTo', 'cardItem.category.card', 'issuer'])->latest()->get();
         return view('school_admin.card-issues.pending-issues', compact('pendingIssues'));
     }
 
@@ -43,8 +44,11 @@ class CardIssueController extends Controller
         $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
+        $groups = Group::select('id', 'name')
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
         $cards = $school->cards()->with('categories.items')->get();
-        return view('school_admin.card-issues.issue-create', compact('users', 'cards','roles'));
+        return view('school_admin.card-issues.issue-create', compact('users', 'cards','roles','groups'));
     }
 
     /**
@@ -79,8 +83,11 @@ class CardIssueController extends Controller
         $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
+        $groups = Group::select('id', 'name')
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
         $cards = $school->cards()->with('categories.items')->get();
-        return view('school_admin.card-issues.issue-edit', compact('issue', 'users', 'cards','roles'));
+        return view('school_admin.card-issues.issue-edit', compact('issue', 'users', 'cards','roles','groups'));
     }
 
     /**
@@ -105,11 +112,10 @@ class CardIssueController extends Controller
         return redirect()->route('issues.index')->with('success', __('message.deleted', ['item' => __('message.card_issue')]));
     }
 
-    public function approved(Request $request, CardIssues $issue)
+    public function approved( CardIssues $issue)
     {
         $this->authorize('approve', $issue);
         $this->cardIssueService->approve($issue);
-        app(DeductionCardService::class)->applyBestCard($issue->user);
         return to_route('issues.index')
             ->with('success', __('message.approved', ['item' => __('message.issue')]));
     }

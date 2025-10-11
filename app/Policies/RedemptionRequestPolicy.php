@@ -30,6 +30,6 @@ class RedemptionRequestPolicy
 
     private function sameSchool(User $user, RedemptionRequest $request): bool
     {
-        return $user->school_id === $request->user->school_id;
+        return $user->school_id === $request->issuedTo->school_id;
     }
 }

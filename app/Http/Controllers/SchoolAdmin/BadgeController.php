@@ -100,7 +100,7 @@ class BadgeController extends Controller
     public function list()
     {
         $school= auth()->user()->school;
-        $badges = UserBadge::with(['badge', 'user',])
+        $badges = UserBadge::with(['badge', 'issued_to',])
             ->whereHas('badge', function ($query) use ($school) {
                 $query->where('school_id', $school->id);
             })

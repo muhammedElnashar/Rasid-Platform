@@ -25,7 +25,6 @@ class UpdateDeductionCardRequest extends FormRequest
     {
         return [
             'name'=>'required|string|max:255',
-            'color'=>'required|hex_color',
             'description'=>'nullable|string|max:1000',
             'deduction_percent'=>'required|integer|min:1|max:100',
             'threshold'=>'required|integer',

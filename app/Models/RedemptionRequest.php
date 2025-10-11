@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RedemptionRequest extends Model
 {
     protected $fillable = [
-        'user_id',
+        'school_id',
+        'issued_to_id',
+        'issued_to_type',
         'item_id',
         'request_date',
         'status',
@@ -19,13 +21,18 @@ class RedemptionRequest extends Model
         'status' => StatusEnum::class,
     ];
 
-    public function user(): BelongsTo
+    public function issuedTo(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 
     public function item(): BelongsTo
     {
-        return $this->belongsTo(StoreItem::class,'item_id');
+        return $this->belongsTo(StoreItem::class, 'item_id');
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
     }
 }

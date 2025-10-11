@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Enum\PurposeEnum;
 use App\Enum\StatusEnum;
+use App\Enum\TransferTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class PointTransfer extends Model
 {
     protected $fillable = [
         'sender_id',
+        'sender_type',
         'receiver_id',
+        'receiver_type',
         'amount',
         'reason',
         'purpose',
@@ -23,16 +26,15 @@ class PointTransfer extends Model
 
     /**
      */
+
     public function sender()
     {
-        return $this->belongsTo(User::class, 'sender_id');
+        return $this->morphTo();
     }
 
-    /**
-     */
     public function receiver()
     {
-        return $this->belongsTo(User::class, 'receiver_id');
+        return $this->morphTo();
     }
     public function scopeForSchool($query, $schoolId)
     {

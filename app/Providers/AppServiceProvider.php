@@ -29,7 +29,7 @@ use App\Models\StudentSubject;
 use App\Models\Subject;
 use App\Models\TeacherSubjectClass;
 use App\Models\User;
-use App\Observers\UserObserver;
+use App\Observers\PointsObserver;
 use App\Policies\BadgePolicy;
 use App\Policies\CardCategoryPolicy;
 use App\Policies\CardIssuePolicy;
@@ -75,7 +75,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        User::observe(UserObserver::class);
+        User::observe(PointsObserver::class);
+        Group::observe(PointsObserver::class);
+
         Paginator::useBootstrap();
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(School::class, SchoolPolicy::class);

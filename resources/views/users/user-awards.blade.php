@@ -53,11 +53,15 @@
 
                             <tr>
 
-                                <td>{{$request->delivery_code}}</td>
-                                <td>{{$request->item->name}}</td>
+                                @if($request->delivery_code)
+                                    <td>{{$request->delivery_code}}</td>
+                                @else
+                                    <td>لم يصدر</td>
+                                @endif
+                                    <td>{{$request->item->name}}</td>
                                 <td><img width="50px" height="50px" src="{{Storage::disk('images')->url($request->item->image_url)}}" alt="{{$request->item->name}}"></td>
                                 <td>{{$request->item->points_required}}</td>
-                                <td>{{$request->request_date}}</td>
+                                <td>{{toHijriWithTime($request->request_date)}}</td>
                                 @if($request->status === \App\Enum\StatusEnum::Approved)
                                     <td><span class="badge badge-light-success">معتمد</span></td>
                                 @elseif($request->status === \App\Enum\StatusEnum::Pending)

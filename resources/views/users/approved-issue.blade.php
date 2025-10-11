@@ -105,14 +105,12 @@
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-25px">@lang('message.issue_number')</th>
                             <th class="min-w-25px">نوع الكرت</th>
-                            <th class="min-w-25px">@lang('message.user')</th>
                             <th class="min-w-25px">@lang('message.issued_by')</th>
                             <th class="min-w-25px">@lang('message.item')</th>
                             <th class="min-w-25px">@lang('message.points')</th>
                             <th class="min-w-25px">@lang('message.deduction_type')</th>
                             <th class="min-w-50px">@lang('message.issue_date')</th>
-                            <th class="min-w-50px">@lang('message.deduction_deadline')</th>
-                            <th class="min-w-25px">@lang('message.status')</th>
+                            <th class="min-w-25px text center">@lang('message.status')</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-center  text-gray-600">
@@ -133,15 +131,13 @@
                                 @else
                                     <td> <span class="badge badge-light-danger"> حسم سلبي </span> </td>
                                 @endif
-                                <td>{{ $issue->user->full_name }}</td>
                                 <td>{{ $issue->issuer->full_name }}</td>
                                 <td>{{ $issue->cardItem->name }}</td>
                                 <td>{{ $issue->cardItem->points }}</td>
                                 <td>
-                                    {{ $issue->deduction_type?->value ? __('message.' . $issue->deduction_type->value) : '' }}
+                                    {{ $issue->deduction_type? __('message.'.$issue->deduction_type->value) : 'لا يوجد' }}
                                 </td>
-                                <td>{{ date_format($issue->issue_date ,'Y-m-d')}}</td>
-                                <td>{{ optional($issue->deduction_deadline)->format('Y-m-d') }}</td>
+                                <td>{{ toHijriWithTime($issue->issue_date)}}</td>
                                     @if($issue->status === \App\Enum\StatusCardEnum::Approved)
                                         <td> <span class="badge badge-light-success">@lang('message.'.$issue->status->value)</span> </td>
                                     @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)

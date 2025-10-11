@@ -59,20 +59,6 @@
                                                    autocomplete="off">{{ old('description') }}</textarea>
                                     </div>
                                 </div>
-                                <div class="fv-row mb-7">
-                                    <label class="fs-6 fw-semibold form-label mb-2 ">
-                                        <span class="required"> @lang('message.color')</span>
-                                    </label>
-
-                                    <div class="input-group input-group-solid mb-5">
-                                        <input type="color" value="{{old("color")}}" class="form-control"
-                                               name="color" min="1"
-                                               placeholder="@lang('message.enter', ['item' => __('message.corlo')])"
-                                               autocomplete="off"/>
-
-                                    </div>
-
-                                </div>
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">

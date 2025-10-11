@@ -59,7 +59,7 @@
                         @foreach($rechargeCards as $card)
 
                             <tr>
-                                <td>{{ $card->code }}</td>
+                                <td>{{ $card->name }}</td>
                                 <td>{{ $card->cardItem->category->card->name->label() }}</td>
                                 <td>{{ $card->cardItem->category->name }}</td>
                                 <td>{{ $card->cardItem->name }}</td>

@@ -38,14 +38,9 @@ class PointTransferController extends Controller
     public function store(StorePointTransferRequest $request)
     {
         $this->authorize('create',PointTransfer::class);
-        $this->transferService->transferPoint(
-            $request->validated(),
-            $request->user()
-        );
-
-        return redirect()
-            ->route('profile')
-            ->with('success', __('message.transfer_created'));
+        $data = $request->validated();
+        $transfer = $this->transferService->transferPoint($data);
+        return redirect()->back()->with('success', __('message.transfer_created'));
     }
 
     public function approved(PointTransfer $transfer)

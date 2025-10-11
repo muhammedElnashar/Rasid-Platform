@@ -9,7 +9,6 @@ use App\Models\CardIssues;
 use App\Models\CardItem;
 use App\Models\PointTransaction;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 
 class CardIssueService
 {
@@ -19,7 +18,8 @@ class CardIssueService
     {
         $cardItem = CardItem::findOrFail($data['card_item_id']);
         $cardIssue->update([
-            'user_id' => $data['user_id'],
+            'issued_to_type' => $data['issued_to_type'],
+            'issued_to_id'   => $data['issued_to_id'],
             'issued_by' => $issuer->id,
             'card_item_id' => $cardItem->id,
             'points' => $cardItem->points,
@@ -39,7 +39,8 @@ class CardIssueService
 
         $cardIssue = CardIssues::create([
             'issue_number' => $this->generateUniqueIssueNumber(),
-            'user_id' => $data['user_id'],
+            'issued_to_type' => $data['issued_to_type'],
+            'issued_to_id'   => $data['issued_to_id'],
             'card_item_id' => $cardItem->id,
             'issued_by' => $issuer->id,
             'points' => $cardItem->points,
@@ -66,15 +67,16 @@ class CardIssueService
 
         $signedAmount = $cardIssue->points;
         if ($signedAmount < 0) {
-            $user = $cardIssue->user;
-            $user->current_negative_points += abs($signedAmount);
-            $user->save();
+            $recipient = $cardIssue->issuedTo; // يمكن أن يكون User أو Group
+            $recipient->current_negative_points += abs($signedAmount);
+            $recipient->save();
         }
 
         if ($cardIssue->deduction_type === DeductionTypeEnum::Immediate || is_null($cardIssue->deduction_type)) {
             $this->applyPoints($cardIssue);
         }
     }
+
 
 
     public function reject(CardIssues $cardIssue)
@@ -114,45 +116,36 @@ class CardIssueService
 
     private function applyPoints(CardIssues $cardIssue, ?int $amount = null)
     {
+        $recipient = $cardIssue->issuedTo; // User أو Group
+
+        if (!$recipient) {
+            return;
+        }
+
+        // النقاط السالبة مع Deferred
         if ($cardIssue->points < 0 && $cardIssue->deduction_type === DeductionTypeEnum::Deferred) {
             if ($cardIssue->is_restricted) {
-                return to_route('profile')->with('error', 'لا يمكنك السداد حالياً، الكرت مقيد');
+                throw new \DomainException('لا يمكنك السداد حالياً، الكرت مقيد');
             }
 
             $remaining = $cardIssue->remaining_points ?? abs($cardIssue->points);
 
-            if ($remaining <= 0) {
-                return;
-            }
+            if ($remaining <= 0) return;
 
             $amountToApply = $amount ?? $remaining;
             $amountToApply = min($amountToApply, $remaining);
-            $user = $cardIssue->user;
 
-            // ✅ السماح بالخصم بعد deadline حتى لو الرصيد صفر/سالب
-            if ($user->fixed_points < $amountToApply) {
-                if ($cardIssue->deduction_deadline && now()->gte($cardIssue->deduction_deadline)) {
-                    // نخصم كامل المبلغ ويصبح الرصيد بالسالب
-                    $amountToApply = $remaining;
-                } else {
-                    // منطق طبيعي (لا خصم إلا لو فيه رصيد كافي)
-                    return to_route('profile')->with('error','ليس لديك رصيد كافي');
-                }
+            if ($recipient->fixed_points < $amountToApply && !($cardIssue->deduction_deadline && now()->gte($cardIssue->deduction_deadline))) {
+                throw new \DomainException('ليس لديك رصيد كافي');
             }
 
             $signedAmount = -$amountToApply;
+            $recipient->fixed_points += $signedAmount;
+            $recipient->flexible_points += $signedAmount;
+            $recipient->save();
 
-            $user->fixed_points += $signedAmount;
-            $user->flexible_points += $signedAmount;
-            $user->save();
+            $this->recordTransaction($recipient, $cardIssue, $signedAmount);
 
-            PointTransaction::create([
-                'user_id' => $user->id,
-                'card_issue_id' => $cardIssue->id,
-                'type' => PointTransactionTypeEnum::Discount,
-                'points' => $signedAmount,
-                'balance_after' => $user->fixed_points,
-            ]);
 
             $cardIssue->remaining_points = $remaining - $amountToApply;
             if ($cardIssue->remaining_points <= 0) {
@@ -164,24 +157,27 @@ class CardIssueService
 
         // باقي الحالات (Support أو Immediate)
         $signedAmount = $cardIssue->points;
-        $user = $cardIssue->user;
-        $user->fixed_points += $signedAmount;
-        $user->flexible_points += $signedAmount;
+        $recipient->fixed_points += $signedAmount;
+        $recipient->flexible_points += $signedAmount;
+        $recipient->save();
 
-        $user->save();
+        $this->recordTransaction($recipient, $cardIssue, $signedAmount);
 
-        PointTransaction::create([
-            'user_id' => $user->id,
-            'card_issue_id' => $cardIssue->id,
-            'type' => $signedAmount > 0 ? PointTransactionTypeEnum::Support : PointTransactionTypeEnum::Discount,
-            'points' => $signedAmount,
-            'balance_after' => $user->fixed_points,
-        ]);
 
         $cardIssue->applied_at = now();
         $cardIssue->save();
     }
 
+    private function recordTransaction($recipient, CardIssues $cardIssue, int $signedAmount)
+    {
+        PointTransaction::create([
+            'user_id' => $recipient->id,
+            'card_issue_id' => $cardIssue->id,
+            'type' => $signedAmount > 0 ? PointTransactionTypeEnum::Support : PointTransactionTypeEnum::Discount,
+            'points' => $signedAmount,
+            'balance_after' => $recipient->fixed_points,
+        ]);
+    }
     private function generateUniqueIssueNumber()
     {
         do {

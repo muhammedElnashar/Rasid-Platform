@@ -607,7 +607,7 @@
             </div>
         </div>
     </div>
-    <form id="exchangeForm" action="{{ route('market.exchange') }}" method="POST" style="display:none;">
+    <form id="exchangeForm" action="{{ route('user.exchange') }}" method="POST" style="display:none;">
         @csrf
         <input type="hidden" name="item_id" id="exchangeItemId">
     </form>

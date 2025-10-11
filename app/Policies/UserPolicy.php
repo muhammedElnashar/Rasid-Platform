@@ -12,7 +12,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->isSchoolAdmin() || $user->isModerator();
+        return $user->isSchoolAdmin() ;
     }
 
     /**
@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return ($user->isSchoolAdmin() || $user->isModerator())
+        return ($user->isSchoolAdmin() )
             && $user->school_id === $model->school_id;
     }
 
@@ -29,7 +29,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSchoolAdmin() || $user->isModerator();
+        return $user->isSchoolAdmin() ;
     }
 
     /**
@@ -37,7 +37,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return ($user->isSchoolAdmin() || $user->isModerator())
+        return ($user->isSchoolAdmin() )
             && $user->school_id === $model->school_id;
     }
 
@@ -46,7 +46,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return ($user->isSchoolAdmin() || $user->isModerator())
+        return ($user->isSchoolAdmin() )
             && $user->school_id === $model->school_id;
     }
 

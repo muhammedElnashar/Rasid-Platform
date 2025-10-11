@@ -175,4 +175,5 @@ KTUtil.onDOMContentLoaded(function () {
         '[data-kt-customer-table-filter="search"]',
         '.kt-table-filter-container' // ضع هذا على div يحتوي كل الفلاتر
     );
+
 });

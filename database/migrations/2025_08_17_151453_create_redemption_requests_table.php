@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('redemption_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
+            $table->morphs('issued_to'); // user أو group
             $table->foreignId('item_id')->constrained('store_items');
-            $table->date('request_date');
+            $table->dateTime('request_date');
             $table->string('status')->default('pending');
             $table->string('delivery_code')->nullable();
             $table->timestamps();

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class CardIssues extends Model
 {
     protected $fillable = [
-        'issue_number', 'user_id', 'card_item_id', 'issued_by',
+        'issue_number','issued_to_type','issued_to_id', 'card_item_id', 'issued_by',
         'points', 'remaining_points','deduction_type', 'issue_date', 'deduction_deadline', 'status',
         'deduction_duration_days', 'applied_at'
         ,'is_restricted',
@@ -30,10 +30,11 @@ class CardIssues extends Model
         return $this->status === \App\Enum\StatusCardEnum::Approved;
     }
 
-    public function user()
+    public function issuedTo()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->morphTo();
     }
+
     public function issuer()
     {
         return $this->belongsTo(User::class, 'issued_by');

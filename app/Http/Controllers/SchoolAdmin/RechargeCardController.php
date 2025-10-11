@@ -6,6 +6,7 @@ use App\Enum\CardNameEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AssignRechargeCardRequest;
 use App\Http\Requests\StoreRechargeCardRequest;
+use App\Models\Group;
 use App\Models\RechargeCard;
 use App\Models\RechargeCardUser;
 use App\Models\Role;
@@ -53,7 +54,6 @@ class RechargeCardController extends Controller
     public function store(StoreRechargeCardRequest $request)
     {
         $this->authorize('create', RechargeCard::class);
-
         $this->rechargeService->create($request->validated());
 
         return redirect()
@@ -109,8 +109,11 @@ class RechargeCardController extends Controller
         $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
+        $groups = Group::select('id', 'name')
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
 
-        return view('school_admin.recharge-cards.assign', compact('roles', 'cards', 'users'));
+        return view('school_admin.recharge-cards.assign', compact('roles', 'cards', 'users','groups'));
     }
 
 
@@ -118,22 +121,7 @@ class RechargeCardController extends Controller
     {
         $this->authorize('create', RechargeCard::class);
         $validated = $request->validated();
-
-        if (!empty($validated['user_id'])) {
-            $data = collect($validated['user_id'])->map(function ($userId) use ($validated) {
-                return [
-                    'user_id' => $userId,
-                    'card_id' => $validated['card_id'],
-                    'max_uses' => $validated['max_uses'] ?? 1,
-                    'created_by' => auth()->id(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            })->toArray();
-
-            RechargeCardUser::insert($data);
-        }
-
+        $this->rechargeService->assign($validated);
         return to_route('recharge.list')->with('success', __('message.assign_success'));
     }
 
@@ -142,8 +130,8 @@ class RechargeCardController extends Controller
         $this->authorize('viewAny', RechargeCard::class);
         $schoolId = Auth::user()->school_id;
 
-        $assignCards= RechargeCardUser::with(['user','card'])
-            ->whereHas('user', function($q) use ($schoolId) {
+        $assignCards= RechargeCardUser::with(['issuedTo','card'])
+            ->whereHas('issuedTo', function($q) use ($schoolId) {
             $q->where('school_id', $schoolId);
         })->get();
         return view('school_admin.recharge-cards.assign-list',compact('assignCards'));

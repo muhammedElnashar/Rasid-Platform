@@ -6,6 +6,7 @@ use App\Enum\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLogsRequest;
 use App\Models\BehaviorLog;
+use App\Models\Group;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\LogServices;
@@ -26,7 +27,7 @@ class BehaviorLogController extends Controller
     public function index()
     {
         $this->authorize('view-any', BehaviorLog::class);
-        $logs=auth()->user()->school->logs()->with('user','issuedBy','cardItem.category.card')->get();
+        $logs=auth()->user()->school->logs()->with('issuedTo','issuedBy','cardItem.category.card')->get();
         return view('school_admin.logs.index',compact('logs'));
     }
 
@@ -42,8 +43,11 @@ class BehaviorLogController extends Controller
             ->where('school_id', auth()->user()->school_id)
             ->get();
         $cards = $school->cards()->with('categories.items')->get();
+        $groups = Group::select('id', 'name')
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
 
-        return view('school_admin.logs.create',compact('users','roles','cards'));
+        return view('school_admin.logs.create',compact('users','roles','cards','groups'));
     }
 
     /**
@@ -76,16 +80,19 @@ class BehaviorLogController extends Controller
         if ($log->status !== StatusEnum::Pending) {
             return redirect()->route('logs.index')->with('error', 'لا يمكن تعديل السجل بعد اعتماده او رفضه');
         }
-        $log->load('cardItem.category.card', 'user');
+        $log->load('cardItem.category.card', 'issuedTo');
         $school= auth()->user()->school;
         $roles = Role::ExpectModeratorAndAdmin()->get();
         $users = User::select('id', 'full_name', 'role_id','username')
             ->where('school_id', auth()->user()->school_id)
             ->get();
+        $groups = Group::select('id', 'name')
+            ->where('school_id', auth()->user()->school_id)
+            ->get();
         $cards = $school->cards()->with('categories.items')->get();
 
 
-        return view('school_admin.logs.edit',compact('users','roles','log','cards'));
+        return view('school_admin.logs.edit',compact('users','roles','log','cards','groups'));
     }
 
 

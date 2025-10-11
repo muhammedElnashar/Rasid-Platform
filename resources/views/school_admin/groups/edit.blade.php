@@ -20,7 +20,7 @@
                 <div id="kt_app_content_container" class="app-container container-xxl">
                     <div class="card card-flush">
                         <div class="card-body pt-6">
-                            <form id="kt_modal_edit_form" class="form" method="POST" action="{{ route('groups.update', $group->id) }}">
+                            <form id="kt_modal_edit_form" class="form" method="POST" action="{{ route('groups.update', $group->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
@@ -37,6 +37,35 @@
                                                placeholder="@lang('message.enter', ['item' => __('message.name')])"
                                                autocomplete="off"/>
                                     </div>
+                                </div>
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class=""> @lang('message.description')</span>
+                                    </label>
+
+                                    <div class="input-group input-group-solid mb-5">
+                                        <textarea class="form-control" name="description"
+                                                  placeholder="@lang('message.enter', ['item' => __('message.description')])"
+                                        >{{old("description",$group->description)}}</textarea>
+
+                                    </div>
+                                </div>
+
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required"> التصنيف</span>
+                                    </label>
+                                    <select name="category_id" data-control="select2"
+                                            data-placeholder="اختر التصنيف"
+                                            class="form-select form-select-solid">
+                                        <option value=""></option>
+
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{(old('category_id',$group->category_id) == $category->id ) ? 'selected' : ''}}>
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 {{-- الأعضاء --}}
@@ -73,6 +102,38 @@
                                     </select>
                                 </div>
 
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required">صورة</span>
+                                    </label>
+
+                                    <div class="input-group input-group-solid mb-5">
+                                        <input type="file" class="form-control"
+                                               name="image"
+                                               autocomplete="off"/>
+
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <img src="{{Storage::disk('images')->url($group->image)}} " alt="" width="100px" height="100px">
+                                </div>
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="">خارطه العمل</span>
+                                    </label>
+
+                                    <div class="input-group input-group-solid mb-5">
+                                        <input type="file" class="form-control"
+                                               name="file"
+                                               autocomplete="off"/>
+
+                                    </div>
+
+                                </div>
+                                <div>
+                                    <a href="{{Storage::disk('files')->url($group->file)}}" target="_blank">خارطه العمل</a>
+                                </div>
                                 <div class="text-center pt-15">
                                     <button type="submit" class="btn btn-primary">
                                         <span class="indicator-label">@lang('message.save')</span>

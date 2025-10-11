@@ -32,6 +32,20 @@
 
                                 <div class="fv-row mb-7">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
+                                        <span class="required"> @lang('message.name')</span>
+                                    </label>
+
+                                    <div class="input-group input-group-solid mb-5">
+                                        <input type="text" value="{{old("name")}}" class="form-control"
+                                               name="name"
+                                               placeholder="@lang('message.enter', ['item' => __('message.name')])"
+                                               autocomplete="off"/>
+
+                                    </div>
+
+                                </div>
+                                <div class="fv-row mb-7">
+                                    <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class="required"> @lang('message.card')</span>
                                     </label>
                                     <select name="card_id" id="cardSelect" data-control="select2"

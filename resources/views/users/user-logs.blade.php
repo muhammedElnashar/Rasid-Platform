@@ -77,7 +77,7 @@
                                 @else
                                     <td><span class="badge badge-light-danger">مرفوض</span></td>
                                 @endif
-                                <td>{{\Illuminate\Support\Carbon::parse($log->log_date)->diffForHumans()}}</td>
+                                <td>{{toHijriWithTime($log->log_date)}}</td>
 
 
                             </tr>

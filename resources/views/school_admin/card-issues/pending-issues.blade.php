@@ -121,15 +121,16 @@
 
 
                         @foreach($pendingIssues as $issue)
-
                             <tr>
                                 <td>  {{ $issue->issue_number }}</td>
-                                <td>{{ $issue->user->full_name }}</td>
+                                <td>{{ $issue->issuedTo?->full_name ?? $issue->issuedTo?->name ?? '-' }}</td>
                                 <td>{{ $issue->issuer->full_name }}</td>
                                 <td>{{ $issue->cardItem->name }}</td>
                                 <td>{{ $issue->cardItem->points }}</td>
-                                <td>{{ $issue->deduction_type->value ?? ""}}</td>
-                                <td>{{ optional($issue->deduction_deadline)->format('Y-m-d') }}</td>
+                                <td>
+                                    {{ $issue->deduction_type? __('message.'.$issue->deduction_type->value) : 'لا يوجد' }}
+                                </td>
+                                <td>{{ toHijri($issue->deduction_deadline) }}</td>
                                 @if($issue->status === \App\Enum\StatusCardEnum::Pending)
                                     <td> <span class="badge badge-light-warning">@lang('message.'.$issue->status->value)</span></td>
                                 @elseif($issue->status === \App\Enum\StatusCardEnum::Approved)

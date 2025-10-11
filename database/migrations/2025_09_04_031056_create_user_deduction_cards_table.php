@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('user_deduction_cards', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->morphs('issued_to'); // user أو group
             $table->foreignId('deduction_card_id')->constrained()->onDelete('cascade');
             $table->dateTime('applied_at')->nullable();
             $table->unsignedInteger('cycle_number')->default(1);
             $table->integer('negative_points_at_time')->nullable();
-
-
             $table->timestamps();
         });
     }

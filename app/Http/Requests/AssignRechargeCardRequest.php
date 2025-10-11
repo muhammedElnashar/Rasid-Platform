@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Group;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AssignRechargeCardRequest extends FormRequest
 {
@@ -21,10 +24,17 @@ class AssignRechargeCardRequest extends FormRequest
      */
     public function rules(): array
     {
+        $type = $this->input('issued_to_type');
+
         return [
+            'issued_to_type' => ['required', Rule::in(['App\Models\User', 'App\Models\Group'])],
+            'issued_to_id'   => [
+                'required',
+                $type === 'App\Models\User'
+                    ? Rule::exists((new User)->getTable(), 'id')
+                    : Rule::exists((new Group)->getTable(), 'id'),
+            ],
             'card_id' => 'required|exists:recharge_cards,id',
-            'user_id' => 'required|array|min:1',
-            'user_id.*' => 'exists:users,id',
             'max_uses' => 'required|integer|min:1',
         ];
     }

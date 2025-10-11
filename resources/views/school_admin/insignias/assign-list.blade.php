@@ -57,7 +57,7 @@
                             <tr>
 
                                 <td>{{ $insignia->issuer->full_name }}</td>
-                                <td>{{ $insignia->user->full_name }}</td>
+                                <td>{{ $insignia->issuedTo->full_name ??$insignia->issuedTo->name }}</td>
                                 <td>{{ $insignia->insignia->name }}</td>
                                 <td>{{ $insignia->insignia->points_value }}</td>
                                 <td><img src="{{ $insignia->insignia->image_url }}" alt="{{ $insignia->insignia->name }}" width="50px" height="50px"></td>

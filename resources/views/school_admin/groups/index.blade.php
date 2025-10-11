@@ -45,7 +45,13 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-150px">اسم المجموعه</th>
+                            <th class="min-w-50px">اسم المجموعه</th>
+                            <th class="min-w-100px">الوصف</th>
+                            <th class="min-w-50px">التصنيف</th>
+                            <th class="min-w-50px">الصوره</th>
+                            <th class="min-w-50px">خارطه العمل</th>
+
+
                             <th class="min-w-100px"> القائد</th>
                             <th class="min-w-100px"> كود التحويل</th>
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
@@ -58,6 +64,10 @@
 
                             <tr>
                                 <td>{{ $group->name }}</td>
+                                <td>{{ $group->description }}</td>
+                                <td>{{ $group->category->name }}</td>
+                                <td><img src="{{Storage::disk('images')->url($group->image)}}" alt="" width="50px" height="50px"></td>
+                                <td><a href="{{Storage::disk('files')->url($group->file)}}" target="_blank"> خارطه العمل</a></td>
                                 <td>{{ $group->leader->full_name }}</td>
                                 <td>{{ $group->settlement_code }}</td>
 
@@ -105,6 +115,15 @@
 
                                             </button>
                                         </form>
+                                        @can('activation',$group)
+                                            <form method="POST" action="{{ route('groups.activation', $group) }}">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="btn btn-sm text-white ms-2 {{ $group->active ? 'btn-danger' : 'btn-success' }}">
+                                                    {{ $group->active ? 'تعطيل' : 'تفعيل' }}
+                                                </button>
+                                            </form>
+                                        @endcan
 
 
                                     </div>
@@ -123,74 +142,6 @@
         </div>
     </div>
 
-{{--
-    <!-- Modal with Table -->
-    <div class="modal fade" id="kt_modal_card_edit" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mw-650px">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>@lang('message.edit', ['item' => __('message.card')])</h2>
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                    <span class="svg-icon svg-icon-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black"/>
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"/>
-                        </svg>
-                    </span>
-                    </div>
-                </div>
-                <form id="editCardForm" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-body py-10 px-lg-17">
-                        <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold form-label mb-2 ">
-                                <span class="required"> @lang('message.card')</span>
-                            </label>
-                            <select name="card_id" id="cardSelect" data-control="select2"
-                                    data-placeholder="@lang('message.select', ['item' => __('message.card')])"
-                                    class="form-select form-select-solid">
-                                <option value="">@lang('message.select', ['item' => __('message.card')])</option>
-                                @foreach($cards as $support_card)
-
-                                    <option value="{{ $support_card->id }}" data-type="{{ $support_card->name }}"
-                                        {{ (old('card_id', $card->cardItem->category->card->id) == $support_card->id) ? 'selected' : '' }}>
-                                        {{ $support_card->name->label() }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold form-label mb-2 ">
-                                <span class="required"> @lang('message.category')</span>
-                            </label>
-                            <select id="categorySelect" class="form-select form-select-solid" aria-label="Select Type"
-                                    data-control="select2" data-placeholder="@lang('message.select', ['item' => __('message.category')])">
-                            </select>
-                        </div>
-
-                        <div class="fv-row mb-7">
-                            <label class="fs-6 fw-semibold form-label mb-2 ">
-                                <span class="required"> @lang('message.item')</span>
-                            </label>
-                            <select name="card_item_id" id="itemSelect" class="form-select form-select-solid" aria-label="Select Type"
-                                    data-control="select2" data-placeholder="@lang('message.select', ['item' => __('message.item')])">
-                            </select>
-                        </div>
-
-
-                    </div>
-
-                    <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">@lang('message.discard')</button>
-                        <button type="submit" class="btn btn-primary">@lang("message.submit")</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
---}}
 
 @endsection
 

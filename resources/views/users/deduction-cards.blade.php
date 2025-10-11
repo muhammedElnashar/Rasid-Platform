@@ -53,9 +53,7 @@
                                 <td>{{$card->pivot->cycle_number}}</td>
                                 <td>{{$card->pivot->negative_points_at_time}}</td>
 
-                                <td>
-                                    {{ $card->pivot->applied_at ? \Carbon\Carbon::parse($card->pivot->applied_at)->format('Y-m-d') : '' }}
-                                </td>
+                                <td>{{toHijriWithTime($card->pivot->applied_at)}}</td>
 
                             </tr>
 

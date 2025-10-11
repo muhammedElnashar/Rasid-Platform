@@ -4,30 +4,39 @@ namespace App\Services;
 
 use App\Models\Badge;
 use App\Models\UserBadge;
-use App\Models\User;
 
 class BadgeService
 {
-    public function checkAndAssignBadges(User $user)
+    public function checkAndAssignBadges($entity)
     {
-        $badges = Badge::where('school_id', $user->school_id)->get();
+        if (!isset($entity->school_id) || !isset($entity->fixed_points)) {
+            return;
+        }
+
+        $badges = Badge::where('school_id', $entity->school_id)->get();
 
         foreach ($badges as $badge) {
-            if ($user->fixed_points >= $badge->required_points) {
+            if ($entity->fixed_points >= $badge->required_points) {
 
-                $alreadyHasBadge = UserBadge::where('user_id', $user->id)
+                $alreadyHasBadge = UserBadge::where('issued_to_id', $entity->id)
+                    ->where('issued_to_type', get_class($entity))
                     ->where('badge_id', $badge->id)
                     ->exists();
 
                 if (!$alreadyHasBadge) {
                     UserBadge::create([
-                        'user_id'   => $user->id,
-                        'badge_id'  => $badge->id,
-                        'award_date'=> now(),
+                        'issued_to_id'   => $entity->id,
+                        'issued_to_type' => get_class($entity),
+                        'badge_id'       => $badge->id,
+                        'award_date'     => now(),
                     ]);
 
-                    $user->increment('flexible_points', $badge->points_awarded);
-                    $user->save();
+
+                    if ($entity->isFillable('fixed_points') && $entity->isFillable('flexible_points')) {
+                        $entity->increment('fixed_points',$badge->points_awarded );
+                        $entity->increment('flexible_points', $badge->points_awarded);
+                    }
+
                 }
             }
         }

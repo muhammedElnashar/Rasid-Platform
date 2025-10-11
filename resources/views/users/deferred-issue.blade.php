@@ -11,10 +11,17 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
+            <div class="alert alert-info">
+                <strong>ملاحظات هامة:</strong>
+                <ul class="mb-0">
+                    <li>لسداد الكرت بالكامل اضغط علي زر السداد</li>
+                    <li>اذا اردت تسديد جزء من الكرت ادخل قيمة النقاط المراد تسديدها اولا قبل الضغط علي زر السداد</li>
+                </ul>
+            </div>
+
             <div class="card   mx-auto">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-
                     </div>
                 </div>
                 <div class="card-body pt-0">
@@ -22,7 +29,7 @@
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-50px">@lang('message.issue_number')</th>
-                            <th class="min-w-100px">@lang('message.username')</th>
+                            <th class="min-w-25px">@lang('message.issued_by')</th>
                             <th class="min-w-50px">@lang('message.points')</th>
                             <th class="min-w-100px">@lang('message.remaining_points')</th>
                             <th class="min-w-100px">@lang('message.issue_date')</th>
@@ -38,12 +45,12 @@
                         @foreach($unsettledIssues as $card)
 
                             <tr>
-                                <td>{{ $card->issue_number }}</td>
+                                <td><span class="badge badge-light-danger">{{ $card->issue_number }}</span></td>
                                 <td>{{ $card->issuer->full_name }}</td>
                                 <td>{{ $card->points }}</td>
                                 <td>{{ $card->remaining_points }}</td>
-                                <td>{{date_format($card->issue_date,'Y-m-d')}}</td>
-                                <td>{{date_format($card->deduction_deadline,'Y-m-d')??""}}</td>
+                                <td>{{ toHijriWithTime($card->issue_date)}}</td>
+                                <td>{{ toHijri($card->deduction_deadline) }}</td>
 
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">

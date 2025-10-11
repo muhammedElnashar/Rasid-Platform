@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'image',
         'phone',
         'fixed_points',
         'flexible_points',
@@ -155,31 +156,6 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-
-/*    public function teacherSubjects()
-    {
-        return $this->belongsToMany(Subject::class, 'teacher_subject_classes', 'teacher_id', 'subject_id');
-    }*/
-
-  /*  public function teacherClasses()
-    {
-        return $this->belongsToMany(Classes::class, 'teacher_subject_classes', 'teacher_id', 'class_id');
-    }*/
-
-    public function studentClasses()
-    {
-        return $this->hasMany(StudentClass::class, 'student_id');
-    }
-
-//    public function studentSubjects()
-//    {
-//        return $this->belongsToMany(Subject::class, 'student_classes', 'student_id', 'subject_id');
-//    }
-
-/*    public function studentClassesRelation()
-    {
-        return $this->belongsToMany(Classes::class, 'student_classes', 'student_id', 'class_id');
-    }*/
     public function teacherSubjectClasses()
     {
         return $this->hasMany(TeacherSubjectClass::class, 'teacher_id');
@@ -222,31 +198,45 @@ class User extends Authenticatable
 
     public function cardIssues()
     {
-        return $this->hasMany(CardIssues::class, 'user_id');
+        return $this->morphMany(CardIssues::class, 'issued_to');
     }
+
 
     public function allTransfers()
     {
         return PointTransfer::with(['sender', 'receiver'])
             ->where(function ($q) {
-                $q->where('sender_id', $this->id)
-                    ->orWhere('receiver_id', $this->id);
+                $q->where(function ($sub) {
+                    $sub->where('sender_id', $this->id)
+                        ->where('sender_type', get_class($this));
+                })
+                    ->orWhere(function ($sub) {
+                        $sub->where('receiver_id', $this->id)
+                            ->where('receiver_type', get_class($this));
+                    });
             });
     }
 
+
     public function deductionCards()
     {
-        return $this->belongsToMany(\App\Models\DeductionCard::class, 'user_deduction_cards')
-            ->withTimestamps()
-            ->withPivot('applied_at', 'cycle_number', 'negative_points_at_time');
+        return $this->morphToMany(DeductionCard::class, 'issued_to', 'user_deduction_cards')
+            ->withPivot(['applied_at', 'cycle_number', 'negative_points_at_time'])
+            ->withTimestamps();
+    }
+
+    public function userDeductionCards()
+    {
+        return $this->morphMany(UserDeductionCard::class, 'issued_to');
     }
 
     public function rechargeCards()
     {
-        return $this->belongsToMany(RechargeCard::class, 'recharge_card_users', 'user_id', 'card_id')
-            ->withPivot(['max_uses', 'used_count', 'is_active'])
+        return $this->morphToMany(RechargeCard::class, 'issued_to', 'recharge_card_users','issued_to_id','card_id')
+            ->withPivot(['max_uses', 'used_count', 'is_active','created_by','code'])
             ->withTimestamps();
     }
+
 
     public function getCalculatedLevelAttribute()
     {
@@ -257,7 +247,7 @@ class User extends Authenticatable
 
     public function levelHistories()
     {
-        return $this->hasMany(UserLevelHistory::class, 'user_id');
+        return $this->morphMany(UserLevelHistory::class, 'issued_to');
     }
 
     public function getRemainingForNextLayerAttribute()
@@ -308,9 +298,8 @@ class User extends Authenticatable
 
     public function currentLevelHistory()
     {
-        return $this->hasOne(UserLevelHistory::class)->latestOfMany('change_date');
+        return $this->morphOne(UserLevelHistory::class, 'issued_to')->latestOfMany('change_date');
     }
-
     public function getCurrentLayerAttribute()
     {
         return $this->currentLevelHistory?->layer;
@@ -323,14 +312,17 @@ class User extends Authenticatable
 
     public function insignias()
     {
-        return $this->belongsToMany(Insignia::class, 'user_insignias')
-            ->withPivot('award_date');
+        return $this->morphToMany(Insignia::class, 'issued_to','user_insignias')
+            ->withPivot('award_date')
+            ->withTimestamps();
+
     }
     public function badges()
     {
-        return $this->belongsToMany(Badge::class, 'user_badges')
+        return $this->morphToMany(Badge::class, 'issued_to', 'user_badges')
             ->withPivot('award_date')
             ->withTimestamps();
     }
+
 
 }

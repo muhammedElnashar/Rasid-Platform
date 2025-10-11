@@ -3,16 +3,30 @@
 namespace App\Services;
 
 use App\Enum\StatusEnum;
+use App\Models\Group;
 use App\Models\PointTransfer;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class TransferPointsServices
 {
-    public function transferPoint(array $data, User $sender)
+    public function transferPoint(array $data)
     {
+        if ($data['sender_type'] === Group::class){
+            $group= Group::find($data['sender_id']);
+
+            if (!$group->active){
+                return back()->with('error','المجموعه مقيده الرجاء التواصل مع الإدارة لإعادة التفعيل');
+            }
+            if ($group->leader_id !== Auth::id()){
+                return back()->with('error','القائد فقط هوا من له هذة الصلاحية');
+            }
+        }
         return PointTransfer::create([
-            'sender_id'   => $sender->id,
-            'receiver_id' => $data['user_id'],
+            'sender_id'     => $data['sender_id'],
+            'sender_type'   => $data['sender_type'],
+            'receiver_id'   => $data['receiver_id'],
+            'receiver_type' => $data['receiver_type'],
             'amount'      => $data['amount'],
             'reason'      => $data['reason'],
             'purpose'     => $data['purpose'],
@@ -26,14 +40,11 @@ class TransferPointsServices
         $sender = $transfer->sender;
 
         \DB::transaction(function () use ($transfer, $sender, $receiver) {
-            $sender->flexible_points -= $transfer->amount;
-            $receiver->flexible_points += $transfer->amount;
+            $sender->decrement('flexible_points', $transfer->amount);
 
-            $sender->save();
-            $receiver->save();
+            $receiver->increment('flexible_points', $transfer->amount);
 
-            $transfer->status = StatusEnum::Approved;
-            $transfer->save();
+            $transfer->update(['status' => StatusEnum::Approved]);
         });
 
         return $transfer->fresh();

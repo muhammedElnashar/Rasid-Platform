@@ -8,26 +8,26 @@ use Illuminate\Support\Str;
 class RechargeCard extends Model
 {
     protected $fillable = [
-        'code',
+        'name',
         'points',
         'card_item_id',
     ];
 
-    public function users()
+    public function issuedTo()
     {
-        return $this->belongsToMany(User::class, 'recharge_card_users', 'card_id', 'user_id')
-            ->withPivot(['max_uses', 'used_count', 'is_active', 'created_by'])
+        return $this->morphedByMany(User::class, 'issued_to', 'recharge_card_users')
+            ->withPivot(['max_uses', 'used_count', 'is_active'])
             ->withTimestamps();
     }
-    public static function generateUniqueCode($length = 10)
-    {
-        do {
-            // ممكن تغير Str::upper أو تخليه بدون uppercase
-            $code = Str::upper(Str::random($length));
-        } while (self::where('code', $code)->exists());
 
-        return $code;
+    public function issuedToGroups()
+    {
+        return $this->morphedByMany(Group::class, 'issued_to', 'recharge_card_users')
+            ->withPivot(['max_uses', 'used_count', 'is_active'])
+            ->withTimestamps();
     }
+
+
 
     public function cardItem()
     {

@@ -50,6 +50,9 @@
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                                         </span>
                                     </button>
+                                    <a href="{{asset('assets/users.csv')}}" class="btn btn-primary" download>
+                                        <span class="indicator-label">تنزيل الملف</span>
+                                    </a>
                                 </div>
                             </form>
 
