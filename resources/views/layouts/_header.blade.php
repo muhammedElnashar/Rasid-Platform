@@ -22,7 +22,7 @@
         <!--end::Aside mobile toggle-->
         <!--begin::Mobile logo-->
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <a href="{{ asset('3.png') }}" class="d-lg-none">
+            <a href="#" class="d-lg-none">
                 <img alt="Logo" src="{{ asset('3.png') }}" class="h-70px" />
             </a>
         </div>

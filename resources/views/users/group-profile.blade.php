@@ -1854,7 +1854,7 @@
 
                                             <div class="fv-row mb-7">
                                                 <label class="fs-6 fw-semibold form-label mb-2 ">
-                                                    <span class="required"> @lang('message.card')</span>
+                                                    <span class="required">رقم البطاقة</span>
                                                 </label>
 
                                                 <div class="input-group input-group-solid mb-5">
