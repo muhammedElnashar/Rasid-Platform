@@ -179,16 +179,25 @@ class ProfileController extends Controller
             'email' => 'nullable|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'avatar_remove' => 'nullable|boolean',
         ]);
 
+        if ($request->avatar_remove) {
+            if ($user->image && Storage::disk('images')->exists($user->image)) {
+                Storage::disk('images')->delete($user->image);
+            }
+            $data['image'] = null;
+        }
 
-        if ($request->hasFile('image')) {
+        // ✅ إذا المستخدم رفع صورة جديدة
+        elseif ($request->hasFile('image')) {
             if ($user->image && Storage::disk('images')->exists($user->image)) {
                 Storage::disk('images')->delete($user->image);
             }
             $data['image'] = $request->file('image')->store('avatars', 'images');
         }
-        $user->update(array_filter($data));
+
+        $user->update($data);
 
         return back()->with('success', 'تم تحديث البيانات بنجاح ✅');
     }

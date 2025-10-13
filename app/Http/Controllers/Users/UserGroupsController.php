@@ -47,23 +47,36 @@ class UserGroupsController extends Controller
                 'currentLayer','currentLevel','categories','badges','insignias','logs','groups','transfers','groupCards'));
     }
 
-    public function updateGroupProfile(Request $request,Group $group)
+    public function updateGroupProfile(Request $request, Group $group)
     {
-        if ($group->leader_id!= Auth::id()){
-            abort(403,'غير مصرح لك ');
+        if ($group->leader_id != Auth::id()) {
+            abort(403, 'غير مصرح لك ');
         }
+
         $data = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'avatar_remove' => 'nullable|boolean',
         ]);
-        if ($request->hasFile('image')) {
+
+        // ✅ لو المستخدم ضغط "إزالة الصورة"
+        if ($request->avatar_remove) {
+            if ($group->image && Storage::disk('images')->exists($group->image)) {
+                Storage::disk('images')->delete($group->image);
+            }
+            $data['image'] = null;
+        }
+
+        // ✅ لو رفع صورة جديدة
+        elseif ($request->hasFile('image')) {
             if ($group->image && Storage::disk('images')->exists($group->image)) {
                 Storage::disk('images')->delete($group->image);
             }
             $data['image'] = $request->file('image')->store('groups', 'images');
         }
-        $group->update($data);
-        return back()->with('success', 'تم تحديث البيانات بنجاح ✅');
 
+        $group->update($data);
+
+        return back()->with('success', 'تم تحديث بيانات المجموعة بنجاح ✅');
     }
     private function groupUnsettledIssue(Group $group)
     {

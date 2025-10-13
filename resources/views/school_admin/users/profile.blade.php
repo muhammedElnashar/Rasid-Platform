@@ -1143,6 +1143,8 @@
                                                     title="تغيير الصورة">
                                                     <i class="bi bi-pencil-fill fs-7"></i>
                                                     <input type="file" name="image" accept=".png, .jpg, .jpeg"/>
+                                                    <input type="hidden" name="avatar_remove" />
+
                                                 </label>
                                                 <!--end::Edit-->
 
