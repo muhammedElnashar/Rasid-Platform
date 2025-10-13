@@ -8,7 +8,7 @@
 
             <div id="kt_app_toolbar" class="app-toolbar p-3">
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                    <div class="page-title d-flex mt-5 flex-column justify-content-center flex-wrap me-3">
                         <h1 class="page-heading d-flex text-dark fw-bolder fs-2 flex-column justify-content-center my-0">
                             تعديل مجموعة
                         </h1>
@@ -135,7 +135,7 @@
                                     <a href="{{Storage::disk('files')->url($group->file)}}" target="_blank">خارطه العمل</a>
                                 </div>
                                 <div class="text-center pt-15">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary w-100 w-md-25">
                                         <span class="indicator-label">@lang('message.save')</span>
                                     </button>
                                 </div>

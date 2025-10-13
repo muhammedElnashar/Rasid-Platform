@@ -119,12 +119,14 @@
                         @foreach($approvedIssues as $issue)
 
                             <tr>
-                                @if($issue->status === \App\Enum\StatusCardEnum::Approved)
-                                <td> <span class="badge badge-light-success"> {{ $issue->issue_number }}</span> </td>
-                                @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
-                                    <td> <span class="badge badge-light-danger"> {{ $issue->issue_number }}</span> </td>
+                                @if($issue->points > 0 )
+                                    <td><span
+                                            class="badge badge-light-success"> {{ $issue->issue_number }}</span>
+                                    </td>
                                 @else
-                                    <td> <span class="badge badge-light-warning"> {{ $issue->issue_number }}</span> </td>
+                                    <td><span
+                                            class="badge badge-light-danger"> {{ $issue->issue_number }}</span>
+                                    </td>
                                 @endif
                                 @if($issue->points > 0 )
                                     <td> <span class="badge badge-light-success">دعم ايجابي</span> </td>

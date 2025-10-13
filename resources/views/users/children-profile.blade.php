@@ -853,17 +853,13 @@
                                             @foreach($approvedIssues as $issue)
 
                                                 <tr>
-                                                    @if($issue->status === \App\Enum\StatusCardEnum::Approved)
+                                                    @if($issue->points > 0 )
                                                         <td><span
                                                                 class="badge badge-light-success"> {{ $issue->issue_number }}</span>
                                                         </td>
-                                                    @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
-                                                        <td><span
-                                                                class="badge badge-light-danger"> {{ $issue->issue_number }}</span>
-                                                        </td>
                                                     @else
                                                         <td><span
-                                                                class="badge badge-light-warning"> {{ $issue->issue_number }}</span>
+                                                                class="badge badge-light-danger"> {{ $issue->issue_number }}</span>
                                                         </td>
                                                     @endif
                                                     @if($issue->points > 0 )
@@ -1269,11 +1265,11 @@
                                             <tbody class="fs-6 fw-bold text-gray-600">
                                             @foreach($transfers as $transfer)
                                                 <tr>
-                                                    <td>{{$transfer->sender->name}}</td>
-                                                    <td>{{$transfer->receiver->name}}</td>
+                                                    <td>{{$transfer->sender->full_name}}</td>
+                                                    <td>{{$transfer->receiver->full_name}}</td>
                                                     <td>{{$transfer->amount}}</td>
                                                     <td>
-                                                        @if ($transfer->sender_id == $group->id)
+                                                        @if ($transfer->sender_id == $user->id)
                                                             <span class="badge badge-light-danger">ارسال</span>
                                                         @else
                                                             <span class="badge badge-light-success">استلام</span>
@@ -1545,3 +1541,31 @@
     </div>
 
 @endsection
+@push("script")
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{asset("assets/js/dynamic.js")}}"></script>
+    <script src="{{asset("assets/js/custom/apps/customers/add.js")}}"></script>
+    <script src="{{asset("assets/js/custom/widgets.js")}}"></script>
+    <script>
+        KTDynamicTable.init(
+            "#kt_issues_table",
+            '[data-kt-customer-table-filter="search"]',
+            '.kt-table-filter-container' // ضع هذا على div يحتوي كل الفلاتر
+        );
+        KTDynamicTable.init(
+            "#kt_unsettle_table",
+            '[data-kt-customer-table-filter="search"]',
+            '.kt-table-filter-container' // ضع هذا على div يحتوي كل الفلاتر
+        );
+        KTDynamicTable.init(
+            "#kt_deductionCard_table",
+            '[data-kt-customer-table-filter="search"]',
+            '.kt-table-filter-container' // ضع هذا على div يحتوي كل الفلاتر
+        );
+        KTDynamicTable.init(
+            "#kt_transfers_table",
+            '[data-kt-customer-table-filter="search"]',
+            '.kt-table-filter-container' // ضع هذا على div يحتوي كل الفلاتر
+        );
+    </script>
+@endpush

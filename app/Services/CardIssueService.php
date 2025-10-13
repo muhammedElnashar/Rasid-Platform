@@ -124,9 +124,11 @@ class CardIssueService
 
         // النقاط السالبة مع Deferred
         if ($cardIssue->points < 0 && $cardIssue->deduction_type === DeductionTypeEnum::Deferred) {
+
             if ($cardIssue->is_restricted) {
                 throw new \DomainException('لا يمكنك السداد حالياً، الكرت مقيد');
             }
+
 
             $remaining = $cardIssue->remaining_points ?? abs($cardIssue->points);
 

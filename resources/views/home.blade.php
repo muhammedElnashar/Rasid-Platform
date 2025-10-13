@@ -159,7 +159,7 @@
 @endpush
 
 @section('content')
-    <div class="dashboard-container position-relative">
+    <div class="dashboard-container position-relative ">
         <!-- Decorative elements -->
         <div class="decoration-circle circle-1"></div>
         <div class="decoration-circle circle-2"></div>
@@ -168,7 +168,7 @@
             <!-- Page Header -->
             @if(\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())
                 <div class="row g-5">
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 col-12">
                         <div class="stats-card gradient-blue">
                             <div class="card-icon">
                                 <i class="fas fa-users"></i>

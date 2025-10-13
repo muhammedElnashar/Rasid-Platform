@@ -20,7 +20,7 @@ class GradesController extends Controller
         if ($user->school_id !== $stage->school_id) {
             return redirect()->route('home')->with('error', __('message.no_school_access'));
         }
-        $grades = $stage->grades()->paginate(5);
+        $grades = $stage->grades()->get();
         return view('school_admin.grades.index', compact('grades','stage'));
 
     }

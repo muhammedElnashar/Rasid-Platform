@@ -16,7 +16,7 @@ class StagesController extends Controller
     {
         $this->authorize('viewAny', Stage::class);
         $school = auth()->user()->school;
-        $stages = $school->stages()->paginate(5);
+        $stages = $school->stages()->get();
 
         return view('school_admin.stages.index', compact('stages'));
     }

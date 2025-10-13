@@ -9,7 +9,7 @@
         <div class="d-flex flex-column flex-column-fluid">
             <div id="kt_app_toolbar" class="app-toolbar p-3 ">
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                    <div class="page-title d-flex flex-column mt-5 justify-content-center flex-wrap me-3">
                         <h1 class="page-heading d-flex text-dark fw-bolder fs-2 flex-column justify-content-center my-0">
                             رفع دفعة من المستخدمين
                         </h1>

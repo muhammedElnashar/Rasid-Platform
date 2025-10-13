@@ -905,17 +905,13 @@
                                             @foreach($approvedIssues as $issue)
 
                                                 <tr>
-                                                    @if($issue->status === \App\Enum\StatusCardEnum::Approved)
+                                                    @if($issue->points > 0 )
                                                         <td><span
                                                                 class="badge badge-light-success"> {{ $issue->issue_number }}</span>
                                                         </td>
-                                                    @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
-                                                        <td><span
-                                                                class="badge badge-light-danger"> {{ $issue->issue_number }}</span>
-                                                        </td>
                                                     @else
                                                         <td><span
-                                                                class="badge badge-light-warning"> {{ $issue->issue_number }}</span>
+                                                                class="badge badge-light-danger"> {{ $issue->issue_number }}</span>
                                                         </td>
                                                     @endif
                                                     @if($issue->points > 0 )
@@ -1021,7 +1017,7 @@
                                                     <td>{{ $card->remaining_points }}</td>
                                                     <td>{{ toHijriWithTime($card->issue_date)}}</td>
                                                     <td>{{ toHijri($card->deduction_deadline) }}</td>
-                                                    @if($issue->issuedTo->leader_id === \Illuminate\Support\Facades\Auth::id())
+                                                    @if($card->issuedTo->leader_id === \Illuminate\Support\Facades\Auth::id())
                                                         <td>
                                                             <div class="d-flex justify-content-center flex-shrink-0">
                                                                 <form action="{{ route('issue.settle', $card) }}"

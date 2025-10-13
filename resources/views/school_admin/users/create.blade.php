@@ -30,7 +30,7 @@
                                   action="{{route("users.store")}}">
                                 @csrf
 
-                                <div class="fv-row mb-7">
+                                <div class="fv-row mb-7 ">
                                     <label class="fs-6 fw-semibold form-label mb-2 ">
                                         <span class="required"> @lang('message.full_name')</span>
                                         <span>
@@ -102,10 +102,9 @@
 
                                 <div class="text-center pt-15">
 
-                                    <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
+                                    <button type="submit" class="btn btn-primary w-100 w-md-50"  data-kt-modal-action="submit">
                                         <span class="indicator-label">@lang('message.save')</span>
-                                        <span class="indicator-progress">جاري الحفظ ...
-                                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+
                                     </button>
                                 </div>
                             </form>

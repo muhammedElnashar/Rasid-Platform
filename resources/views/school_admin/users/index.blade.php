@@ -12,11 +12,10 @@
 @section('content')
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <div id="kt_content_container" class="container-xl">
-            <div class="card mx-auto" >
+            <div class="card mt-5" >
                 <div class="card-header border-0 pt-6">
-                    <div class="card-title"></div>
-                    <div class="card-toolbar">
-                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center position-relative ">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none">
@@ -32,9 +31,15 @@
                                    class="form-control form-control-solid w-250px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
-                        <div class="kt-table-filter-container">
-                            <a type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
-                               data-kt-menu-placement="bottom-end">
+
+                    </div>
+
+                    <div class="card-toolbar">
+
+                        <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
+                            <div class="kt-table-filter-container">
+                                <a type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
+                                   data-kt-menu-placement="bottom-end">
                             	<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none">
@@ -43,61 +48,60 @@
                                                     fill="black"/>
 											</svg>
 										</span>
-                                @lang('message.filter')
-                            </a>
+                                    @lang('message.filter')
+                                </a>
 
-                            <!-- القائمة -->
-                            <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
-                                <div class="px-7 py-5">
-                                    <!-- فلتر Status -->
-                                    <div class="mb-10">
-                                        <label class="form-label fs-5 fw-bold mb-3">@lang('message.status')</label>
-                                        <div class="d-flex flex-column flex-wrap fw-bold">
-                                            <label
-                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
-                                                <input class="form-check-input" type="radio" name="role_id"
-                                                       value="@lang('message.student')"/>
-                                                <span
-                                                    class="form-check-label text-gray-600">@lang('message.student')</span>
-                                            </label>
-                                            <label
-                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3">
-                                                <input class="form-check-input" type="radio" name="role_id"
-                                                       value="@lang('message.teacher')"/>
-                                                <span
-                                                    class="form-check-label text-gray-600">@lang('message.teacher')</span>
-                                            </label>
-                                            <label
-                                                class="form-check form-check-sm form-check-custom form-check-solid mb-3">
-                                                <input class="form-check-input" type="radio" name="role_id"
-                                                       value="@lang('message.guardian')"/>
-                                                <span
-                                                    class="form-check-label text-gray-600">@lang('message.guardian')</span>
-                                            </label>
-                                            <label class="form-check form-check-sm form-check-custom form-check-solid">
-                                                <input class="form-check-input" type="radio" name="role_id"
-                                                       value="@lang('message.moderator')"/>
-                                                <span
-                                                    class="form-check-label text-gray-600">@lang('message.moderator')</span>
-                                            </label>
+                                <!-- القائمة -->
+                                <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
+                                    <div class="px-7 py-5">
+                                        <!-- فلتر Status -->
+                                        <div class="mb-10">
+                                            <label class="form-label fs-5 fw-bold mb-3">@lang('message.status')</label>
+                                            <div class="d-flex flex-column flex-wrap fw-bold">
+                                                <label
+                                                    class="form-check form-check-sm form-check-custom form-check-solid mb-3 me-5">
+                                                    <input class="form-check-input" type="radio" name="role_id"
+                                                           value="@lang('message.student')"/>
+                                                    <span
+                                                        class="form-check-label text-gray-600">@lang('message.student')</span>
+                                                </label>
+                                                <label
+                                                    class="form-check form-check-sm form-check-custom form-check-solid mb-3">
+                                                    <input class="form-check-input" type="radio" name="role_id"
+                                                           value="@lang('message.teacher')"/>
+                                                    <span
+                                                        class="form-check-label text-gray-600">@lang('message.teacher')</span>
+                                                </label>
+                                                <label
+                                                    class="form-check form-check-sm form-check-custom form-check-solid mb-3">
+                                                    <input class="form-check-input" type="radio" name="role_id"
+                                                           value="@lang('message.guardian')"/>
+                                                    <span
+                                                        class="form-check-label text-gray-600">@lang('message.guardian')</span>
+                                                </label>
+                                                <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                    <input class="form-check-input" type="radio" name="role_id"
+                                                           value="@lang('message.moderator')"/>
+                                                    <span
+                                                        class="form-check-label text-gray-600">@lang('message.moderator')</span>
+                                                </label>
 
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- أزرار -->
-                                    <div class="d-flex justify-content-end">
-                                        <button type="reset" class="btn btn-light btn-active-light-primary me-2"
-                                                data-kt-menu-dismiss="true" data-kt-table-filter="reset">Reset
-                                        </button>
-                                        <button type="button" class="btn btn-primary" data-kt-menu-dismiss="true"
-                                                data-kt-table-filter="filter">Apply
-                                        </button>
+                                        <!-- أزرار -->
+                                        <div class="d-flex justify-content-end">
+                                            <button type="reset" class="btn btn-light btn-active-light-primary me-2"
+                                                    data-kt-menu-dismiss="true" data-kt-table-filter="reset">Reset
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-kt-menu-dismiss="true"
+                                                    data-kt-table-filter="filter">Apply
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             <a href="{{ route('users.create') }}" class="btn btn-primary">
                                 @lang('message.add',['item' => __('message.user')])
                             </a>
@@ -107,7 +111,8 @@
                 </div>
 
                 <div class="card-body pt-0">
-                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
+                    <div class="table-responsive">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5 " id="kt_customers_table">
                         <thead>
                         <tr class="text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-150px">@lang('message.full_name')</th>
@@ -205,7 +210,7 @@
                         @endforeach
                         </tbody>
                     </table>
-
+                    </div>
 
                 </div>
             </div>
@@ -289,8 +294,8 @@
                     </div>
 
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">@lang('message.discard')</button>
-                        <button type="submit" class="btn btn-primary">@lang("message.submit")</button>
+                        <button type="reset" class="btn btn-light w-25 w-md-auto " data-bs-dismiss="modal">@lang('message.discard')</button>
+                        <button type="submit" class="btn btn-primary w-25 w-md-auto">@lang("message.submit")</button>
                     </div>
                 </form>
             </div>
