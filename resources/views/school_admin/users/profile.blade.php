@@ -629,7 +629,7 @@
             <div id="kt_content_container" class="container-xxl">
                 <div class="d-flex flex-column flex-xl-row">
                     <div class="flex-column flex-lg-row-auto w-100 w-xl-350px mb-10">
-                        <div class="card mb-5 mb-xl-8 animation-alert border-primary">
+                        <div class="card mb-5 mt-5 mb-xl-8 animation-alert border-primary">
                             <div class="card-body ">
                                 <div class="d-flex flex-center flex-column py-5">
                                     <div class="symbol symbol-100px border border-3 border-success mb-7">
