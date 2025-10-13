@@ -678,7 +678,7 @@
                                 <div class="d-flex flex-stack fs-4 py-3">
                                     <div class="fw-bolder rotate collapsible" data-bs-toggle="collapse"
                                          href="#kt_user_view_details" role="button" aria-expanded="false"
-                                         aria-controls="kt_user_view_details">Details
+                                         aria-controls="kt_user_view_details">تفاصيل
                                         <span class="ms-2 rotate-180">
 														<span class="svg-icon svg-icon-3">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -694,7 +694,7 @@
                                           title="Edit customer details">
                                 @if($group->leader_id === \Illuminate\Support\Facades\Auth::id())
                                             <a href="#" class="btn btn-sm btn-light-primary" data-bs-toggle="modal"
-                                               data-bs-target="#kt_modal_update_details">Edit</a>
+                                               data-bs-target="#kt_modal_update_details">تعديل</a>
                                         @endif
 
                                     </span>
@@ -1147,14 +1147,10 @@
 
                                                     <!-- أزرار -->
                                                     <div class="d-flex justify-content-end">
-                                                        <button type="reset"
-                                                                class="btn btn-light btn-active-light-primary me-2"
-                                                                data-kt-menu-dismiss="true"
-                                                                data-kt-table-filter="reset">Reset
-                                                        </button>
+
                                                         <button type="button" class="btn btn-primary"
                                                                 data-kt-menu-dismiss="true"
-                                                                data-kt-table-filter="filter">Apply
+                                                                data-kt-table-filter="filter">تطبيق
                                                         </button>
                                                     </div>
                                                 </div>

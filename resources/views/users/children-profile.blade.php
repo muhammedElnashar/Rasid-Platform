@@ -608,7 +608,7 @@
                                        class="fs-3 text-gray-800 text-hover-primary fw-bolder mb-3">{{$user->full_name}}</a>
                                     <div class="mb-9">
                                         <div
-                                            class="badge badge-lg badge-light-primary d-inline">{{$user->role->name}}</div>
+                                            class="badge badge-lg badge-light-primary d-inline">{{__('message.'.$user->role->name)}}</div>
                                     </div>
                                     <div class="d-flex flex-wrap flex-center">
                                         <div class="border border-gray-300 border-dashed rounded py-3 px-3 mb-3">
@@ -636,7 +636,7 @@
                                 <div class="d-flex flex-stack fs-4 py-3">
                                     <div class="fw-bolder rotate collapsible" data-bs-toggle="collapse"
                                          href="#kt_user_view_details" role="button" aria-expanded="false"
-                                         aria-controls="kt_user_view_details">Details
+                                         aria-controls="kt_user_view_details">تفاصيل
                                         <span class="ms-2 rotate-180">
 														<span class="svg-icon svg-icon-3">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -1092,14 +1092,9 @@
 
                                                     <!-- أزرار -->
                                                     <div class="d-flex justify-content-end">
-                                                        <button type="reset"
-                                                                class="btn btn-light btn-active-light-primary me-2"
-                                                                data-kt-menu-dismiss="true"
-                                                                data-kt-table-filter="reset">Reset
-                                                        </button>
                                                         <button type="button" class="btn btn-primary"
                                                                 data-kt-menu-dismiss="true"
-                                                                data-kt-table-filter="filter">Apply
+                                                                data-kt-table-filter="filter">تطبيق
                                                         </button>
                                                     </div>
                                                 </div>

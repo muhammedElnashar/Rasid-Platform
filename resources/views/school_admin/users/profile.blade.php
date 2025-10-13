@@ -645,7 +645,7 @@
                                        class="fs-3 text-gray-800 text-hover-primary fw-bolder mb-3">{{$user->full_name}}</a>
                                     <div class="mb-9">
                                         <div
-                                            class="badge badge-lg badge-light-primary d-inline">{{$user->role->name}}</div>
+                                            class="badge badge-lg badge-light-primary d-inline">{{__('message.'.$user->role->name)}}</div>
                                     </div>
                                     <div class="d-flex flex-wrap flex-center">
                                         <div class="border border-gray-300 border-dashed rounded py-3 px-3 mb-3">
@@ -673,7 +673,7 @@
                                 <div class="d-flex flex-stack fs-4 py-3">
                                     <div class="fw-bolder rotate collapsible" data-bs-toggle="collapse"
                                          href="#kt_user_view_details" role="button" aria-expanded="false"
-                                         aria-controls="kt_user_view_details">Details
+                                         aria-controls="kt_user_view_details">التفاصيل
                                         <span class="ms-2 rotate-180">
 														<span class="svg-icon svg-icon-3">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -688,7 +688,7 @@
                                     <span data-bs-toggle="tooltip" data-bs-trigger="hover"
                                           title="Edit customer details">
                                         <a href="#" class="btn btn-sm btn-light-primary" data-bs-toggle="modal"
-                                           data-bs-target="#kt_modal_update_details">Edit</a>
+                                           data-bs-target="#kt_modal_update_details">تعديل</a>
                                     </span>
                                 </div>
                                 <div class="separator"></div>

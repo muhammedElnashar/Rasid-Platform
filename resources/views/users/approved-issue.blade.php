@@ -84,11 +84,8 @@
 
                                     <!-- أزرار -->
                                     <div class="d-flex justify-content-end">
-                                        <button type="reset" class="btn btn-light btn-active-light-primary me-2"
-                                                data-kt-menu-dismiss="true" data-kt-table-filter="reset">Reset
-                                        </button>
                                         <button type="button" class="btn btn-primary" data-kt-menu-dismiss="true"
-                                                data-kt-table-filter="filter">Apply
+                                                data-kt-table-filter="filter">تطبيق
                                         </button>
                                     </div>
                                 </div>

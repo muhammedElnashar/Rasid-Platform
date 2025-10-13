@@ -15,7 +15,7 @@
 
     <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
         <a href="#" class="mb-12">
-            <img alt="Logo" src="{{ asset('assets/media/logos/logo-1.svg') }}" class="h-40px" />
+            <img alt="Logo" src="{{ asset('3.png') }}" class="h-40px" />
         </a>
 
         <div class="w-lg-550px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
@@ -25,17 +25,17 @@
                 <input type="hidden" name="email" value="{{ $email }}">
 
                 <div class="text-center mb-10">
-                    <h1 class="text-dark mb-3">Setup New Password</h1>
+                    <h1 class="text-dark mb-3">تعيين كلمة سر جديدة</h1>
                     <h2 class="text-dark mb-3">{{ $username }}</h2>
                     <div class="text-gray-400 fw-bold fs-4">
-                        Already have reset your password?
-                        <a href="{{ route('login') }}" class="link-primary fw-bolder">Sign in here</a>
+                        لقد قمت بالفعل بإعادة تعيين كلمة المرور الخاصة بك؟
+                        <a href="{{ route('login') }}" class="link-primary fw-bolder">تسجيل الدخول هنا</a>
                     </div>
                 </div>
 
                 <div class="mb-10 fv-row" data-kt-password-meter="true">
                     <div class="mb-1">
-                        <label class="form-label fw-bolder text-dark fs-6">Password</label>
+                        <label class="form-label fw-bolder text-dark fs-6">كلمة سر </label>
                         <div class="position-relative mb-3">
                             <input class="form-control form-control-lg form-control-solid" type="password" name="password" autocomplete="off" />
                             <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
@@ -54,13 +54,13 @@
                 </div>
 
                 <div class="fv-row mb-10">
-                    <label class="form-label fw-bolder text-dark fs-6">Confirm Password</label>
+                    <label class="form-label fw-bolder text-dark fs-6">تأكيد كلمة السر </label>
                     <input class="form-control form-control-lg form-control-solid" type="password" name="password_confirmation" autocomplete="off" />
                 </div>
 
                 <div class="text-center">
                     <button type="submit" id="kt_new_password_submit" class="btn btn-lg btn-primary fw-bolder">
-                        <span class="indicator-label">Submit</span>
+                        <span class="indicator-label">ارسال</span>
                         <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
