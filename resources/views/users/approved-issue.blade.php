@@ -11,7 +11,7 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card ">
+            <div class="card mt-5 ">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
                         <div class="d-flex align-items-center position-relative my-1">
@@ -101,16 +101,16 @@
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
+                        <thead class="text-center">
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-25px">@lang('message.issue_number')</th>
-                            <th class="min-w-25px">نوع الكرت</th>
-                            <th class="min-w-25px">@lang('message.issued_by')</th>
-                            <th class="min-w-25px">@lang('message.item')</th>
-                            <th class="min-w-25px">@lang('message.points')</th>
-                            <th class="min-w-25px">@lang('message.deduction_type')</th>
-                            <th class="min-w-50px">@lang('message.issue_date')</th>
-                            <th class="min-w-25px text center">@lang('message.status')</th>
+                            <th class="min-w-100px">@lang('message.issue_number')</th>
+                            <th class="min-w-50px">نوع الكرت</th>
+                            <th class="min-w-100px">@lang('message.issued_by')</th>
+                            <th class="min-w-100px">@lang('message.item')</th>
+                            <th class="min-w-100px">@lang('message.points')</th>
+                            <th class="min-w-100px">@lang('message.deduction_type')</th>
+                            <th class="min-w-200px">@lang('message.issue_date')</th>
+                            <th class="min-w-50px text center">@lang('message.status')</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-center  text-gray-600">

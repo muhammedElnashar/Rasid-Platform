@@ -11,10 +11,9 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card ">
+            <div class="card  mt-5">
                 <div class="card-header border-0 pt-6">
-                    <h3 class="card-title"></h3>
-                    <div class="card-toolbar">
+                    <div class="card-title">
                         <div class="d-flex align-items-center position-relative mx-3 my-1">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -33,17 +32,20 @@
                         </div>
 
                     </div>
+                    <div class="card-toolbar">
+
+                    </div>
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder text-center fs-7 text-uppercase gs-0">
-                            <th class="min-w-50px">كود التسليم</th>
-                            <th class="min-w-50px">اسم الجائزة</th>
-                            <th class="min-w-50px">الصوره</th>
-                            <th class="min-w-50px">النقاط</th>
-                            <th class="min-w-50px">تاريخ الطلب</th>
-                            <th class="min-w-50px">حالة الطلب</th>
+                            <th class="min-w-100px">كود التسليم</th>
+                            <th class="min-w-100px">اسم الجائزة</th>
+                            <th class="min-w-100px">الصوره</th>
+                            <th class="min-w-100px">النقاط</th>
+                            <th class="min-w-200px">تاريخ الطلب</th>
+                            <th class="min-w-100px">حالة الطلب</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-center   text-gray-600">

@@ -14,7 +14,7 @@
             <div class="card ">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-                        <div class="d-flex align-items-center position-relative my-1">
+                        <div class="d-flex align-items-center position-relative ">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none">
@@ -27,7 +27,7 @@
                                 </svg>
                             </span>
                             <input type="text" data-kt-customer-table-filter="search"
-                                   class="form-control form-control-solid w-250px ps-15"
+                                   class="form-control form-control-solid w-200px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
                     </div>
@@ -35,16 +35,16 @@
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
+                        <thead class="text-center">
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-150px">@lang('message.name')</th>
                             <th class="min-w-150px">@lang('message.cycle_number')</th>
                             <th class="min-w-150px">@lang('message.negative_points_at_time')</th>
-                            <th class="min-w-150px">@lang('message.applied_at')</th>
+                            <th class="min-w-200px">@lang('message.applied_at')</th>
 
                         </tr>
                         </thead>
-                        <tbody class="fw-bold   text-gray-600">
+                        <tbody class="fw-bold text-center  text-gray-600">
 
 
                         @foreach($deductionCards as $card)

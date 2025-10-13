@@ -6,6 +6,7 @@
     <link href="{{asset("assets/plugins/global/plugins.bundle.css")}}" rel="stylesheet" type="text/css" />
     <link href="{{asset("assets/css/style.bundle.css")}}" rel="stylesheet" type="text/css" />
 </head>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 <body id="kt_body" class="bg-body">
 @include('partials.alert')

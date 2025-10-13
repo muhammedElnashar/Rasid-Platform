@@ -4,13 +4,105 @@
 @endsection
 @push('css')
     <style>
+        .progress-slider-container {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .slider-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 0.5rem;
+            max-width: 300px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .slider-dots::-webkit-scrollbar {
+            display: none;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .dot.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .slides-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         .progress-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            margin-bottom: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -43,22 +135,44 @@
             }
         }
 
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+
         .progress-title {
             color: white;
             font-size: 1.8rem;
             font-weight: 700;
             margin: 0;
-            position: relative;
-            z-index: 2;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin: 0.3rem 0 0 0;
+            font-weight: 500;
         }
 
         .progress-icon {
             font-size: 2rem;
             margin-left: 1rem;
-            position: relative;
-            z-index: 2;
             animation: pulse 2s ease-in-out infinite;
+        }
+
+        .position-badge {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         @keyframes pulse {
@@ -79,7 +193,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.2rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .info-badge-item {
@@ -170,11 +284,27 @@
             margin-bottom: 0.3rem;
         }
 
+        .current-layer-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
         .progress-track {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 3rem 0;
+            margin: 2.5rem 0;
             padding: 0 1rem;
             position: relative;
         }
@@ -231,19 +361,30 @@
 
         .level-tooltip {
             position: absolute;
-            bottom: -45px;
+            bottom: -60px;
             left: 50%;
             transform: translateX(-50%);
             background: #1f2937;
             color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
             font-size: 0.85rem;
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .badge-current {
+            background: rgba(245, 158, 11, 0.9);
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+            display: inline-block;
         }
 
         .level-circle:hover .level-tooltip {
@@ -335,34 +476,95 @@
             }
         }
 
+        .layer-info-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.03));
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #4338ca;
+            font-size: 1rem;
+            margin-top: 2rem;
+        }
+
+        .layer-info-box i {
+            font-size: 1.3rem;
+        }
+
         @media (max-width: 768px) {
             .progress-track {
-                flex-direction: column;
-                gap: 1rem;
+                overflow-x: auto;
+                justify-content: flex-start;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
 
-            .connector {
-                width: 6px;
-                height: 25px;
-                margin: -8px 0;
+            .progress-track::-webkit-scrollbar {
+                display: none;
             }
 
             .level-circle {
-                width: 55px;
-                height: 55px;
-                font-size: 1.1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1rem;
+                flex-shrink: 0;
             }
 
-            .info-badges {
-                gap: 1rem;
+            .connector {
+                width: 30px;
+                height: 4px;
+                margin: 0;
+                flex-shrink: 0;
+                flex: none;
             }
 
             .progress-body {
-                padding: 1.8rem;
+                padding: 1.5rem;
             }
 
             .progress-header {
                 padding: 1.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .position-badge {
+                align-self: flex-end;
+            }
+
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .progress-title {
+                font-size: 1.4rem;
+            }
+
+            .category-subtitle {
+                font-size: 0.9rem;
+            }
+
+            .info-badge-item {
+                padding: 1rem 1.2rem;
+            }
+
+            .badge-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+
+            .badge-content h5 {
+                font-size: 1rem;
             }
         }
     </style>
@@ -500,108 +702,200 @@
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active " id="kt_user_view_overview" role="tabpanel">
-                                <div class="progress-container">
-                                    @if($currentLayer && $currentLevel)
-                                        <div class="progress-header">
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-trophy-fill text-white progress-icon"></i>
-                                                <h2 class="progress-title">رحلة التقدم</h2>
-                                            </div>
-                                        </div>
+                            <div class="tab-pane fade show active" id="kt_user_view_overview" role="tabpanel">
+                                <div class="progress-slider-container">
+                                    <!-- Slider Navigation -->
+                                    <div class="slider-navigation">
+                                        <button class="nav-btn prev-btn" id="prevBtn">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </button>
+                                        <div class="slider-dots" id="sliderDots"></div>
+                                        <button class="nav-btn next-btn" id="nextBtn">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </button>
+                                    </div>
 
-                                        <div class="progress-body">
-                                            <div class="info-badges">
-                                                <div class="info-badge-item category">
-                                                    <div class="badge-icon category">
-                                                        <i class="bi bi-collection text-white"></i>
-                                                    </div>
-                                                    <div class="badge-content">
-                                                        <div class="badge-label">الفئة</div>
-                                                        <h5>{{ $currentLayer->category->name }}</h5>
-                                                    </div>
-                                                </div>
+                                    <!-- Slides Container -->
+                                    <div class="slides-wrapper" id="slidesWrapper">
+                                        @php
+                                            $allLayers = [];
+                                            foreach($categories as $category) {
+                                                foreach($category->layers as $layer) {
+                                                    $allLayers[] = [
+                                                        'category' => $category,
+                                                        'layer' => $layer
+                                                    ];
+                                                }
+                                            }
+                                        @endphp
 
-                                                <div class="info-badge-item layer">
-                                                    <div class="badge-icon layer">
-                                                        <i class="bi bi-layers text-white"></i>
-                                                    </div>
-                                                    <div class="badge-content">
-                                                        <div class="badge-label">الطبقة</div>
-                                                        <h5>{{ $currentLayer->name }}</h5>
-                                                    </div>
-                                                </div>
+                                        @foreach($allLayers as $index => $item)
+                                            @php
+                                                $category = $item['category'];
+                                                $layer = $item['layer'];
+                                                $isCurrentLayer = $layer->id == $currentLayer?->id;
+                                            @endphp
 
-                                                <div class="info-badge-item level">
-                                                    <div class="badge-icon level">
-                                                        <i class="bi bi-star-fill text-white"></i>
-                                                    </div>
-                                                    <div class="badge-content">
-                                                        <div class="badge-label">المستوى الحالي</div>
-                                                        <h5>{{ $currentLevel->name }}</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- شريط التقدم -->
-                                            <div class="progress-track">
-                                                @foreach($levelsInLayer as $level)
-                                                    <div
-                                                        class="level-circle {{ $level->id == $currentLevel->id ? 'current' : ($level->points_required <= $currentLevel->points_required ? 'completed' : 'upcoming') }}">
-                                                        {{ $loop->iteration }}
-                                                        <div class="level-tooltip">
-                                                            {{ $level->id == $currentLevel->id ? 'المستوى الحالي' : ($level->points_required <= $currentLevel->points_required ? 'مكتمل' : 'القادم') }}
-                                                            - {{ $level->points_required }} نقطة
+                                            <div class="slide {{ $isCurrentLayer ? 'active' : '' }}" data-layer="{{ $layer->id }}">
+                                                <div class="progress-container">
+                                                    <!-- Header -->
+                                                    <div class="progress-header">
+                                                        <div class="header-content">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="bi bi-trophy-fill text-white progress-icon"></i>
+                                                                <div>
+                                                                    <h2 class="progress-title">{{ $layer->name }}</h2>
+                                                                    <p class="category-subtitle">{{ $category->name }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="position-badge">
+                                                                طبقة {{ $index + 1 }} من {{ count($allLayers) }}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    @if(!$loop->last)
-                                                        <div
-                                                            class="connector {{ $level->points_required <= $currentLevel->points_required ? 'completed' : 'upcoming' }}"></div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
 
-                                            <div class="progress-stats">
-                                                <span
-                                                    class="current-position">{{ $levelsInLayer->search(fn($lvl) => $lvl->id == $currentLevel->id) + 1 }}</span>
-                                                <span class="text-muted fw-semibold">/ {{ $levelsInLayer->count() }} مستوى داخل الطبقة {{ $currentLayer->name }}</span>
-                                            </div>
+                                                    <!-- Body -->
+                                                    <div class="progress-body">
+                                                        <!-- Info Badges -->
+                                                        <div class="info-badges">
+                                                            <div class="info-badge-item category">
+                                                                <div class="badge-icon category">
+                                                                    <i class="bi bi-collection text-white"></i>
+                                                                </div>
+                                                                <div class="badge-content">
+                                                                    <div class="badge-label">الفئة</div>
+                                                                    <h5>{{ $category->name }}</h5>
+                                                                </div>
+                                                            </div>
 
-                                            <!-- رسالة المتبقي للوصول للطبقة التالية -->
-                                            @if($user->remaining_for_next_layer > 0)
-                                                <div class="remaining-alert alert-info">
-                                                    🎯 متبقي <strong>{{ $user->remaining_for_next_layer }} نقطة</strong>
-                                                    لإنهاء الطبقة <strong>{{ $currentLayer->name }}</strong>
-                                                    والانتقال إلى الطبقة التالية 🚀
+                                                            <div class="info-badge-item layer">
+                                                                <div class="badge-icon layer">
+                                                                    <i class="bi bi-layers text-white"></i>
+                                                                </div>
+                                                                <div class="badge-content">
+                                                                    <div class="badge-label">الطبقة</div>
+                                                                    <h5>{{ $layer->name }}</h5>
+                                                                </div>
+                                                            </div>
+
+                                                            @if($isCurrentLayer && $currentLevel)
+                                                                <div class="info-badge-item level">
+                                                                    <div class="badge-icon level">
+                                                                        <i class="bi bi-star-fill text-white"></i>
+                                                                    </div>
+                                                                    <div class="badge-content">
+                                                                        <div class="badge-label">المستوى الحالي</div>
+                                                                        <h5>{{ $currentLevel->name }}</h5>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+
+                                                        <!-- Current Layer Indicator -->
+                                                        @if($isCurrentLayer)
+                                                            <div class="current-layer-badge">
+                                                                <i class="bi bi-check-circle-fill"></i>
+                                                                <span>الطبقة الحالية</span>
+                                                            </div>
+                                                        @endif
+
+                                                        <!-- Levels Progress Track -->
+                                                        <div class="progress-track">
+                                                            @foreach($layer->levels as $level)
+                                                                @php
+                                                                    $isCompleted = false;
+                                                                    $isCurrent = false;
+
+                                                                    if ($currentLayer && $currentLevel) {
+                                                                        // إذا كانت الطبقة الحالية نفسها
+                                                                        if ($layer->id == $currentLayer->id) {
+                                                                            $isCurrent = $level->id == $currentLevel->id;
+                                                                            $isCompleted = $level->points_required <= $currentLevel->points_required;
+                                                                        }
+                                                                        // إذا كانت الطبقة قبل الطبقة الحالية
+                                                                        elseif ($layer->id < $currentLayer->id) {
+                                                                            $isCompleted = true;
+                                                                        }
+                                                                        // إذا كانت الطبقة بعد الحالية تبقى غير مكتملة (false)
+                                                                    }
+                                                                @endphp
+
+
+                                                                <div class="level-circle {{ $isCurrent ? 'current' : ($isCompleted ? 'completed' : 'upcoming') }}">
+                                                                    {{ $loop->iteration }}
+                                                                    <div class="level-tooltip">
+                                                                        <strong>{{ $level->name }}</strong><br>
+                                                                        {{ $level->points_required }} نقطة
+                                                                        @if($isCurrent)
+                                                                            <br><span class="badge-current">الحالي</span>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+
+                                                                @if(!$loop->last)
+                                                                    <div class="connector {{ $isCompleted ? 'completed' : 'upcoming' }}"></div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+
+                                                        <!-- Progress Stats -->
+                                                        @if($isCurrentLayer && $currentLevel)
+                                                            <div class="progress-stats">
+                                    <span class="current-position">
+                                        {{ $layer->levels->search(fn($lvl) => $lvl->id == $currentLevel->id) + 1 }}
+                                    </span>
+                                                                <span class="text-muted fw-semibold">
+                                        / {{ $layer->levels->count() }} مستوى في {{ $layer->name }}
+                                    </span>
+                                                            </div>
+
+                                                            <!-- Remaining Points Alert -->
+                                                            @if($user->remaining_for_next_layer > 0)
+                                                                <div class="remaining-alert alert-info">
+                                                                    🎯 متبقي <strong>{{ $user->remaining_for_next_layer }} نقطة</strong>
+                                                                    لإنهاء الطبقة <strong>{{ $layer->name }}</strong>
+                                                                    والانتقال إلى الطبقة التالية 🚀
+                                                                </div>
+                                                            @else
+                                                                <div class="remaining-alert alert-success">
+                                                                    🎉 مبروك! أنهيت الطبقة <strong>{{ $layer->name }}</strong>
+                                                                </div>
+                                                            @endif
+                                                        @else
+                                                            <!-- Show total levels in non-current layers -->
+                                                            <div class="layer-info-box">
+                                                                <i class="bi bi-info-circle"></i>
+                                                                <span>هذه الطبقة تحتوي على <strong>{{ $layer->levels->count() }} مستوى</strong></span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                            @else
-                                                <div class="remaining-alert alert-success">
-                                                    🎉 مبروك! أنهيت الطبقة <strong>{{ $currentLayer->name }}</strong>،
-                                                    ستنتقل تلقائيًا إلى الطبقة الأعلى.
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <!-- حالة عدم وجود طبقة/مستوى/فئة -->
-                                        <div class="progress-header">
-                                            <div class="d-flex align-items-center">
-                                                <i class="bi bi-emoji-smile text-white progress-icon"></i>
-                                                <h2 class="progress-title">رحلة التقدم</h2>
                                             </div>
-                                        </div>
+                                        @endforeach
 
-                                        <div class="progress-body text-center py-10">
-                                            <div class="mb-4">
-                                                <i class="bi bi-flag-fill fs-1 text-primary opacity-75"></i>
+                                        @if(empty($allLayers))
+                                            <div class="slide active">
+                                                <div class="progress-container">
+                                                    <div class="progress-header">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bi bi-emoji-smile text-white progress-icon"></i>
+                                                            <h2 class="progress-title">رحلة التقدم</h2>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progress-body text-center py-10">
+                                                        <div class="mb-4">
+                                                            <i class="bi bi-flag-fill fs-1 text-primary opacity-75"></i>
+                                                        </div>
+                                                        <h4 class="fw-bold text-gray-700">لم تبدأ رحلتك بعد 🚀</h4>
+                                                        <p class="text-muted mb-0">
+                                                            لم يتم تعيين أي طبقات حتى الآن.
+                                                            بمجرد تسجيل التقدم، ستظهر رحلتك هنا خطوة بخطوة.
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <h4 class="fw-bold text-gray-700">لم تبدأ رحلتك بعد 🚀</h4>
-                                            <p class="text-muted mb-0">
-                                                لم يتم تعيين <strong>فئة</strong> أو <strong>طبقة</strong> أو <strong>مستوى</strong>
-                                                لك حتى الآن.
-                                                بمجرد تسجيل التقدم، ستظهر رحلتك هنا خطوة بخطوة.
-                                            </p>
-                                        </div>
-                                    @endif
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
@@ -1568,4 +1862,108 @@
             '.kt-table-filter-container' // ضع هذا على div يحتوي كل الفلاتر
         );
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slidesWrapper = document.getElementById('slidesWrapper');
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const dotsContainer = document.getElementById('sliderDots');
+
+            let currentSlide = 0;
+
+            // Create dots
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = `dot ${index === currentSlide ? 'active' : ''}`;
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = document.querySelectorAll('.dot');
+
+            function updateSlider() {
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === currentSlide);
+                });
+
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+
+                // Auto-scroll dots to show active dot
+                const activeDot = dots[currentSlide];
+                if (activeDot) {
+                    activeDot.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }
+
+            function goToSlide(index) {
+                currentSlide = index;
+                updateSlider();
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlider();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    updateSlider();
+                }
+            });
+
+            // Find the slide with current layer and show it
+            slides.forEach((slide, index) => {
+                if (slide.classList.contains('active')) {
+                    currentSlide = index;
+                }
+            });
+
+            updateSlider();
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' && currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    updateSlider();
+                } else if (e.key === 'ArrowRight' && currentSlide > 0) {
+                    currentSlide--;
+                    updateSlider();
+                }
+            });
+
+            // Touch swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            slidesWrapper.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            slidesWrapper.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                if (touchEndX < touchStartX - 50 && currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    updateSlider();
+                }
+                if (touchEndX > touchStartX + 50 && currentSlide > 0) {
+                    currentSlide--;
+                    updateSlider();
+                }
+            }
+        });
+    </script>
+
 @endpush

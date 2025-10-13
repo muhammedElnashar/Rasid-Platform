@@ -78,7 +78,13 @@ class ProfileController extends Controller
         $parents= $user->guardians()->get();
         $currentLevel = $user->currentLevel;
         $currentLayer = $user->currentLayer;
-        $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();
+        $currentCategory = $currentLayer?->category;
+
+        $categories = \App\Models\Category::with(['layers.levels' => function ($q) {
+            $q->orderBy('points_required');
+        }])->orderBy('id')->get();
+/*        $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();*/
+
         $insignias = $user->insignias;
         $badges = $user->badges;
         $studentSubjects = $user->studentSubjects()->with('subject')->get();
@@ -88,7 +94,7 @@ class ProfileController extends Controller
 
         return view('school_admin.users.profile',compact(
             'user','subjectClasses','parents','badges'
-            ,'currentLevel','currentLayer','levelsInLayer','insignias','studentSubjects','studentClass'
+            ,'currentLevel','currentLayer','currentCategory','categories','insignias','studentSubjects','studentClass'
         ));
     }
 
@@ -206,7 +212,9 @@ class ProfileController extends Controller
 
         $currentLevel = $user->currentLevel;
         $currentLayer = $user->currentLayer;
-        $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();
+        $categories = \App\Models\Category::with(['layers.levels' => function ($q) {
+            $q->orderBy('points_required');
+        }])->orderBy('id')->get();
         $insignias = $user->insignias;
         $badges = $user->badges;
         $studentSubjects = $user->studentSubjects()->with('subject')->get();
@@ -219,7 +227,7 @@ class ProfileController extends Controller
         $childCards = $this->childCard($user);
         $awards = $this->childAward($user);
         return view('users.children-profile',compact('user','currentLevel','currentLayer','insignias'
-        ,'badges','levelsInLayer','studentSubjects','studentClass','deductionCards','approvedIssues','unsettledIssues'
+        ,'badges','categories','studentSubjects','studentClass','deductionCards','approvedIssues','unsettledIssues'
         ,'logs','transfers','childCards','awards'));
     }
     private function childUnsettledIssue(User $child)

@@ -31,8 +31,9 @@ class UserGroupsController extends Controller
         $deductionCards = $this->deductionCards($group);
         $currentLevel = $group->currentLevel;
         $currentLayer = $group->currentLayer;
-        $levelsInLayer = $currentLayer?->levels()->orderBy('points_required')->get();
-        $badges = $group->badges;
+        $categories = \App\Models\Category::with(['layers.levels' => function ($q) {
+            $q->orderBy('points_required');
+        }])->orderBy('id')->get();          $badges = $group->badges;
         $insignias = $group->insignias;
         $groups = Group::select('id', 'name')
             ->where('school_id', auth()->user()->school_id)->where('id','!=',$group->id)
@@ -43,7 +44,7 @@ class UserGroupsController extends Controller
         $awards = $this->groupAward($group);
         return view('users.group-profile',
             compact('group', 'approvedIssues','unsettledIssues','deductionCards','awards',
-                'currentLayer','currentLevel','levelsInLayer','badges','insignias','logs','groups','transfers','groupCards'));
+                'currentLayer','currentLevel','categories','badges','insignias','logs','groups','transfers','groupCards'));
     }
 
     public function updateGroupProfile(Request $request,Group $group)

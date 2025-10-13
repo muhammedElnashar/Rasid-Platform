@@ -19,28 +19,27 @@
                 </ul>
             </div>
 
-            <div class="card   mx-auto">
+            <div class="card   mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
                     </div>
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
+                        <thead class="text-center">
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                             <th class="min-w-50px">@lang('message.issue_number')</th>
-                            <th class="min-w-25px">@lang('message.issued_by')</th>
+                            <th class="min-w-100px">@lang('message.issued_by')</th>
                             <th class="min-w-50px">@lang('message.points')</th>
                             <th class="min-w-100px">@lang('message.remaining_points')</th>
-                            <th class="min-w-100px">@lang('message.issue_date')</th>
-                            <th class="min-w-50px">@lang('message.deduction_deadline')</th>
+                            <th class="min-w-200px">@lang('message.issue_date')</th>
+                            <th class="min-w-100px">@lang('message.deduction_deadline')</th>
 
 
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
-                        <tbody class="fw-bold  text-gray-600">
-
+                        <tbody class="fw-bold text-center text-gray-600">
 
                         @foreach($unsettledIssues as $card)
 
