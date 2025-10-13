@@ -10,12 +10,11 @@
                 @section('content')
                     <div class="post d-flex flex-column-fluid" id="kt_post">
                         <!--begin::Container-->
-                        <div id="kt_content_container" class="container-xl">
-                            <div class="card ">
+                        <div id="kt_content_container" class="container-fluid">
+                            <div class="card mt-5 ">
                                 <div class="card-header border-0 pt-6">
-                                    <h3 class="card-title"></h3>
-                                    <div class="card-toolbar">
-                                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                                    <div class="card-title">
+                                        <div class="d-flex align-items-center position-relative ">
                                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      viewBox="0 0 24 24">
@@ -28,9 +27,12 @@
                                                 </svg>
                                             </span>
                                             <input type="text" data-kt-customer-table-filter="search"
-                                                   class="form-control form-control-solid w-250px ps-15"
+                                                   class="form-control form-control-solid w-200px ps-15"
                                                    placeholder="@lang('message.search')"/>
                                         </div>
+
+                                    </div>
+                                    <div class="card-toolbar">
                                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                                             <a class="btn btn-primary" href="{{ route('logs.create') }}">
                                                 اصدار سجل جدبد
@@ -42,18 +44,18 @@
                                 </div>
                                 <div class="card-body pt-0">
                                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                                        <thead>
+                                        <thead class="text-center">
                                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                                            <th class="min-w-25px">رقم السجل</th>
-                                            <th class="min-w-25px">المستخدم</th>
-                                            <th class="min-w-25px">بواسطة</th>
-                                                <th class="min-w-25px">النوع</th>
-                                                <th class="min-w-25px">التصنيف</th>
-                                            <th class="min-w-25px">البند</th>
-                                            <th class="min-w-25px">النقاط</th>
-                                            <th class="min-w-25px">حاله السجل</th>
+                                            <th class="min-w-50px">رقم السجل</th>
+                                            <th class="min-w-100px">المستخدم</th>
+                                            <th class="min-w-100px">بواسطة</th>
+                                            <th class="min-w-50px">النوع</th>
+                                            <th class="min-w-50px">التصنيف</th>
+                                            <th class="min-w-50px">البند</th>
+                                            <th class="min-w-10px">النقاط</th>
+                                            <th class="min-w-70px">حاله السجل</th>
                                             <th class="min-w-25px">الحالة</th>
-                                            <th class="min-w-25px">التاريخ</th>
+                                            <th class="min-w-200px">اصدر في </th>
                                             <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>
                                         </tr>
                                         </thead>
@@ -82,7 +84,7 @@
                                                 @else
                                                     <td><span class="badge badge-light-danger">مرفوض</span></td>
                                                 @endif
-                                                <td>{{\Illuminate\Support\Carbon::parse($log->log_date)->diffForHumans()}}</td>
+                                                <td>{{toHijriWithTime($log->log_date)}}</td>
                                                 <td>
                                                     <div class="d-flex justify-content-center flex-shrink-0">
                                                         @if($log->status === \App\Enum\StatusEnum::Pending)

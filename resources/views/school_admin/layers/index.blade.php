@@ -11,7 +11,7 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card   mx-auto">
+            <div class="card   mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
 
@@ -42,16 +42,16 @@
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
+                        <thead class="text-center">
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-250px">اسم الطبقة</th>
-                            <th class="min-w-250px">قيمة الجائزة</th>
+                            <th class="min-w-100px">اسم الطبقة</th>
+                            <th class="min-w-100px">قيمة الجائزة</th>
 
 
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
-                        <tbody class="fw-bold  text-gray-600">
+                        <tbody class="fw-bold text-center  text-gray-600">
 
 
                         @foreach($layers as $layer)
@@ -157,8 +157,8 @@
                     </div>
 
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">@lang('message.discard')</button>
-                        <button type="submit" class="btn btn-primary">@lang("message.submit")</button>
+                        <button type="reset" class="btn btn-light w-25" data-bs-dismiss="modal">@lang('message.discard')</button>
+                        <button type="submit" class="btn btn-primary w-25">@lang("message.submit")</button>
                     </div>
                 </form>
             </div>

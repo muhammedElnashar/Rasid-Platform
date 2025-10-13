@@ -11,7 +11,7 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card   mx-auto">
+            <div class="card   mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
 
@@ -27,7 +27,7 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-250px">@lang('message.name')</th>
+                            <th class="min-w-200px">@lang('message.name')</th>
 
 
                             <th class="min-w-100px text-center" colspan="1">@lang('message.action')</th>
@@ -131,8 +131,8 @@
                     </div>
 
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">@lang('message.discard')</button>
-                        <button type="submit" class="btn btn-primary">@lang("message.submit")</button>
+                        <button type="reset" class="btn btn-light w-25" data-bs-dismiss="modal">@lang('message.discard')</button>
+                        <button type="submit" class="btn btn-primary w-25">@lang("message.submit")</button>
                     </div>
                 </form>
             </div>

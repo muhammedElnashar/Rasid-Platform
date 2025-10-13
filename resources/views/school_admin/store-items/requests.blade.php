@@ -11,11 +11,11 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card ">
+            <div class="card mt-5 ">
                 <div class="card-header border-0 pt-6">
-                    <h3 class="card-title"></h3>
-                    <div class="card-toolbar">
-                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center position-relative "
+                        >
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24">
@@ -28,22 +28,27 @@
                                 </svg>
                             </span>
                             <input type="text" data-kt-customer-table-filter="search"
-                                   class="form-control form-control-solid w-250px ps-15"
+                                   class="form-control form-control-solid w-200px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
 
                     </div>
+                    <div class="card-toolbar">
+
+                    </div>
                 </div>
                 <div class="card-body pt-0">
+                    <div class="table-responsive">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
+                        <thead class="text-center">
                         <tr class=" text-gray-400 fw-bolder text-center fs-7 text-uppercase gs-0">
-                            <th class="min-w-50px">الاسم</th>
-                            <th class="min-w-50px">اسم الجائزة</th>
+                            <th class="min-w-100px">مقدم الطلب</th>
+                            <th class="min-w-100px">اسم الجائزة</th>
                             <th class="min-w-50px">الصوره</th>
                             <th class="min-w-50px">النقاط</th>
-                            <th class="min-w-50px">تاريخ الطلب</th>
-                            <th class="min-w-50px">حالة الطلب</th>
+                            <th class="min-w-200px">تاريخ الطلب</th>
+                            <th class="min-w-100px">حالة الطلب</th>
+
                             <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
@@ -57,7 +62,7 @@
                                 <td>{{$request->item->name}}</td>
                                 <td><img width="50px" height="50px" src="{{Storage::disk('images')->url($request->item->image_url)}}" alt="{{$request->item->name}}"></td>
                                 <td>{{$request->item->points_required}}</td>
-                                <td>{{$request->request_date}}</td>
+                                <td>{{toHijriWithTime($request->request_date)}}</td>
                                 @if($request->status === \App\Enum\StatusEnum::Approved)
                                     <td><span class="badge badge-light-success">معتمد</span></td>
                                 @elseif($request->status === \App\Enum\StatusEnum::Pending)
@@ -102,7 +107,7 @@
 
                         </tbody>
                     </table>
-
+                    </div>
                 </div>
             </div>
         </div>

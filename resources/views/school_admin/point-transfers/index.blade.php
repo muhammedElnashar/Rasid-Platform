@@ -11,11 +11,10 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card ">
+            <div class="card  mt-5">
                 <div class="card-header border-0 pt-6">
-                    <h3 class="card-title"></h3>
-                    <div class="card-toolbar">
-                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center position-relative ">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none">
@@ -28,9 +27,12 @@
                                 </svg>
                             </span>
                             <input type="text" data-kt-customer-table-filter="search"
-                                   class="form-control form-control-solid w-250px ps-15"
+                                   class="form-control form-control-solid w-200px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
+
+                    </div>
+                    <div class="card-toolbar">
                         <div class="kt-table-filter-container">
                             <a type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
                                data-kt-menu-placement="bottom-end">
@@ -99,12 +101,12 @@
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
-                        <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-25px">@lang('message.sender')</th>
-                            <th class="min-w-25px">@lang('message.receiver')</th>
-                            <th class="min-w-25px">@lang('message.transfer_points')</th>
-                            <th class="min-w-25px">@lang('message.reason_transfer')</th>
+                        <thead class="text-center">
+                        <tr class=" text-gray-400 fw-bolder  fs-7 text-uppercase gs-0">
+                            <th class="min-w-100px">@lang('message.sender')</th>
+                            <th class="min-w-100px">@lang('message.receiver')</th>
+                            <th class="min-w-100px">@lang('message.transfer_points')</th>
+                            <th class="min-w-100px">@lang('message.reason_transfer')</th>
                             <th class="min-w-25px">@lang('message.purpose')</th>
                             <th class="min-w-25px">@lang('message.status')</th>
                             <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>

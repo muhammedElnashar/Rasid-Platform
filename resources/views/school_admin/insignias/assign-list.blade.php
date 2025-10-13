@@ -11,7 +11,7 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card   mx-auto">
+            <div class="card   mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
 
@@ -39,17 +39,18 @@
                 </div>
                 <div class="card-body pt-0">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
-                        <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-200px">المصدر </th>
-                            <th class="min-w-200px">اسم المستخدم </th>
-                            <th class="min-w-200px">اسم الشارة </th>
-                            <th class="min-w-200px">قيمة النقاط</th>
-                            <th class="min-w-200px">الشارة</th>
+                        <thead class="text-center">
+                        <tr class=" text-gray-400  fw-bolder fs-7 text-uppercase gs-0">
+                            <th class="min-w-100px">المصدر </th>
+                            <th class="min-w-100px">اسم المستخدم </th>
+                            <th class="min-w-100px">اسم الشارة </th>
+                            <th class="min-w-100px">قيمة النقاط</th>
+                            <th class="min-w-100px">الشارة</th>
+                            <th class="min-w-100px">اصدر في </th>
 
                         </tr>
                         </thead>
-                        <tbody class="fw-bold  text-gray-600">
+                        <tbody class="fw-bold  text-center text-gray-600">
 
 
                         @foreach($insignias as $insignia)
@@ -61,6 +62,7 @@
                                 <td>{{ $insignia->insignia->name }}</td>
                                 <td>{{ $insignia->insignia->points_value }}</td>
                                 <td><img src="{{ $insignia->insignia->image_url }}" alt="{{ $insignia->insignia->name }}" width="50px" height="50px"></td>
+                                <td>{{toHijriWithTime( $insignia->award_date) }}</td>
 
                             </tr>
 

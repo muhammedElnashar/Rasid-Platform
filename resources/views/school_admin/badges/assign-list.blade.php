@@ -11,13 +11,9 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card   mx-auto">
+            <div class="card   mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-
-                    </div>
-                    <div class="card-toolbar">
-
                         <div class="d-flex align-items-center position-relative mx-3 my-1">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -36,19 +32,25 @@
                         </div>
 
                     </div>
+                    <div class="card-toolbar">
+
+
+                    </div>
                 </div>
                 <div class="card-body pt-0">
+                    <div class="table-responsive">
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
-                        <thead>
+                        <thead class="text-center">
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-200px">اسم المستخدم </th>
-                            <th class="min-w-200px"> الوسام و الميداليه </th>
-                            <th class="min-w-200px">قيمة النقاط</th>
-                            <th class="min-w-200px">الصورة</th>
+                            <th class="min-w-100px">اسم المستخدم </th>
+                            <th class="min-w-100px"> الوسام و الميداليه </th>
+                            <th class="min-w-100px">قيمة النقاط</th>
+                            <th class="min-w-50px">الصورة</th>
+                            <th class="min-w-200px">اصدر في </th>
 
                         </tr>
                         </thead>
-                        <tbody class="fw-bold  text-gray-600">
+                        <tbody class="fw-bold text-center  text-gray-600">
 
 
                         @foreach($badges as $badge)
@@ -59,6 +61,7 @@
                                 <td>{{ $badge->badge->name }}</td>
                                 <td>{{ $badge->badge->points_awarded }}</td>
                                 <td><img src="{{ $badge->badge->image_url }}" alt="{{ $badge->badge->name }}" width="50px" height="50px"></td>
+                                <td>{{ toHijriWithTime($badge->award_date) }}</td>
 
                             </tr>
 
@@ -66,7 +69,7 @@
 
                         </tbody>
                     </table>
-
+                    </div>
 
                 </div>
             </div>

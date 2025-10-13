@@ -11,13 +11,10 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card   mx-auto">
+            <div class="card   mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
-
-                    </div>
-                    <div class="card-toolbar">
-                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                        <div class="d-flex align-items-center position-relative ">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none">
@@ -30,9 +27,12 @@
                                 </svg>
                             </span>
                             <input type="text" data-kt-customer-table-filter="search"
-                                   class="form-control form-control-solid w-250px ps-15"
+                                   class="form-control form-control-solid w-200px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
+
+                    </div>
+                    <div class="card-toolbar">
 
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             <a href="{{ route('group-categories.create') }}" class="btn btn-primary" >
@@ -147,8 +147,8 @@
                     </div>
 
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3" data-bs-dismiss="modal">@lang('message.discard')</button>
-                        <button type="submit" class="btn btn-primary">@lang("message.submit")</button>
+                        <button type="reset" class="btn btn-light w-25" data-bs-dismiss="modal">@lang('message.discard')</button>
+                        <button type="submit" class="btn btn-primary w-25">@lang("message.submit")</button>
                     </div>
                 </form>
             </div>

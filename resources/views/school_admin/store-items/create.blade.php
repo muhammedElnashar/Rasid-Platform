@@ -12,7 +12,7 @@
         <div class=" d-flex flex-column flex-column-fluid">
             <div id="kt_app_toolbar" class="app-toolbar p-3 ">
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                    <div class="page-title d-flex mt-5 flex-column justify-content-center flex-wrap me-3">
                         <h1 class="page-heading d-flex text-dark fw-bolder fs-2 flex-column justify-content-center my-0">
                             انشاء جائزة
                         </h1>
@@ -138,7 +138,7 @@
 
                                 <div class="text-center pt-15">
 
-                                    <button type="submit" class="btn btn-primary" data-kt-modal-action="submit">
+                                    <button type="submit" class="btn btn-primary w-100 w-md-25" data-kt-modal-action="submit">
                                         <span class="indicator-label">@lang('message.save')</span>
                                         <span class="indicator-progress">جاري الحفظ ...
                                                 <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>

@@ -10,12 +10,11 @@
 @section('content')
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
-        <div id="kt_content_container" class="container-xl">
-            <div class="card ">
+        <div id="kt_content_container" class="container-fluid">
+            <div class="card mt-5 ">
                 <div class="card-header border-0 pt-6">
-                    <h3 class="card-title"></h3>
-                    <div class="card-toolbar">
-                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center position-relative ">
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24" fill="none">
@@ -28,9 +27,12 @@
                                 </svg>
                             </span>
                             <input type="text" data-kt-customer-table-filter="search"
-                                   class="form-control form-control-solid w-250px ps-15"
+                                   class="form-control form-control-solid w-200px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
+
+                    </div>
+                    <div class="card-toolbar">
                         <div class="kt-table-filter-container">
                             <a type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
                                data-kt-menu-placement="bottom-end">
@@ -105,16 +107,18 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-20px">@lang('message.issue_number')</th>
-                            <th class="min-w-25px">@lang('message.user')</th>
-                            <th class="min-w-50px">بواسطه</th>
-                            <th class="min-w-25px">@lang('message.item')</th>
-                            <th class="min-w-25px">@lang('message.points')</th>
-                            <th class="min-w-25px">@lang('message.deduction_type')</th>
-                            <th class="min-w-50px">موعد السداد</th>
-                            <th class="min-w-25px">@lang('message.status')</th>
-                            <th class="min-w-25px">التقييد</th>
-                            <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>
+                            <th class="min-w-50px">@lang('message.issue_number')</th>
+                            <th class="min-w-50px">@lang('message.user')</th>
+                            <th class="min-w-100px">بواسطه</th>
+                            <th class="min-w-50px">@lang('message.item')</th>
+                            <th class="min-w-10px">@lang('message.points')</th>
+                            <th class="min-w-10px">@lang('message.deduction_type')</th>
+                            <th class="min-w-200px">اصدر في </th>
+                            <th class="min-w-100px">موعد السداد</th>
+                            <th class="min-w-5px">السداد</th>
+                            <th class="min-w-5px">@lang('message.status')</th>
+                            <th class="min-w-5px">التقييد</th>
+                            <th class="min-w-150px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-center  text-gray-600">
@@ -122,7 +126,11 @@
 
                         @foreach($pendingIssues as $issue)
                             <tr>
-                                <td>  {{ $issue->issue_number }}</td>
+                                @if($issue->cardItem->points > 0)
+                                <td><span class="badge badge-light-success">{{ $issue->issue_number }}</span></td>
+                                @else
+                                    <td><span class="badge badge-light-danger">{{ $issue->issue_number }}</span></td>
+                                @endif
                                 <td>{{ $issue->issuedTo?->full_name ?? $issue->issuedTo?->name ?? '-' }}</td>
                                 <td>{{ $issue->issuer->full_name }}</td>
                                 <td>{{ $issue->cardItem->name }}</td>
@@ -130,19 +138,40 @@
                                 <td>
                                     {{ $issue->deduction_type? __('message.'.$issue->deduction_type->value) : 'لا يوجد' }}
                                 </td>
+                                <td>{{ toHijriWithTime($issue->issue_date) }}</td>
                                 <td>{{ toHijri($issue->deduction_deadline) }}</td>
+                                    @if($issue->deduction_type === \App\Enum\DeductionTypeEnum::Deferred && $issue->applied_at != null)
+                                        <td><span
+                                                class="badge badge-light-success">تم السداد</span>
+                                        </td>
+                                    @elseif($issue->deduction_type === \App\Enum\DeductionTypeEnum::Deferred && $issue->applied_at == null)
+                                        <td><span
+                                                class="badge badge-light-danger">لم يسدد</span>
+                                        </td>
+                                    @else
+                                        <td><span
+                                                class="badge badge-light-dark">----</span>
+                                        </td>
+                                    @endif
+
                                 @if($issue->status === \App\Enum\StatusCardEnum::Pending)
-                                    <td> <span class="badge badge-light-warning">@lang('message.'.$issue->status->value)</span></td>
+                                    <td><span
+                                            class="badge badge-light-warning">@lang('message.'.$issue->status->value)</span>
+                                    </td>
                                 @elseif($issue->status === \App\Enum\StatusCardEnum::Approved)
-                                    <td> <span class="badge badge-light-success">@lang('message.'.$issue->status->value)</span></td>
+                                    <td><span
+                                            class="badge badge-light-success">@lang('message.'.$issue->status->value)</span>
+                                    </td>
                                 @elseif($issue->status === \App\Enum\StatusCardEnum::Rejected)
-                                     <td> <span class="badge badge-light-danger">@lang('message.'.$issue->status->value)</span></td>
+                                    <td><span
+                                            class="badge badge-light-danger">@lang('message.'.$issue->status->value)</span>
+                                    </td>
                                 @endif
                                 @if($issue->is_restricted === 1)
-                                    <td> <span class="badge badge-light-danger">مقيد</span></td>
+                                    <td><span class="badge badge-light-danger">مقيد</span></td>
 
                                 @elseif($issue->is_restricted === 0)
-                                    <td> <span class="badge badge-light-success">غير مقيد</span></td>
+                                    <td><span class="badge badge-light-success">غير مقيد</span></td>
                                 @endif
                                 <td>
                                     @if($issue->status === \App\Enum\StatusCardEnum::Pending)
@@ -187,43 +216,43 @@
 
                                                 </button>
                                             </form>
-                                    @endif
+                                            @endif
 
-                                        @can('approve',$issue)
-                                        <form method="POST"
-                                              action="{{ route('issues.approved',$issue) }}">
-                                            @csrf
-                                            @method('put')
-                                            <button type="submit"
-                                                    class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
-                                                @lang('message.approve')
-                                            </button>
-                                        </form>
-                                        @endcan
-                                        @can('reject',$issue)
-                                        <form method="POST"
-                                              action="{{ route('issues.rejected',$issue) }}">
-                                            @csrf
-                                            @method('put')
-                                            <button type="submit"
-                                                    class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
-                                                @lang('message.reject')
-                                            </button>
-                                        </form>
-                                        @endcan
-                                        @can('unrestricted',$issue)
-                                        <form method="POST"
-                                              action="{{ route('issues.unrestricted',$issue) }}">
-                                            @csrf
-                                            @method('put')
-                                            <button type="submit"
-                                                    class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
-                                                فك القيد
-                                            </button>
-                                        </form>
-                                        @endcan
+                                            @can('approve',$issue)
+                                                <form method="POST"
+                                                      action="{{ route('issues.approved',$issue) }}">
+                                                    @csrf
+                                                    @method('put')
+                                                    <button type="submit"
+                                                            class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
+                                                        @lang('message.approve')
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                            @can('reject',$issue)
+                                                <form method="POST"
+                                                      action="{{ route('issues.rejected',$issue) }}">
+                                                    @csrf
+                                                    @method('put')
+                                                    <button type="submit"
+                                                            class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
+                                                        @lang('message.reject')
+                                                    </button>
+                                                </form>
+                                            @endcan
+                                            @can('unrestricted',$issue)
+                                                <form method="POST"
+                                                      action="{{ route('issues.unrestricted',$issue) }}">
+                                                    @csrf
+                                                    @method('put')
+                                                    <button type="submit"
+                                                            class="btn  btn-bg-light btn-active-color-primary  btn-sm  ms-2">
+                                                        فك القيد
+                                                    </button>
+                                                </form>
+                                            @endcan
 
-                                    </div>
+                                        </div>
 
                                 </td>
                             </tr>
@@ -237,8 +266,6 @@
             </div>
         </div>
     </div>
-
-
 
 @endsection
 

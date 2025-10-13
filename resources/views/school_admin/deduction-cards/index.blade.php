@@ -11,11 +11,11 @@
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <!--begin::Container-->
         <div id="kt_content_container" class="container-xl">
-            <div class="card ">
+            <div class="card mt-5 ">
                 <div class="card-header border-0 pt-6">
-                    <h3 class="card-title"></h3>
-                    <div class="card-toolbar">
-                        <div class="d-flex align-items-center position-relative mx-3 my-1">
+                    <div class="card-title">
+                        <div class="d-flex align-items-center position-relative "
+                        >
                             <span class="svg-icon svg-icon-1 position-absolute ms-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                      viewBox="0 0 24 24">
@@ -28,9 +28,12 @@
                                 </svg>
                             </span>
                             <input type="text" data-kt-customer-table-filter="search"
-                                   class="form-control form-control-solid w-250px ps-15"
+                                   class="form-control form-control-solid w-200px ps-15"
                                    placeholder="@lang('message.search')"/>
                         </div>
+
+                    </div>
+                    <div class="card-toolbar">
                         <div class="d-flex justify-content-end" data-kt-customer-table-toolbar="base">
                             <a href="{{ route('deduction-cards.create') }}"
                                class="btn btn-primary">@lang('message.add',['item' => __('message.deduction_card')])</a>
@@ -43,15 +46,15 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
                         <thead>
                         <tr class=" text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-25px">@lang('message.name')</th>
-                            <th class="min-w-25px">@lang('message.description')</th>
-                            <th class="min-w-25px">@lang('message.threshold')</th>
-                            <th class="min-w-25px">@lang('message.deduction_percent')</th>
-                            <th class="min-w-25px">@lang('message.type')</th>
-                            <th class="min-w-120px text-center" colspan="1">@lang('message.action')</th>
+                            <th class="min-w-125px">@lang('message.name')</th>
+                            <th class="min-w-125px">@lang('message.description')</th>
+                            <th class="min-w-125px">@lang('message.threshold')</th>
+                            <th class="min-w-125px">@lang('message.deduction_percent')</th>
+                            <th class="min-w-125px">@lang('message.type')</th>
+                            <th class="min-w-150px text-center" colspan="1">@lang('message.action')</th>
                         </tr>
                         </thead>
-                        <tbody class="fw-bold text-center  text-gray-600">
+                        <tbody class="fw-bold   text-gray-600">
 
 
                         @foreach($cards as $card)
@@ -189,9 +192,9 @@
                     </div>
 
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light me-3"
+                        <button type="reset" class="btn btn-light w-25"
                                 data-bs-dismiss="modal">@lang('message.discard')</button>
-                        <button type="submit" class="btn btn-primary">@lang("message.submit")</button>
+                        <button type="submit" class="btn btn-primary w-25">@lang("message.submit")</button>
                     </div>
                 </form>
             </div>
