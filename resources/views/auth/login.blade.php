@@ -42,8 +42,8 @@
 
     <div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url('assets/media/illustrations/sketchy-1/14.png')">
         <div class="p-10 d-flex flex-center flex-column flex-column-fluid pb-lg-20">
-            <div class="">
-                <img alt="Logo" src="{{asset("3.png")}}" class="h-150px" />
+            <div class="logo">
+                <img alt="Logo" src="{{asset("3.png")}}" class="h-300px"   />
             </div>
 
             <div class="p-10 mx-auto rounded shadow-sm w-lg-500px bg-body p-lg-15">

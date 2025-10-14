@@ -640,7 +640,7 @@
                                         @if($group->image)
                                             <img src="{{\Illuminate\Support\Facades\Storage::disk('images')->url($group->image)}}" alt="" />
                                         @else
-                                            <img src="{{asset('assets/media/avatars/150-1.jpg')}}" alt="image"/>
+                                            <img src="{{asset('assets/media/avatars/150-26.jpg')}}" alt="image"/>
 
                                         @endif
                                     </div>
