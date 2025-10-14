@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BehaviorLog;
 use App\Models\CardIssues;
 use App\Models\Group;
+use App\Models\GroupUser;
 use App\Models\RedemptionRequest;
 use App\Models\StudentGuardian;
 use App\Models\User;
@@ -235,9 +236,10 @@ class ProfileController extends Controller
         $transfers = $this->childTransfers($user);
         $childCards = $this->childCard($user);
         $awards = $this->childAward($user);
+        $groups= $this->childGroups($user);
         return view('users.children-profile',compact('user','currentLevel','currentLayer','insignias'
         ,'badges','categories','studentSubjects','studentClass','deductionCards','approvedIssues','unsettledIssues'
-        ,'logs','transfers','childCards','awards'));
+        ,'logs','transfers','childCards','awards','groups'));
     }
     private function childUnsettledIssue(User $child)
     {
@@ -297,5 +299,10 @@ class ProfileController extends Controller
     {
         $awards = RedemptionRequest::with('item')->where('issued_to_id',$child->id)->get();
         return $awards;
+    }
+    private function childGroups(User $child)
+    {
+        $groups = GroupUser::with(['user','group'])->where('user_id',$child->id)->get();
+        return $groups;
     }
 }
