@@ -10,9 +10,9 @@ Route::get('/', function () {
     }
     return to_route('login');
 });
-/*Route::fallback(function () {
+Route::fallback(function () {
     return redirect('/');
-});*/
+});
 
 Auth::routes();
 

@@ -583,6 +583,55 @@
             color: #fff;
         }
     </style>
+    <style>
+        .animation-alert {
+            position: relative;
+            overflow: visible;
+        }
+
+
+
+        .animation-alert::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(90deg, #10b981, #34d399, #10b981);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.6;
+            animation: rotateBorder 3s linear infinite;
+        }
+
+        @keyframes rotateBorder {
+            0% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+            }
+            25% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 0%);
+            }
+            50% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            }
+            75% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);
+            }
+            100% {
+                clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+            }
+        }
+        .hover-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .bg-gradient {
+            background: linear-gradient(45deg, #0062E6, #33AEFF);
+            color: #fff;
+        }
+    </style>
 
 @endpush
 @section('content')
@@ -592,16 +641,16 @@
             <div id="kt_content_container" class="container-xxl">
                 <div class="d-flex flex-column flex-xl-row">
                     <div class="flex-column flex-lg-row-auto w-100 w-xl-350px mb-10">
-                        <div class="card mt-5 mb-5 mb-xl-8">
+                        <div class="card mt-5 mb-5 mb-xl-8 animation-alert border-primary">
                             <div class="card-body">
                                 <div class="d-flex flex-center flex-column py-5">
-                                    <div class="symbol symbol-100px symbol-circle mb-7">
+                                    <div class="symbol symbol-100px border border-3 border-success mb-7">
                                         @if($user->image)
                                             <img
                                                 src="{{\Illuminate\Support\Facades\Storage::disk('images')->url($user->image)}}"
                                                 alt="image"/>
                                         @else
-                                            <img src="{{asset('assets/media/avatars/150-1.jpg')}}" alt="image"/>
+                                            <img src="{{asset('assets/media/avatars/150-26.jpg')}}" alt="image"/>
                                         @endif
                                     </div>
                                     <a href="#"
