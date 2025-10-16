@@ -12,7 +12,7 @@
 @section('content')
     <div class="post d-flex flex-column-fluid" id="kt_post">
         <div id="kt_content_container" class="container-xl">
-            <div class="card mt-5" >
+            <div class="card mt-5">
                 <div class="card-header border-0 pt-6">
                     <div class="card-title">
                         <div class="d-flex align-items-center position-relative ">
@@ -79,7 +79,8 @@
                                                     <span
                                                         class="form-check-label text-gray-600">@lang('message.guardian')</span>
                                                 </label>
-                                                <label class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <label
+                                                    class="form-check form-check-sm form-check-custom form-check-solid">
                                                     <input class="form-check-input" type="radio" name="role_id"
                                                            value="@lang('message.moderator')"/>
                                                     <span
@@ -112,39 +113,51 @@
 
                 <div class="card-body pt-0">
                     <div class="table-responsive">
-                    <table class="table align-middle table-row-dashed fs-6 gy-5 " id="kt_customers_table">
-                        <thead>
-                        <tr class="text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                            <th class="min-w-150px">@lang('message.full_name')</th>
-                            <th class="min-w-75px">@lang('message.username')</th>
-                            <th class="min-w-150px">@lang('message.email')</th>
-                            <th class="min-w-75px">@lang('message.role')</th>
-                            <th class="min-w-100px">@lang('message.phone')</th>
-                            <th class="min-w-100px text-center">@lang('message.action')</th>
-                        </tr>
-                        </thead>
-                        <tbody class="fw-bold text-gray-600">
-                        @foreach($users as $user)
-                            <tr>
-                                <td>{{ $user->full_name }}</td>
-                                <td>{{ $user->username }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ __('message.' . $user->role->name) }}</td>
-                                <td>{{ $user->phone }}</td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center flex-shrink-0">
-                                        <!-- زر تعديل -->
-                                        <a href="javascript:void(0)"
-                                           class="btn btn-icon btn-bg-light edit-btn btn-active-color-primary btn-sm ms-2"
-                                           data-id="{{ $user->id }}"
-                                           data-full_name="{{ $user->full_name }}"
-                                           data-email="{{ $user->email }}"
-                                           data-role="{{ $user->role->id }}"
-                                           data-phone="{{ $user->phone }}">
+                        <table class="table align-middle table-row-dashed fs-6 gy-5 " id="kt_customers_table">
+                            <thead>
+                            <tr class="text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                                <th class="min-w-150px">@lang('message.full_name')</th>
+                                <th class="min-w-75px">@lang('message.username')</th>
+                                <th class="min-w-150px">@lang('message.email')</th>
+                                <th class="min-w-75px">@lang('message.role')</th>
+                                <th class="min-w-100px">@lang('message.phone')</th>
+                                <th class="min-w-100px text-center">@lang('message.action')</th>
+                            </tr>
+                            </thead>
+                            <tbody class="fw-bold text-gray-600">
+                            @foreach($users as $user)
+                                <tr>
+                                    <td>{{ $user->full_name }}</td>
+                                    <td>{{ $user->username }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ __('message.' . $user->role->name) }}</td>
+                                    <td>{{ $user->phone }}</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center flex-shrink-0">
+                                            @if($user->isTeacher() || $user->isStudent() || $user->isGuardian())
+                                                <a href="{{ route('children.profile', $user) }}"
+                                                   class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm ms-2">
+                                                <span class="svg-icon svg-icon-3">
+            <i class="fa fa-eye"></i>
+        </span>
+                                                </a>
+                                            @else
+                                                <span class="btn btn-icon btn-bg-light btn-sm ms-2" style="visibility: hidden;"></span>
+                                            @endif
+
+
+
+                                            <a href="javascript:void(0)"
+                                               class="btn btn-icon btn-bg-light edit-btn btn-active-color-primary btn-sm ms-2"
+                                               data-id="{{ $user->id }}"
+                                               data-full_name="{{ $user->full_name }}"
+                                               data-email="{{ $user->email }}"
+                                               data-role="{{ $user->role->id }}"
+                                               data-phone="{{ $user->phone }}">
                                             <span class="svg-icon svg-icon-3">
 																				<svg xmlns="http://www.w3.org/2000/svg"
                                                                                      width="24" height="24"
-                                                                                     viewBox="0 0 24 24" >
+                                                                                     viewBox="0 0 24 24">
 																					<path opacity="0.3"
                                                                                           d="M21.4 8.35303L19.241 10.511L13.485 4.755L15.643 2.59595C16.0248 2.21423 16.5426 1.99988 17.0825 1.99988C17.6224 1.99988 18.1402 2.21423 18.522 2.59595L21.4 5.474C21.7817 5.85581 21.9962 6.37355 21.9962 6.91345C21.9962 7.45335 21.7817 7.97122 21.4 8.35303ZM3.68699 21.932L9.88699 19.865L4.13099 14.109L2.06399 20.309C1.98815 20.5354 1.97703 20.7787 2.03189 21.0111C2.08674 21.2436 2.2054 21.4561 2.37449 21.6248C2.54359 21.7934 2.75641 21.9115 2.989 21.9658C3.22158 22.0201 3.4647 22.0084 3.69099 21.932H3.68699Z"
                                                                                           fill="black"/>
@@ -153,17 +166,19 @@
                                                                                         fill="black"/>
 																				</svg>
 																			</span>
-                                        </a>
+                                            </a>
 
-                                        <!-- زر حذف -->
-                                        <form method="POST" action="{{ route('users.destroy', $user->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-icon btn-bg-light btn-active-color-primary deleted-btn btn-sm ms-2">
-                                                                                                <span class="svg-icon svg-icon-3">
+                                            <!-- زر حذف -->
+                                            <form method="POST" action="{{ route('users.destroy', $user->id) }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="btn btn-icon btn-bg-light btn-active-color-primary deleted-btn btn-sm ms-2">
+                                                                                                <span
+                                                                                                    class="svg-icon svg-icon-3">
 																				<svg xmlns="http://www.w3.org/2000/svg"
                                                                                      width="24" height="24"
-                                                                                     viewBox="0 0 24 24" >
+                                                                                     viewBox="0 0 24 24">
 																					<path
                                                                                         d="M5 9C5 8.44772 5.44772 8 6 8H18C18.5523 8 19 8.44772 19 9V18C19 19.6569 17.6569 21 16 21H8C6.34315 21 5 19.6569 5 18V9Z"
                                                                                         fill="black"/>
@@ -176,40 +191,42 @@
 																				</svg>
 																			</span>
 
-                                            </button>
-                                        </form>
-                                        @if($user->status === 1 )
-                                            @can('activate',$user)
-                                            <form method="POST" action="{{ route('user.deactivate', $user) }}">
-                                                @csrf
-                                                @method('POST')
-                                                <button type="submit" class="btn btn-danger text-white btn-sm ms-2">
-                                                    <span>تعطيل</span>
-
                                                 </button>
                                             </form>
-                                            @endcan
+                                            @if($user->status === 1 )
+                                                @can('activate',$user)
+                                                    <form method="POST" action="{{ route('user.deactivate', $user) }}">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <button type="submit"
+                                                                class="btn btn-danger text-white btn-sm ms-2">
+                                                            <span>تعطيل</span>
 
-                                        @elseif($user->status === 0)
-                                            @can('deactivate',$user)
-                                            <form method="POST" action="{{ route('user.activate', $user) }}">
-                                                @csrf
-                                                @method('POST')
-                                                <button type="submit" class="btn btn-success text-white btn-sm ms-2">
-                                                    <span>تفعيل</span>
+                                                        </button>
+                                                    </form>
+                                                @endcan
 
-                                                </button>
-                                            </form>
-                                            @endcan
-                                        @endif
+                                            @elseif($user->status === 0)
+                                                @can('deactivate',$user)
+                                                    <form method="POST" action="{{ route('user.activate', $user) }}">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <button type="submit"
+                                                                class="btn btn-success text-white btn-sm ms-2">
+                                                            <span>تفعيل</span>
 
-                                    </div>
+                                                        </button>
+                                                    </form>
+                                                @endcan
+                                            @endif
 
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
@@ -225,8 +242,10 @@
                     <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
                     <span class="svg-icon svg-icon-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
-                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black"/>
-                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"/>
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                  transform="rotate(-45 6 17.3137)" fill="black"/>
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+                                  fill="black"/>
                         </svg>
                     </span>
                     </div>
@@ -243,8 +262,11 @@
                             <div class="mb-1">
                                 <label class="form-label fw-bolder text-dark fs-6">Password</label>
                                 <div class="position-relative mb-3">
-                                    <input type="password" class="form-control form-control-solid" name="password" placeholder="@lang('message.enter', ['item' => __('message.password')])"/>
-                                    <span class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2" data-kt-password-meter-control="visibility">
+                                    <input type="password" class="form-control form-control-solid" name="password"
+                                           placeholder="@lang('message.enter', ['item' => __('message.password')])"/>
+                                    <span
+                                        class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                                        data-kt-password-meter-control="visibility">
                                 <i class="bi bi-eye-slash fs-2"></i>
                                 <i class="bi bi-eye fs-2 d-none"></i>
                             </span>
@@ -255,10 +277,11 @@
                                     <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px me-2"></div>
                                     <div class="flex-grow-1 bg-secondary bg-active-success rounded h-5px"></div>
                                 </div>
-                                <div class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols.</div>
+                                <div class="text-muted">Use 8 or more characters with a mix of letters, numbers &
+                                    symbols.
+                                </div>
                             </div>
                         </div>
-
 
 
                         <div class="mb-5 fv-row">
@@ -271,9 +294,9 @@
                                 <span class="required"> @lang('message.role')</span>
                             </label>
 
-                            <select name="role_id" aria-label="Select Type" id="type"  data-control="select2"
+                            <select name="role_id" aria-label="Select Type" id="type" data-control="select2"
                                     data-placeholder="@lang('message.select', ['item' => __('message.role')])"
-                                    class="form-select form-select-solid" >
+                                    class="form-select form-select-solid">
                                 <option value="">@lang('message.select', ['item' => __('message.role')])</option>
 
                                 @foreach($roles as $role)
@@ -294,7 +317,8 @@
                     </div>
 
                     <div class="modal-footer flex-center">
-                        <button type="reset" class="btn btn-light w-25 w-md-auto " data-bs-dismiss="modal">@lang('message.discard')</button>
+                        <button type="reset" class="btn btn-light w-25 w-md-auto "
+                                data-bs-dismiss="modal">@lang('message.discard')</button>
                         <button type="submit" class="btn btn-primary w-25 w-md-auto">@lang("message.submit")</button>
                     </div>
                 </form>
@@ -306,7 +330,7 @@
 @push("script")
     <script>
         document.querySelectorAll('.deleted-btn').forEach(btn => {
-            btn.addEventListener('click', function(e){
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 const form = this.closest('form');
                 Swal.fire({
@@ -319,14 +343,14 @@
                     cancelButtonText: "{{ __('message.no_cancel') }}",
                     confirmButtonText: "{{ __('message.yes_delete') }}"
                 }).then((result) => {
-                    if(result.isConfirmed){
+                    if (result.isConfirmed) {
                         form.submit();
                     }
                 });
             });
         });
 
-        $('.edit-btn').on('click', function() {
+        $('.edit-btn').on('click', function () {
             var id = $(this).data('id');
             var fullName = $(this).data('full_name');
             var email = $(this).data('email');

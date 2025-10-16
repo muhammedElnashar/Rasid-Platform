@@ -216,9 +216,11 @@ class ProfileController extends Controller
     public function childrenProfile(User $user)
     {
         $parent = Auth::user();
-        if (!$parent->isGuardian()){
-            abort(403,'غير مصرح لك ');
+
+        if (!$parent->isGuardian() && !$parent->isSchoolAdmin()) {
+            abort(403, 'غير مصرح لك');
         }
+
 
         $currentLevel = $user->currentLevel;
         $currentLayer = $user->currentLayer;

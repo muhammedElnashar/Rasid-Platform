@@ -33,7 +33,8 @@ class UserGroupsController extends Controller
         $currentLayer = $group->currentLayer;
         $categories = \App\Models\Category::with(['layers.levels' => function ($q) {
             $q->orderBy('points_required');
-        }])->orderBy('id')->get();          $badges = $group->badges;
+        }])->orderBy('id')->get();
+        $badges = $group->badges;
         $insignias = $group->insignias;
         $groups = Group::select('id', 'name')
             ->where('school_id', auth()->user()->school_id)->where('id','!=',$group->id)

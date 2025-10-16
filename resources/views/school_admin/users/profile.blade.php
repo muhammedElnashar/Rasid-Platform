@@ -704,16 +704,13 @@
                                         <div class="text-gray-600">{{$user->phone}}</div>
                                         <div class="fw-bolder mt-5">كود الشحن</div>
                                         <div class="text-gray-600">{{$user->settlement_code}}</div>
-                                        @if(\Illuminate\Support\Facades\Auth::user()->isStudent())
+                                        @if(\Illuminate\Support\Facades\Auth::user()->isStudent() )
 
                                             @foreach($parents as $parent)
-                                                @if($parent->pivot->relationship === 'father')
-                                                    <div class="fw-bolder mb-4 mt-5">اسم الاب</div>
-                                                    <span class="fs-5  text-gray-600">{{$parent->full_name}}</span>
-                                                @else
-                                                    <div class="fw-bolder mb-4 mt-5">اسم الام</div>
-                                                    <span class="fs-5  text-gray-600">{{$parent->full_name}}</span>
-                                                @endif
+                                                <div class="fw-bolder mb-4 mt-5">
+                                                    اسم {{ \App\Enum\RelationEnum::from($parent->pivot->relationship)->label() }}
+                                                </div>
+                                                <span class="fs-5 text-gray-600">{{ $parent->full_name }}</span>
                                             @endforeach
                                             <div class="fw-bolder mb-4 mt-5">@lang('message.subjects')</div>
                                             @foreach($studentSubjects as $subject)

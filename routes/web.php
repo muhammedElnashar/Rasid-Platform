@@ -102,6 +102,8 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
     Route::resource('group-categories',\App\Http\Controllers\SchoolAdmin\GroupCategoryController::class);
     Route::resource('groups',\App\Http\Controllers\SchoolAdmin\GroupController::class);
     Route::post('groups/activation/{group}',[\App\Http\Controllers\SchoolAdmin\GroupController::class,'activationToggle'])->name('groups.activation');
+    Route::get('children/{user}/profile',[App\Http\Controllers\Users\ProfileController::class,'childrenProfile'])->name('children.profile');
+    Route::get('user/group/profile/{group}',[\App\Http\Controllers\Users\UserGroupsController::class,'userGroupProfile'])->name('user.group.profile');
 
     // Student - Parent - Teacher
     Route::middleware('CheckNormalUser')->group(function (){
@@ -133,12 +135,10 @@ Route::group(['middleware' => ['auth','check.user.status']], function () {
         Route::get('profile',[\App\Http\Controllers\Users\ProfileController::class,'UserProfile'])->name('profile');
         // Groups
         Route::get('user/groups',[\App\Http\Controllers\Users\UserGroupsController::class,'userGroups'])->name('user.groups');
-        Route::get('user/group/profile/{group}',[\App\Http\Controllers\Users\UserGroupsController::class,'userGroupProfile'])->name('user.group.profile');
         Route::post('/groups/{group}/recharge',[\App\Http\Controllers\Users\UserGroupsController::class,'recharge'])->name('group.recharge');
         Route::put('update/group/{group}/profile',[App\Http\Controllers\Users\UserGroupsController::class,'updateGroupProfile'])->name('update.group.profile');
         //Parent
         Route::get('children',[App\Http\Controllers\Users\ProfileController::class,'children'])->name('children');
-        Route::get('children/{user}/profile',[App\Http\Controllers\Users\ProfileController::class,'childrenProfile'])->name('children.profile');
     });
 
 });

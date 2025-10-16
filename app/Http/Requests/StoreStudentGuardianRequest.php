@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\RelationEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,11 +25,23 @@ class StoreStudentGuardianRequest extends FormRequest
     {
         return [
             'student_id' => 'required|exists:users,id',
-            'guardian_id' => ['required', 'exists:users,id', Rule::unique('student_guardians')
-                ->where(fn($q) => $q->where('student_id', $this->student_id)),
-                ],
-            'relationship' => ['required', 'string', 'max:255', Rule::unique('student_guardians')
-                ->where(fn($q) => $q->where('student_id', $this->student_id)),
+
+            // منع نفس الولي لنفس الطالب مرتين
+            'guardian_id' => [
+                'required',
+                'exists:users,id',
+                Rule::unique('student_guardians')
+                    ->where(fn($q) => $q->where('student_id', $this->student_id)),
+            ],
+
+            // منع تكرار نفس العلاقة لنفس الطالب
+            'relationship' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::in(array_column(RelationEnum::cases(), 'value')),
+                Rule::unique('student_guardians')
+                    ->where(fn($q) => $q->where('student_id', $this->student_id)),
             ],
         ];
     }

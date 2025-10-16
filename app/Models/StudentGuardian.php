@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\RelationEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class StudentGuardian extends Model
@@ -10,6 +11,9 @@ class StudentGuardian extends Model
         'student_id',
         'guardian_id',
         'relationship',
+    ];
+    protected $casts=[
+      'relationship' => RelationEnum::class,
     ];
 
     public function student()

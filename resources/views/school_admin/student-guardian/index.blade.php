@@ -55,7 +55,7 @@
                             <tr>
                                 <td>{{ $studentGuardian->student->username }}</td>
                                 <td>{{ $studentGuardian->guardian->username }}</td>
-                                <td>{{ __('message.'. $studentGuardian->relationship)  }}</td>
+                                <td>{{ $studentGuardian->relationship->label()}}</td>
                                 <td>
                                     <div class="d-flex justify-content-center flex-shrink-0">
 
@@ -175,7 +175,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="fv-row mb-7">
+                            <div class="fv-row mb-7 ">
                                 <label class="fs-6 fw-semibold form-label mb-2 ">
                                     <span class="required"> @lang('message.relationship')</span>
                                 </label>
@@ -184,20 +184,13 @@
                                         class="form-select form-select-solid">
 
                                     <option value="">@lang('message.select', ['item' => __('message.relationship')])</option>
-
-                                    <option value="father" {{ old('relation') == 'father' ? 'selected' : '' }}>
-                                        @lang('message.father')
-                                    </option>
-
-                                    <option value="mother" {{ old('relation') == 'mother' ? 'selected' : '' }}>
-                                        @lang('message.mother')
-                                    </option>
-
-
+                                    @foreach(\App\Enum\RelationEnum::cases() as $type)
+                                        <option value="{{ $type->value }}" {{ $guardian->relationship == $type->value ? 'selected' : '' }}>
+                                            {{$type->label()}}
+                                        </option>
+                                    @endforeach
                                 </select>
-
                             </div>
-
                         </div>
 
                         <div class="modal-footer flex-center">

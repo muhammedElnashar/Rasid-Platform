@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    الصفحة  الابن الشخصية
+    الصفحة  الشخصية
 @endsection
 @push('css')
     <style>
