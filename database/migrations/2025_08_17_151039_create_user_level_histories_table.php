@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('user_level_histories', function (Blueprint $table) {
             $table->id();
             $table->morphs('issued_to'); // user أو group
-            $table->foreignId('category_id')->constrained('categories');
-            $table->foreignId('layer_id')->constrained('layers');
-            $table->foreignId('level_id')->constrained('levels');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('layer_id')->constrained('layers')->onDelete('cascade');
+            $table->foreignId('level_id')->constrained('levels')->onDelete('cascade');
             $table->date('change_date');
             $table->boolean('notification_sent')->default(false);
             $table->boolean('is_upgrade')->nullable();

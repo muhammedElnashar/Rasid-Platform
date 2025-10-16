@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->morphs('issued_to'); // user أو group
-            $table->foreignId('item_id')->constrained('store_items');
+            $table->foreignId('item_id')->constrained('store_items')->onDelete('cascade');
             $table->dateTime('request_date');
             $table->string('status')->default('pending');
             $table->string('delivery_code')->nullable();

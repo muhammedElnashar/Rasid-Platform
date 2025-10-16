@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('behavior_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->constrained('schools');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->morphs('issued_to'); // user أو group
-            $table->foreignId('issuer_by')->constrained('users');
+            $table->foreignId('issuer_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('card_item_id')->constrained('card_items')->onDelete('cascade');
             $table->string('issue_number', 12)->unique();
             $table->integer('points_value');

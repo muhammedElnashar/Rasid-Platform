@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('insignias', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->constrained('schools');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->string('name');
             $table->integer('points_value');
             $table->string('image');

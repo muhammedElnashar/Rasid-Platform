@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('user_insignias', function (Blueprint $table) {
             $table->id();
             $table->morphs('issued_to'); // user أو group
-            $table->foreignId('insignia_id')->constrained('insignias');
-            $table->foreignId('issuer_id')->constrained('users');
+            $table->foreignId('insignia_id')->constrained('insignias')->onDelete('cascade');
+            $table->foreignId('issuer_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('award_date');
             $table->timestamps();
         });

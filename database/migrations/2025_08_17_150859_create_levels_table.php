@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('layer_id')->constrained('layers');
+            $table->foreignId('layer_id')->constrained('layers')->onDelete('cascade');
             $table->string('name'); // e.g., مستوى 1
             $table->integer('points_required')->default(100);
             $table->integer('reward_value')->default(0); // مكافأة صغيرة

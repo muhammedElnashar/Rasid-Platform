@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('store_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('school_id')->constrained('schools');
+            $table->foreignId('school_id')->constrained('schools')->onDelete('cascade');
             $table->string('name');
             $table->string('image_url')->nullable();
             $table->integer('points_required');
